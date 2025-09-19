@@ -24,8 +24,13 @@ export async function sendOrderEmail(details: OrderDetails) {
 
   // Ensure imageUrl is an absolute URL
   if (imageUrl.startsWith('/')) {
-    const host = process.env.NEXT_PUBLIC_HOST_URL || 'http://localhost:9002';
-    imageUrl = new URL(imageUrl, host).href;
+    const host = process.env.NEXT_PUBLIC_HOST_URL;
+    if (!host) {
+        console.error("NEXT_PUBLIC_HOST_URL is not set. Image URLs in emails will likely be broken.");
+        imageUrl = new URL(imageUrl, 'http://localhost:9002').href;
+    } else {
+        imageUrl = new URL(imageUrl, host).href;
+    }
   }
   
   const urlValidation = z.string().url().safeParse(imageUrl);
