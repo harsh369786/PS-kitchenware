@@ -1,7 +1,6 @@
 "use server";
 
 import nodemailer from "nodemailer";
-import { google } from "googleapis";
 import { z } from "zod";
 
 const OrderSchema = z.object({
@@ -11,8 +10,6 @@ const OrderSchema = z.object({
 });
 
 type OrderDetails = z.infer<typeof OrderSchema>;
-
-const OAuth2 = google.auth.OAuth2;
 
 export async function sendOrderEmail(details: OrderDetails) {
   const validation = OrderSchema.safeParse(details);
@@ -36,44 +33,19 @@ export async function sendOrderEmail(details: OrderDetails) {
     throw new Error("Invalid image URL provided for the order.");
   }
 
-  const {
-    GMAIL_OAUTH_CLIENT_ID,
-    GMAIL_OAUTH_CLIENT_SECRET,
-    GMAIL_OAUTH_REFRESH_TOKEN,
-    GMAIL_SENDER_EMAIL
-  } = process.env;
+  const { GMAIL_SENDER_EMAIL, GMAIL_APP_PASSWORD } = process.env;
 
-  if (!GMAIL_OAUTH_CLIENT_ID || !GMAIL_OAUTH_CLIENT_SECRET || !GMAIL_OAUTH_REFRESH_TOKEN || !GMAIL_SENDER_EMAIL) {
-    console.error("Missing Gmail OAuth environment variables.");
+  if (!GMAIL_SENDER_EMAIL || !GMAIL_APP_PASSWORD) {
+    console.error("Missing Gmail environment variables for App Password.");
     throw new Error("Email service is not configured.");
   }
 
-  const oauth2Client = new OAuth2(
-    GMAIL_OAUTH_CLIENT_ID,
-    GMAIL_OAUTH_CLIENT_SECRET,
-    "https://developers.google.com/oauthplayground"
-  );
-
-  oauth2Client.setCredentials({
-    refresh_token: GMAIL_OAUTH_REFRESH_TOKEN,
-  });
-
   try {
-    const { token } = await oauth2Client.getAccessToken();
-    
-    if (!token) {
-      throw new Error("Failed to create access token.");
-    }
-
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        type: "OAuth2",
         user: GMAIL_SENDER_EMAIL,
-        clientId: GMAIL_OAUTH_CLIENT_ID,
-        clientSecret: GMAIL_OAUTH_CLIENT_SECRET,
-        refreshToken: GMAIL_OAUTH_REFRESH_TOKEN,
-        accessToken: token,
+        pass: GMAIL_APP_PASSWORD,
       },
     });
 
