@@ -1,21 +1,23 @@
 "use server";
 
 import nodemailer from "nodemailer";
+import { google } from "googleapis";
 import { z } from "zod";
 
 const OrderSchema = z.object({
   productName: z.string(),
   quantity: z.number().min(1),
-  imageUrl: z.string(), // Allow any string for now
+  imageUrl: z.string(),
 });
 
 type OrderDetails = z.infer<typeof OrderSchema>;
+
+const OAuth2 = google.auth.OAuth2;
 
 export async function sendOrderEmail(details: OrderDetails) {
   const validation = OrderSchema.safeParse(details);
 
   if (!validation.success) {
-    // Basic logging for debugging
     console.error("Invalid order details object:", details, validation.error.flatten());
     throw new Error("Invalid order details.");
   }
@@ -23,45 +25,71 @@ export async function sendOrderEmail(details: OrderDetails) {
   const { productName, quantity } = validation.data;
   let { imageUrl } = validation.data;
 
-  // Construct absolute URL if it's a local path
   if (imageUrl.startsWith('/')) {
     const host = process.env.NEXT_PUBLIC_HOST_URL || 'http://localhost:9002';
     imageUrl = new URL(imageUrl, host).href;
   }
   
-  // Now, validate if it's a URL.
   const urlValidation = z.string().url().safeParse(imageUrl);
   if (!urlValidation.success) {
     console.error("Constructed imageUrl is not a valid URL:", imageUrl, urlValidation.error.flatten());
     throw new Error("Invalid image URL provided for the order.");
   }
 
+  const {
+    GMAIL_OAUTH_CLIENT_ID,
+    GMAIL_OAUTH_CLIENT_SECRET,
+    GMAIL_OAUTH_REFRESH_TOKEN,
+    GMAIL_SENDER_EMAIL
+  } = process.env;
 
-  // IMPORTANT: Storing credentials directly in code is a major security risk.
-  // In a real production application, use environment variables and a secure vault.
-  // This is implemented as per the user's specific request.
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "psessentials11@gmail.com",
-      pass: "psessentials2710",
-    },
+  if (!GMAIL_OAUTH_CLIENT_ID || !GMAIL_OAUTH_CLIENT_SECRET || !GMAIL_OAUTH_REFRESH_TOKEN || !GMAIL_SENDER_EMAIL) {
+    console.error("Missing Gmail OAuth environment variables.");
+    throw new Error("Email service is not configured.");
+  }
+
+  const oauth2Client = new OAuth2(
+    GMAIL_OAUTH_CLIENT_ID,
+    GMAIL_OAUTH_CLIENT_SECRET,
+    "https://developers.google.com/oauthplayground"
+  );
+
+  oauth2Client.setCredentials({
+    refresh_token: GMAIL_OAUTH_REFRESH_TOKEN,
   });
 
-  const mailOptions = {
-    from: '"PS Essentials" <psessentials11@gmail.com>',
-    to: "harsh.shah@finqy.ai",
-    subject: `New Order for ${productName}`,
-    html: `
-      <h1>New Order Received</h1>
-      <p>An order has been placed for the following item:</p>
-      <img src="${imageUrl}" alt="${productName}" width="200" />
-      <h2>${productName}</h2>
-      <p><strong>Quantity:</strong> ${quantity}</p>
-    `,
-  };
-
   try {
+    const accessToken = await oauth2Client.getAccessToken();
+
+    if (!accessToken.token) {
+        throw new Error("Failed to create access token.");
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        type: "OAuth2",
+        user: GMAIL_SENDER_EMAIL,
+        clientId: GMAIL_OAUTH_CLIENT_ID,
+        clientSecret: GMAIL_OAUTH_CLIENT_SECRET,
+        refreshToken: GMAIL_OAUTH_REFRESH_TOKEN,
+        accessToken: accessToken.token,
+      },
+    });
+
+    const mailOptions = {
+      from: `"PS Essentials" <${GMAIL_SENDER_EMAIL}>`,
+      to: "harsh.shah@finqy.ai",
+      subject: `New Order for ${productName}`,
+      html: `
+        <h1>New Order Received</h1>
+        <p>An order has been placed for the following item:</p>
+        <img src="${imageUrl}" alt="${productName}" width="200" />
+        <h2>${productName}</h2>
+        <p><strong>Quantity:</strong> ${quantity}</p>
+      `,
+    };
+
     const info = await transporter.sendMail(mailOptions);
     console.log("Email sent: " + info.response);
     return { success: true, message: "Email sent successfully" };
