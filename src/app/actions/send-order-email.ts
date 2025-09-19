@@ -22,6 +22,7 @@ export async function sendOrderEmail(details: OrderDetails) {
   const { productName, quantity } = validation.data;
   let { imageUrl } = validation.data;
 
+  // Ensure imageUrl is an absolute URL
   if (imageUrl.startsWith('/')) {
     const host = process.env.NEXT_PUBLIC_HOST_URL || 'http://localhost:9002';
     imageUrl = new URL(imageUrl, host).href;
