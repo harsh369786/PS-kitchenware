@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import type { Product, Category } from "@/lib/types";
+import { useState, useEffect } from "react";
+import type { Product, Category, SiteContent } from "@/lib/types";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import HeroCarousel from "@/components/hero-carousel";
 import ProductScroll from "@/components/product-scroll";
@@ -10,16 +10,7 @@ import ProductDetailModal from "@/components/product-detail-modal";
 import OrderConfirmationDialog from "@/components/order-confirmation-dialog";
 import { sendOrderEmail } from "@/app/actions/send-order-email";
 import { useToast } from "@/hooks/use-toast";
-
-const heroProductsData: Product[] = PlaceHolderImages.filter((p) =>
-  p.id.startsWith("hero-")
-).map((p, i) => ({
-  id: p.id,
-  name: `Product Example ${i + 1}`,
-  tagline: `Essential for your modern home`,
-  imageUrl: p.imageUrl,
-  imageHint: p.imageHint,
-}));
+import { getSiteContent } from "@/lib/site-content";
 
 const scrollProductsData: Product[] = PlaceHolderImages.filter((p) =>
   p.id.startsWith("scroll-")
@@ -30,21 +21,20 @@ const scrollProductsData: Product[] = PlaceHolderImages.filter((p) =>
   imageHint: p.imageHint,
 }));
 
-const categoriesData: Category[] = [
-  { id: "cat-laddles", name: "Laddles and Palta’s", href: "/category/laddles", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-laddles')?.imageUrl || '', imageHint: 'laddles kitchen' },
-  { id: "cat-doyas", name: "Doya’s", href: "/category/doyas", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-doyas')?.imageUrl || '', imageHint: 'serving spoon' },
-  { id: "cat-jaras", name: "Jara’s", href: "/category/jaras", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-jaras')?.imageUrl || '', imageHint: 'slotted spoon' },
-  { id: "cat-steamers", name: "Steamer and Washer", href: "/category/steamers", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-steamers')?.imageUrl || '', imageHint: 'steamer pot' },
-  { id: "cat-vati", name: "Vati and Plates", href: "/category/vati-plates", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-vati')?.imageUrl || '', imageHint: 'bowls plates' },
-  { id: "cat-glasses", name: "Glasses", href: "/category/glasses", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-glasses')?.imageUrl || '', imageHint: 'drinking glasses' },
-  { id: "cat-others", name: "Others", href: "/category/others", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-others')?.imageUrl || '', imageHint: 'kitchenware various' },
-].map(cat => ({ ...cat, imageUrl: cat.imageUrl || `https://picsum.photos/seed/${cat.id}/600/400` }));
-
 export default function Home() {
   const { toast } = useToast();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDetailModalOpen, setDetailModalOpen] = useState(false);
   const [isConfirmationOpen, setConfirmationOpen] = useState(false);
+  const [siteContent, setSiteContent] = useState<SiteContent | null>(null);
+
+  useEffect(() => {
+    async function fetchContent() {
+      const content = await getSiteContent();
+      setSiteContent(content);
+    }
+    fetchContent();
+  }, []);
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
@@ -75,11 +65,19 @@ export default function Home() {
     }
   };
 
+  if (!siteContent) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-2xl">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-background">
-      <HeroCarousel products={heroProductsData} onProductClick={handleProductClick} />
+      <HeroCarousel products={siteContent.heroProducts} onProductClick={handleProductClick} />
       <ProductScroll products={scrollProductsData} onProductClick={handleProductClick} />
-      <CategoryGrid categories={categoriesData} />
+      <CategoryGrid categories={siteContent.categories} />
       
       {selectedProduct && (
         <ProductDetailModal

@@ -6,10 +6,26 @@ export interface Product {
   imageHint: string;
 }
 
+export interface SubCategory {
+  id: string;
+  name: string;
+  href: string;
+}
+
 export interface Category {
   id: string;
   name: string;
   imageUrl: string;
   imageHint: string;
   href: string;
+  subcategories?: SubCategory[];
+}
+
+export interface HeroProduct extends Product {
+  // Currently same as Product, can be extended
+}
+
+export interface SiteContent {
+  heroProducts: HeroProduct[];
+  categories: Category[];
 }
