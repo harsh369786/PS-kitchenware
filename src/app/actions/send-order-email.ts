@@ -59,10 +59,10 @@ export async function sendOrderEmail(details: OrderDetails) {
   });
 
   try {
-    const accessToken = await oauth2Client.getAccessToken();
-
-    if (!accessToken.token) {
-        throw new Error("Failed to create access token.");
+    const { token } = await oauth2Client.getAccessToken();
+    
+    if (!token) {
+      throw new Error("Failed to create access token.");
     }
 
     const transporter = nodemailer.createTransport({
@@ -73,7 +73,7 @@ export async function sendOrderEmail(details: OrderDetails) {
         clientId: GMAIL_OAUTH_CLIENT_ID,
         clientSecret: GMAIL_OAUTH_CLIENT_SECRET,
         refreshToken: GMAIL_OAUTH_REFRESH_TOKEN,
-        accessToken: accessToken.token,
+        accessToken: token,
       },
     });
 
