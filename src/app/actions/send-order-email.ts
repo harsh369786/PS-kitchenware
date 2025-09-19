@@ -2,7 +2,6 @@
 
 import nodemailer from "nodemailer";
 import { z } from "zod";
-import 'dotenv/config';
 
 const OrderSchema = z.object({
   productName: z.string(),
