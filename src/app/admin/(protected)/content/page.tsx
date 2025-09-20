@@ -82,35 +82,39 @@ export default function ContentAdminPage() {
     },
   });
 
-  const { control, watch, setValue } = form;
+  const { control, setValue, getValues } = form;
+  
+  const updateHrefs = useCallback((categoryIndex: number, subcategoryIndex?: number) => {
+    const categories = getValues('categories');
+    const category = categories[categoryIndex];
+    if (!category) return;
 
-  const watchedCategories = watch('categories');
-  // Create a stable dependency by stringifying only the relevant fields (name)
-  const categoryNamesDep = JSON.stringify(
-    watchedCategories.map(cat => ({
-      name: cat.name,
-      subNames: cat.subcategories?.map(sub => sub.name)
-    }))
-  );
+    const categorySlug = slugify(category.name);
+    const expectedCategoryHref = `/category/${categorySlug}`;
+    if (category.href !== expectedCategoryHref) {
+      setValue(`categories.${categoryIndex}.href`, expectedCategoryHref, { shouldDirty: true, shouldTouch: true });
+    }
 
-  useEffect(() => {
-    watchedCategories.forEach((category, categoryIndex) => {
-      const categorySlug = slugify(category.name);
-      const expectedCategoryHref = `/category/${categorySlug}`;
-      if (category.href !== expectedCategoryHref) {
-        setValue(`categories.${categoryIndex}.href`, expectedCategoryHref, { shouldDirty: true });
-      }
-      
-      category.subcategories?.forEach((subcategory, subIndex) => {
+    if (subcategoryIndex !== undefined) {
+      const subcategory = category.subcategories?.[subcategoryIndex];
+      if (subcategory) {
         const subcategorySlug = slugify(subcategory.name);
         const expectedSubHref = `${expectedCategoryHref}/${subcategorySlug}`;
-         if (subcategory.href !== expectedSubHref) {
-           setValue(`categories.${categoryIndex}.subcategories.${subIndex}.href`, expectedSubHref, { shouldDirty: true });
-         }
-      });
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryNamesDep, setValue]);
+        if (subcategory.href !== expectedSubHref) {
+          setValue(`categories.${categoryIndex}.subcategories.${subcategoryIndex}.href`, expectedSubHref, { shouldDirty: true, shouldTouch: true });
+        }
+      }
+    } else { // Update all subcategories for a category
+       category.subcategories?.forEach((sub, subIndex) => {
+          const subcategorySlug = slugify(sub.name);
+          const expectedSubHref = `${expectedCategoryHref}/${subcategorySlug}`;
+           if (sub.href !== expectedSubHref) {
+             setValue(`categories.${categoryIndex}.subcategories.${subIndex}.href`, expectedSubHref, { shouldDirty: true, shouldTouch: true });
+           }
+       });
+    }
+  }, [getValues, setValue]);
+
 
   const { fields: heroProductFields, append: appendHero, remove: removeHero } = useFieldArray({
     control,
@@ -155,6 +159,7 @@ export default function ContentAdminPage() {
     try {
       await saveSiteContent(values as SiteContent);
       toast({ title: 'Success', description: 'Content saved successfully.' });
+      form.reset(values); // Resets the dirty state
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to save content.' });
     } finally {
@@ -168,9 +173,8 @@ export default function ContentAdminPage() {
       name: `categories.${categoryIndex}.subcategories`,
     });
     
-    const categoryName = watch(`categories.${categoryIndex}.name`);
+    const categoryName = form.watch(`categories.${categoryIndex}.name`);
     const categorySlug = slugify(categoryName);
-
 
     const handleAppendSubcategory = () => {
       const newSubName = '';
@@ -197,7 +201,7 @@ export default function ContentAdminPage() {
                     render={({ field }) => (
                         <FormItem>
                         <FormLabel>Name</FormLabel>
-                        <FormControl><Input {...field} /></FormControl>
+                        <FormControl><Input {...field} onBlur={() => updateHrefs(categoryIndex, index)} /></FormControl>
                         <FormMessage />
                         </FormItem>
                     )}
@@ -349,7 +353,7 @@ export default function ContentAdminPage() {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel>Category Name</FormLabel>
-                                    <FormControl><Input {...field} /></FormControl>
+                                    <FormControl><Input {...field} onBlur={() => updateHrefs(index)}/></FormControl>
                                     <FormMessage />
                                   </FormItem>
                                 )}
@@ -406,7 +410,7 @@ export default function ContentAdminPage() {
             </TabsContent>
           </Tabs>
           
-          <Button type="submit" disabled={isSaving} size="lg">
+          <Button type="submit" disabled={isSaving || !form.formState.isDirty} size="lg">
             {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Save Changes
           </Button>
