@@ -1,18 +1,18 @@
 import Link from "next/link";
-import { Facebook, Twitter, Instagram, Mail } from "lucide-react";
+import { Facebook, Twitter, Instagram } from "lucide-react";
 import ContactForm from "@/components/contact-form";
 
 export default function Footer() {
   return (
     <footer className="bg-card border-t">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-12 items-start">
           <div>
             <h2 className="text-2xl font-bold font-headline mb-4">Contact Us</h2>
             <p className="text-muted-foreground mb-6">Have a question or a special request? Fill out the form and we'll get back to you.</p>
             <ContactForm />
           </div>
-          <div className="flex flex-col justify-between">
+          <div className="flex flex-col justify-between h-full">
             <div>
               <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
               <div className="flex flex-col space-y-3 text-muted-foreground">
