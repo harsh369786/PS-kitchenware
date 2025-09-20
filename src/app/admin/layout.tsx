@@ -1,22 +1,10 @@
-import { redirect } from 'next/navigation';
-import { isAuthenticated } from '@/app/actions/auth-actions';
-import AdminSidebar from '@/components/layout/admin-sidebar';
-import AdminHeader from '@/components/layout/admin-header';
+import type { Metadata } from 'next';
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const isLoggedIn = await isAuthenticated();
+export const metadata: Metadata = {
+  title: 'PS Essentials Admin',
+};
 
-  if (!isLoggedIn) {
-    redirect('/admin/login');
-  }
-
-  return (
-    <div className="flex min-h-screen bg-muted/40">
-      <AdminSidebar />
-      <div className="flex flex-col flex-1">
-        <AdminHeader />
-        <main className="flex-1 p-4 sm:p-6">{children}</main>
-      </div>
-    </div>
-  );
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  // This layout is now a simple wrapper and does not perform auth checks
+  return <>{children}</>;
 }
