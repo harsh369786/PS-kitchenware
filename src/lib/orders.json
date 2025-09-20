@@ -40,5 +40,19 @@
     "quantity": 1,
     "date": "2025-09-20T09:35:04.436Z",
     "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/category-cat-doyas-1758353493543.webp"
+  },
+  {
+    "id": "order_1758360995228_du1lfnj",
+    "productName": "OGRALA LADDEL ",
+    "quantity": 4,
+    "date": "2025-09-20T09:36:35.228Z",
+    "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/subcategory-new-subcat-1758295949547-1758353493545.jpeg"
+  },
+  {
+    "id": "order_1758360995515_5ujdxzs",
+    "productName": "CURVE LADDEL",
+    "quantity": 2,
+    "date": "2025-09-20T09:36:35.515Z",
+    "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/subcategory-new-subcat-1758303052280-1758354209735.webp"
   }
 ]

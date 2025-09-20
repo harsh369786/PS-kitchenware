@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import type { Product } from "@/lib/types";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
@@ -26,15 +26,24 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
   const { toast } = useToast();
 
   const handleAddToCartClick = () => {
-    addToCart({ ...product }, quantity);
-    toast({
-      title: "Added to Cart",
-      description: `${quantity} x ${product.name} has been added to your cart.`,
-    });
-    onClose();
+    if (quantity > 0) {
+      addToCart({ ...product }, quantity);
+      toast({
+        title: "Added to Cart",
+        description: `${quantity} x ${product.name} has been added to your cart.`,
+      });
+      onClose();
+    }
   };
 
-  const quantityOptions = Array.from({ length: 300 }, (_, i) => i + 1);
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value) && value > 0) {
+        setQuantity(value);
+    } else if (e.target.value === '') {
+        setQuantity(0);
+    }
+  };
   
   if (!isOpen) return null;
 
@@ -58,19 +67,17 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
             <div className="py-6 space-y-4">
               <div className="flex items-center space-x-4">
                 <label htmlFor="quantity" className="text-sm font-medium">Quantity</label>
-                <Select value={String(quantity)} onValueChange={(val) => setQuantity(Number(val))}>
-                  <SelectTrigger className="w-[100px]">
-                    <SelectValue placeholder="Qty" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {quantityOptions.map(q => (
-                      <SelectItem key={q} value={String(q)}>{q}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Input
+                  id="quantity"
+                  type="number"
+                  min="1"
+                  value={quantity > 0 ? quantity : ""}
+                  onChange={handleQuantityChange}
+                  className="w-24 text-center"
+                />
               </div>
             </div>
-            <Button onClick={handleAddToCartClick} size="lg" className="bg-primary hover:bg-primary/90">
+            <Button onClick={handleAddToCartClick} size="lg" className="bg-primary hover:bg-primary/90" disabled={quantity <= 0}>
                 Add to Cart
             </Button>
           </div>
