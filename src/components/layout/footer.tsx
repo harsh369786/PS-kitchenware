@@ -27,7 +27,7 @@ export default function Footer() {
               </div>
             </div>
             <div className="mt-8 text-sm text-muted-foreground">
-              <p>No exchange or returns</p>
+              <p className="font-bold">No exchange or returns</p>
               <p className="mt-2">&copy; {new Date().getFullYear()} PS Essentials. All Rights Reserved.</p>
             </div>
           </div>
