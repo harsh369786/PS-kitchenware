@@ -56,6 +56,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const slugify = (text: string) => {
+  if (!text) return '';
   return text
     .toString()
     .normalize('NFD')
@@ -84,24 +85,32 @@ export default function ContentAdminPage() {
   const { control, watch, setValue } = form;
 
   const watchedCategories = watch('categories');
+  // Create a stable dependency by stringifying only the relevant fields (name)
+  const categoryNamesDep = JSON.stringify(
+    watchedCategories.map(cat => ({
+      name: cat.name,
+      subNames: cat.subcategories?.map(sub => sub.name)
+    }))
+  );
 
   useEffect(() => {
     watchedCategories.forEach((category, categoryIndex) => {
       const categorySlug = slugify(category.name);
       const expectedCategoryHref = `/category/${categorySlug}`;
       if (category.href !== expectedCategoryHref) {
-        setValue(`categories.${categoryIndex}.href`, expectedCategoryHref);
+        setValue(`categories.${categoryIndex}.href`, expectedCategoryHref, { shouldDirty: true });
       }
       
       category.subcategories?.forEach((subcategory, subIndex) => {
         const subcategorySlug = slugify(subcategory.name);
         const expectedSubHref = `${expectedCategoryHref}/${subcategorySlug}`;
          if (subcategory.href !== expectedSubHref) {
-           setValue(`categories.${categoryIndex}.subcategories.${subIndex}.href`, expectedSubHref);
+           setValue(`categories.${categoryIndex}.subcategories.${subIndex}.href`, expectedSubHref, { shouldDirty: true });
          }
       });
     });
-  }, [watchedCategories, setValue]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryNamesDep, setValue]);
 
   const { fields: heroProductFields, append: appendHero, remove: removeHero } = useFieldArray({
     control,
