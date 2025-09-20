@@ -53,12 +53,8 @@ export async function getSiteContent(): Promise<SiteContent> {
 
 export async function saveSiteContent(content: SiteContent): Promise<void> {
   try {
-    // This is a simplified implementation. In a real app, you'd handle file storage
-    // more robustly, possibly using a database or a proper file storage service.
-    // We are directly writing to the filesystem.
-
     const processImage = async (base64Data: string, fileName: string): Promise<string> => {
-        if (base64Data.startsWith('data:image')) {
+        if (base64Data && base64Data.startsWith('data:image')) {
             const fileType = base64Data.match(/data:(image\/\w+);base64,/)?.[1];
             if (!fileType) throw new Error('Invalid image format');
             
@@ -78,14 +74,15 @@ export async function saveSiteContent(content: SiteContent): Promise<void> {
     }
     
     for (const product of content.heroProducts) {
-        if (product.imageUrl.startsWith('data:image')) {
-            product.imageUrl = await processImage(product.imageUrl, `hero-${product.id}`);
-        }
+        product.imageUrl = await processImage(product.imageUrl, `hero-${product.id}`);
     }
 
     for (const category of content.categories) {
-        if (category.imageUrl.startsWith('data:image')) {
-            category.imageUrl = await processImage(category.imageUrl, `category-${category.id}`);
+        category.imageUrl = await processImage(category.imageUrl, `category-${category.id}`);
+        if (category.subcategories) {
+            for (const subcategory of category.subcategories) {
+                subcategory.imageUrl = await processImage(subcategory.imageUrl || '', `subcategory-${subcategory.id}`);
+            }
         }
     }
 

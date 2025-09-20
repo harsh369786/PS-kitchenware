@@ -10,6 +10,8 @@ export interface SubCategory {
   id: string;
   name: string;
   href: string;
+  imageUrl?: string;
+  imageHint?: string;
 }
 
 export interface Category {

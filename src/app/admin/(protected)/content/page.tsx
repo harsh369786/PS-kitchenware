@@ -35,6 +35,8 @@ const subCategorySchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Subcategory name is required'),
   href: z.string().min(1, 'Link is required'),
+  imageUrl: z.string().optional(),
+  imageHint: z.string().optional(),
 });
 
 const categorySchema = z.object({
@@ -126,31 +128,52 @@ export default function ContentAdminPage() {
       <div className="ml-6 mt-4 space-y-4 border-l pl-4">
         <h4 className="font-semibold">Subcategories</h4>
         {fields.map((field, index) => (
-          <div key={field.id} className="flex items-end gap-2">
-            <FormField
-              control={form.control}
-              name={`categories.${categoryIndex}.subcategories.${index}.name`}
-              render={({ field }) => (
-                <FormItem className="flex-grow">
-                  <FormLabel>Name</FormLabel>
-                  <FormControl><Input {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name={`categories.${categoryIndex}.subcategories.${index}.href`}
-              render={({ field }) => (
-                <FormItem className="flex-grow">
-                  <FormLabel>Link</FormLabel>
-                  <FormControl><Input {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
-              <Trash2 className="h-4 w-4" />
+          <div key={field.id} className="relative rounded-md border p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
+                    <FormField
+                    control={form.control}
+                    name={`categories.${categoryIndex}.subcategories.${index}.name`}
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl><Input {...field} /></FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                    <FormField
+                    control={form.control}
+                    name={`categories.${categoryIndex}.subcategories.${index}.href`}
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Link</FormLabel>
+                        <FormControl><Input {...field} /></FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                </div>
+                <div className="space-y-2">
+                    <FormField
+                        control={form.control}
+                        name={`categories.${categoryIndex}.subcategories.${index}.imageUrl`}
+                        render={({ field: { onChange, value } }) => (
+                        <FormItem>
+                            <FormLabel>Image (optional)</FormLabel>
+                            {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
+                            <FormControl>
+                            <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                </div>
+              </div>
+
+            <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} className="absolute top-2 right-2 h-6 w-6">
+              <Trash2 className="h-4 w-4 text-destructive" />
             </Button>
           </div>
         ))}
@@ -158,7 +181,7 @@ export default function ContentAdminPage() {
           type="button"
           size="sm"
           variant="outline"
-          onClick={() => append({ id: `new-subcat-${Date.now()}`, name: '', href: '' })}
+          onClick={() => append({ id: `new-subcat-${Date.now()}`, name: '', href: '', imageUrl: '', imageHint: '' })}
         >
           <PlusCircle className="mr-2 h-4 w-4" /> Add Subcategory
         </Button>
