@@ -26,5 +26,19 @@
     "quantity": 5,
     "date": "2025-09-20T09:32:27.740Z",
     "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/hero-hero-6-1758349865726.jpeg"
+  },
+  {
+    "id": "order_1758360865348_9nnxwzm",
+    "productName": "DALWATI LADDEL",
+    "quantity": 1,
+    "date": "2025-09-20T09:34:25.348Z",
+    "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/category-cat-doyas-1758353493543.webp"
+  },
+  {
+    "id": "order_1758360904436_fwn6xap",
+    "productName": "BLACK CHINESE LADDEL ",
+    "quantity": 1,
+    "date": "2025-09-20T09:35:04.436Z",
+    "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/category-cat-doyas-1758353493543.webp"
   }
 ]

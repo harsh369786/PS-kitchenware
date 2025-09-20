@@ -4,6 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,7 @@ export default function CartPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isConfirmationOpen, setConfirmationOpen] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const router = useRouter();
 
   const handleQuantityChange = (productId: string, quantity: number) => {
     if (quantity >= 1) {
@@ -63,6 +65,12 @@ export default function CartPage() {
     }
   };
   
+  const handleCloseConfirmation = () => {
+    setConfirmationOpen(false);
+    setOrderPlaced(false);
+    router.push('/');
+  };
+
   if (cart.length === 0 && !orderPlaced) {
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -124,12 +132,8 @@ export default function CartPage() {
     </div>
     <OrderConfirmationDialog
         isOpen={isConfirmationOpen}
-        onClose={() => {
-            setConfirmationOpen(false);
-            setOrderPlaced(false);
-        }}
+        onClose={handleCloseConfirmation}
       />
     </>
   );
 }
-
