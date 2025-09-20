@@ -45,11 +45,6 @@ export default function DashboardPage() {
       }
     }
     fetchData();
-
-    // Set up polling to refresh data every 30 seconds
-    const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
-
   }, []);
 
   const analytics = useMemo(() => {
