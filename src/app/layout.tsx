@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { CartProvider } from '@/context/cart-context';
+import { headers } from 'next/headers';
 
 export const metadata: Metadata = {
   title: 'PS Essentials E-Store',
@@ -15,6 +16,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = headers();
+  const pathname = headersList.get('next-url') || '';
+  const isAdminPage = pathname.startsWith('/admin');
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -24,11 +29,17 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased" suppressHydrationWarning>
         <CartProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </div>
+          {isAdminPage ? (
+            <>
+              {children}
+            </>
+          ) : (
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </div>
+          )}
           <Toaster />
         </CartProvider>
       </body>
