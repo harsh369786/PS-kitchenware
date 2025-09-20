@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -18,6 +19,7 @@ export default function CartPage() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isConfirmationOpen, setConfirmationOpen] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   const handleQuantityChange = (productId: string, quantity: number) => {
     if (quantity >= 1) {
@@ -45,7 +47,8 @@ export default function CartPage() {
       
       // Send a single email with all cart items
       await sendOrderEmail({ cartItems: cart });
-
+      
+      setOrderPlaced(true);
       clearCart();
       setConfirmationOpen(true);
     } catch (error) {
@@ -60,7 +63,7 @@ export default function CartPage() {
     }
   };
   
-  if (cart.length === 0) {
+  if (cart.length === 0 && !orderPlaced) {
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div className="flex flex-col items-center text-center">
@@ -110,7 +113,7 @@ export default function CartPage() {
           ))}
         </div>
         <div className="flex justify-end">
-          <Button onClick={handleConfirmOrder} size="lg" disabled={isSubmitting} className="bg-primary hover:bg-primary/90">
+          <Button onClick={handleConfirmOrder} size="lg" disabled={isSubmitting || cart.length === 0} className="bg-primary hover:bg-primary/90">
              {isSubmitting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : null}
@@ -121,8 +124,12 @@ export default function CartPage() {
     </div>
     <OrderConfirmationDialog
         isOpen={isConfirmationOpen}
-        onClose={() => setConfirmationOpen(false)}
+        onClose={() => {
+            setConfirmationOpen(false);
+            setOrderPlaced(false);
+        }}
       />
     </>
   );
 }
+
