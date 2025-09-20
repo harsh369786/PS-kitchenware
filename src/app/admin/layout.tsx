@@ -5,6 +5,7 @@ export const metadata: Metadata = {
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  // This layout is now a simple wrapper and does not perform auth checks
+  // This layout wrapper ensures that the main site's header and footer
+  // are not displayed on any admin pages.
   return <>{children}</>;
 }
