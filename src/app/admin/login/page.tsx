@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -28,7 +27,6 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function LoginPage() {
-  const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -46,8 +44,8 @@ export default function LoginPage() {
       const result = await login(values);
       if (result.success) {
         toast({ title: 'Login Successful', description: 'Redirecting to dashboard...' });
-        router.push('/admin/dashboard');
-        router.refresh(); // Force a refresh to re-evaluate the layout
+        // Use window.location.href for a full page reload to ensure the server recognizes the new auth state
+        window.location.href = '/admin/dashboard';
       } else {
         toast({
           variant: 'destructive',
