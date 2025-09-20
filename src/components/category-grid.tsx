@@ -17,7 +17,7 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {categories.map((category) => (
             <Link key={category.id} href={category.href} className="group">
-              <div className="relative aspect-[4/5] w-full rounded-lg overflow-hidden">
+              <div className="relative aspect-[3/4] w-full rounded-lg overflow-hidden">
                 <Image
                   src={category.imageUrl}
                   alt={category.name}
@@ -27,11 +27,11 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                 />
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
-                  <h3 className="text-2xl font-bold uppercase tracking-widest">
+                  <h3 className="text-xl font-bold uppercase tracking-widest">
                     {category.name}
                   </h3>
                   <Button
-                    variant="secondary"
+                    variant="default"
                     className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   >
                     Shop Now
