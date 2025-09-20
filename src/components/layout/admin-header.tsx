@@ -22,8 +22,9 @@ export default function AdminHeader() {
   const handleLogout = async () => {
     await logout();
     toast({ title: 'Logged Out', description: 'You have been successfully logged out.' });
-    router.push('/admin/login');
+    // Refresh the router to ensure the client state is updated
     router.refresh();
+    router.push('/admin/login');
   };
 
   return (

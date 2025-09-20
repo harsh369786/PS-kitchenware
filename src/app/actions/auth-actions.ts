@@ -36,7 +36,13 @@ export async function login(credentials: unknown) {
 }
 
 export async function logout() {
-  cookies().delete(AUTH_COOKIE_NAME);
+  // Ensure the path is specified to correctly clear the cookie
+  cookies().set(AUTH_COOKIE_NAME, '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: -1, // Expire the cookie immediately
+    path: '/',
+  });
 }
 
 export async function isAuthenticated() {
