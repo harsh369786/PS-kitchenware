@@ -14,12 +14,6 @@ export default function Footer() {
           </div>
           <div className="flex flex-col justify-between h-full">
             <div>
-              <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
-              <div className="flex flex-col space-y-3 text-muted-foreground">
-                <Link href="/customer-service" className="hover:text-foreground transition-colors">Customer Service</Link>
-                <Link href="/shipping" className="hover:text-foreground transition-colors">Shipping</Link>
-                <Link href="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
-              </div>
               <div className="flex space-x-4 mt-8">
                 <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors"><Facebook size={20} /></Link>
                 <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors"><Twitter size={20} /></Link>
