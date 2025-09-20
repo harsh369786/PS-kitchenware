@@ -2,14 +2,45 @@
 
 import nodemailer from "nodemailer";
 import { z } from "zod";
+import type { CartItem } from '@/lib/types';
 
-const OrderSchema = z.object({
-  productName: z.string(),
+const CartItemSchema = z.object({
+  id: z.string(),
+  name: z.string(),
   quantity: z.number().min(1),
   imageUrl: z.string(),
 });
 
+const OrderSchema = z.object({
+  cartItems: z.array(CartItemSchema),
+});
+
 type OrderDetails = z.infer<typeof OrderSchema>;
+
+function getHost() {
+    return process.env.NEXT_PUBLIC_HOST_URL || 'http://localhost:9002';
+}
+
+function generateCartHTML(cartItems: CartItem[]) {
+    const host = getHost();
+    return cartItems.map(item => {
+        // Ensure imageUrl is an absolute URL
+        let absoluteImageUrl = item.imageUrl.startsWith('/') 
+            ? new URL(item.imageUrl, host).href
+            : item.imageUrl;
+
+        return `
+            <div style="border-bottom: 1px solid #eee; padding: 10px 0; display: flex; align-items: center;">
+                <img src="${absoluteImageUrl}" alt="${item.name}" width="80" style="margin-right: 20px; border-radius: 8px;" />
+                <div>
+                    <h3 style="margin: 0; font-size: 16px;">${item.name}</h3>
+                    <p style="margin: 5px 0 0;"><strong>Quantity:</strong> ${item.quantity}</p>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
 
 export async function sendOrderEmail(details: OrderDetails) {
   const validation = OrderSchema.safeParse(details);
@@ -18,25 +49,12 @@ export async function sendOrderEmail(details: OrderDetails) {
     console.error("Invalid order details object:", details, validation.error.flatten());
     throw new Error("Invalid order details.");
   }
-
-  const { productName, quantity } = validation.data;
-  let { imageUrl } = validation.data;
-
-  // Ensure imageUrl is an absolute URL
-  if (imageUrl.startsWith('/')) {
-    const host = process.env.NEXT_PUBLIC_HOST_URL;
-    if (!host) {
-        console.error("NEXT_PUBLIC_HOST_URL is not set. Image URLs in emails will likely be broken.");
-        imageUrl = new URL(imageUrl, 'http://localhost:9002').href;
-    } else {
-        imageUrl = new URL(imageUrl, host).href;
-    }
-  }
   
-  const urlValidation = z.string().url().safeParse(imageUrl);
-  if (!urlValidation.success) {
-    console.error("Constructed imageUrl is not a valid URL:", imageUrl, urlValidation.error.flatten());
-    throw new Error("Invalid image URL provided for the order.");
+  const { cartItems } = validation.data;
+  
+  if (cartItems.length === 0) {
+      console.log("No items in cart, skipping email.");
+      return { success: true, message: "No items to order." };
   }
 
   const { GMAIL_SENDER_EMAIL, GMAIL_APP_PASSWORD } = process.env;
@@ -58,13 +76,13 @@ export async function sendOrderEmail(details: OrderDetails) {
     const mailOptions = {
       from: `"PS Essentials" <${GMAIL_SENDER_EMAIL}>`,
       to: "harsh.shah@finqy.ai",
-      subject: `New Order for ${productName}`,
+      subject: `New Order Received`,
       html: `
         <h1>New Order Received</h1>
-        <p>An order has been placed for the following item:</p>
-        <img src="${imageUrl}" alt="${productName}" width="200" />
-        <h2>${productName}</h2>
-        <p><strong>Quantity:</strong> ${quantity}</p>
+        <p>A new order has been placed with the following items:</p>
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px;">
+            ${generateCartHTML(cartItems)}
+        </div>
       `,
     };
 

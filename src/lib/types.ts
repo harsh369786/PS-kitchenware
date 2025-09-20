@@ -15,7 +15,7 @@ export interface SubCategory {
 }
 
 export interface Category {
-  id: string;
+  id:string;
   name: string;
   imageUrl: string;
   imageHint: string;
@@ -38,4 +38,8 @@ export interface Order {
   quantity: number;
   date: string; // ISO 8601 format
   imageUrl: string;
+}
+
+export interface CartItem extends Product {
+    quantity: number;
 }

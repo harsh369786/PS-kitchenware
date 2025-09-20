@@ -11,26 +11,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Product } from "@/lib/types";
-import { Loader2 } from "lucide-react";
+import { useCart } from "@/context/cart-context";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   product: Product;
-  onBuyNow: (product: Product, quantity: number) => Promise<void>;
 }
 
-export default function ProductDetailModal({ isOpen, onClose, product, onBuyNow }: ProductDetailModalProps) {
+export default function ProductDetailModal({ isOpen, onClose, product }: ProductDetailModalProps) {
   const [quantity, setQuantity] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { addToCart } = useCart();
+  const { toast } = useToast();
 
-  const handleBuyNowClick = async () => {
-    setIsSubmitting(true);
-    await onBuyNow(product, quantity);
-    setIsSubmitting(false);
+  const handleAddToCartClick = () => {
+    addToCart({ ...product }, quantity);
+    toast({
+      title: "Added to Cart",
+      description: `${quantity} x ${product.name} has been added to your cart.`,
+    });
+    onClose();
   };
 
   const quantityOptions = Array.from({ length: 300 }, (_, i) => i + 1);
+  
+  if (!isOpen) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -64,15 +70,8 @@ export default function ProductDetailModal({ isOpen, onClose, product, onBuyNow 
                 </Select>
               </div>
             </div>
-            <Button onClick={handleBuyNowClick} size="lg" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                "Buy Now"
-              )}
+            <Button onClick={handleAddToCartClick} size="lg" className="bg-primary hover:bg-primary/90">
+                Add to Cart
             </Button>
           </div>
         </div>

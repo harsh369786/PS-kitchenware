@@ -7,20 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Package } from "lucide-react";
 import ProductDetailModal from "@/components/product-detail-modal";
-import OrderConfirmationDialog from "@/components/order-confirmation-dialog";
-import { sendOrderEmail } from "@/app/actions/send-order-email";
-import { addOrder } from "@/app/actions/order-actions";
-import { useToast } from "@/hooks/use-toast";
 
 interface CategoryProductGridProps {
     products: Product[];
 }
 
 export default function CategoryProductGrid({ products }: CategoryProductGridProps) {
-  const { toast } = useToast();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDetailModalOpen, setDetailModalOpen] = useState(false);
-  const [isConfirmationOpen, setConfirmationOpen] = useState(false);
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
@@ -30,38 +24,6 @@ export default function CategoryProductGrid({ products }: CategoryProductGridPro
   const handleCloseDetailModal = () => {
     setDetailModalOpen(false);
     setSelectedProduct(null);
-  };
-
-  const handleBuyNow = async (product: Product, quantity: number) => {
-    try {
-      let absoluteImageUrl = product.imageUrl;
-      if (absoluteImageUrl.startsWith('/')) {
-        const host = process.env.NEXT_PUBLIC_HOST_URL || window.location.origin;
-        absoluteImageUrl = new URL(absoluteImageUrl, host).href;
-      }
-
-      await addOrder({
-        productName: product.name,
-        quantity,
-        imageUrl: absoluteImageUrl
-      });
-
-      await sendOrderEmail({
-        productName: product.name,
-        quantity,
-        imageUrl: product.imageUrl,
-      });
-
-      setDetailModalOpen(false);
-      setConfirmationOpen(true);
-    } catch (error) {
-      console.error("Failed to process order:", error);
-      toast({
-        variant: "destructive",
-        title: "Order Failed",
-        description: "There was a problem processing your order. Please try again.",
-      });
-    }
   };
 
   return (
@@ -82,7 +44,7 @@ export default function CategoryProductGrid({ products }: CategoryProductGridPro
                   </div>
                   <div className="p-4 text-center">
                     <h4 className="font-semibold text-base mb-4 truncate">{product.name}</h4>
-                    <Button onClick={() => handleProductClick(product)}>Buy Now</Button>
+                    <Button onClick={() => handleProductClick(product)} className="bg-primary hover:bg-primary/90">Buy Now</Button>
                   </div>
                 </CardContent>
               </Card>
@@ -100,14 +62,8 @@ export default function CategoryProductGrid({ products }: CategoryProductGridPro
           isOpen={isDetailModalOpen}
           onClose={handleCloseDetailModal}
           product={selectedProduct}
-          onBuyNow={handleBuyNow}
         />
       )}
-
-      <OrderConfirmationDialog
-        isOpen={isConfirmationOpen}
-        onClose={() => setConfirmationOpen(false)}
-      />
     </>
   );
 }
