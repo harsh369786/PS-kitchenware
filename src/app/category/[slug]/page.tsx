@@ -15,7 +15,7 @@ async function getCategory(slug: string): Promise<{ category: Category | null, p
         id: sub.id,
         name: sub.name,
         imageUrl: sub.imageUrl || currentCategory.imageUrl, // Fallback to category image
-        imageHint: sub.imageHint || currentCategory.imageHint, // Fallback to category hint
+        imageHint: sub.imageHint || currentCategory.imageHint || "", // Fallback to category hint
       }));
       return { category: currentCategory, products: categoryProducts };
     }
