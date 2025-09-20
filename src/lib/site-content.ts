@@ -51,27 +51,28 @@ export async function getSiteContent(): Promise<SiteContent> {
   }
 }
 
+async function processImage(base64Data: string | undefined, fileName: string): Promise<string> {
+    if (base64Data && base64Data.startsWith('data:image')) {
+        const fileType = base64Data.match(/data:(image\/\w+);base64,/)?.[1];
+        if (!fileType) throw new Error('Invalid image format');
+        
+        const base64 = base64Data.split(',')[1];
+        const buffer = Buffer.from(base64, 'base64');
+        const publicPath = path.join(process.cwd(), "public", "uploads");
+        const fileExtension = fileType.split('/')[1];
+        const uniqueFileName = `${fileName}-${Date.now()}.${fileExtension}`;
+        const filePath = path.join(publicPath, uniqueFileName);
+        
+        await fs.mkdir(publicPath, { recursive: true });
+        await fs.writeFile(filePath, buffer);
+        
+        return `/uploads/${uniqueFileName}`;
+    }
+    return base64Data || '';
+}
+
 export async function saveSiteContent(content: SiteContent): Promise<void> {
   try {
-    const processImage = async (base64Data: string, fileName: string): Promise<string> => {
-        if (base64Data && base64Data.startsWith('data:image')) {
-            const fileType = base64Data.match(/data:(image\/\w+);base64,/)?.[1];
-            if (!fileType) throw new Error('Invalid image format');
-            
-            const base64 = base64Data.split(',')[1];
-            const buffer = Buffer.from(base64, 'base64');
-            const publicPath = path.join(process.cwd(), "public", "uploads");
-            const fileExtension = fileType.split('/')[1];
-            const uniqueFileName = `${fileName}-${Date.now()}.${fileExtension}`;
-            const filePath = path.join(publicPath, uniqueFileName);
-            
-            await fs.mkdir(publicPath, { recursive: true });
-            await fs.writeFile(filePath, buffer);
-            
-            return `/uploads/${uniqueFileName}`;
-        }
-        return base64Data;
-    }
     
     for (const product of content.heroProducts) {
         product.imageUrl = await processImage(product.imageUrl, `hero-${product.id}`);
@@ -81,7 +82,9 @@ export async function saveSiteContent(content: SiteContent): Promise<void> {
         category.imageUrl = await processImage(category.imageUrl, `category-${category.id}`);
         if (category.subcategories) {
             for (const subcategory of category.subcategories) {
-                subcategory.imageUrl = await processImage(subcategory.imageUrl || '', `subcategory-${subcategory.id}`);
+                if (subcategory.imageUrl) {
+                    subcategory.imageUrl = await processImage(subcategory.imageUrl, `subcategory-${subcategory.id}`);
+                }
             }
         }
     }

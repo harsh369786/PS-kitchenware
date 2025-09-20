@@ -17,7 +17,7 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {categories.map((category) => (
             <Link key={category.id} href={category.href} className="group">
-              <div className="relative aspect-[3/4] w-full rounded-lg overflow-hidden">
+              <div className="relative aspect-[4/5] w-full rounded-lg overflow-hidden">
                 <Image
                   src={category.imageUrl}
                   alt={category.name}

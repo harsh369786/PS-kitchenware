@@ -126,7 +126,7 @@ export default function ContentAdminPage() {
 
     return (
       <div className="ml-6 mt-4 space-y-4 border-l pl-4">
-        <h4 className="font-semibold">Subcategories</h4>
+        <h4 className="font-semibold">Subcategories / Products</h4>
         {fields.map((field, index) => (
           <div key={field.id} className="relative rounded-md border p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -169,6 +169,7 @@ export default function ContentAdminPage() {
                         </FormItem>
                         )}
                     />
+                     <p className="text-xs text-muted-foreground">If no image is provided, the main category image will be used.</p>
                 </div>
               </div>
 
