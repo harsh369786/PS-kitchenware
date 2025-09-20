@@ -21,7 +21,7 @@ import { sendEnquiryEmail } from '@/app/actions/send-enquiry-email';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  phone: z.string().min(1, 'Phone number is required'),
+  phone: z.string().regex(/^\d{10}$/, 'Phone number must be 10 digits'),
   query: z.string().min(1, 'Query is required'),
 });
 
@@ -72,7 +72,7 @@ export default function ContactForm() {
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John Doe" {...field} />
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -85,7 +85,7 @@ export default function ContactForm() {
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input placeholder="+1 (555) 123-4567" {...field} />
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
