@@ -17,8 +17,7 @@ import { useCart } from "@/context/cart-context";
 
 const navLinks = [
   { name: "New Arrivals", href: "/category/new-arrivals" },
-  { name: "Kitchenware", href: "/category/kitchenware" },
-  { name: "Houseware", href: "/category/houseware" },
+  { name: "Kitchenware", href: "/category/laddels" },
   { name: "About Us", href: "/about" },
 ];
 
