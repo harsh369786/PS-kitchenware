@@ -42,23 +42,26 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       const result = await login(values);
-      if (result.success) {
-        toast({ title: 'Login Successful', description: 'Redirecting to dashboard...' });
-        // Use window.location.href for a full page reload to ensure the server recognizes the new auth state
-        window.location.href = '/admin/dashboard';
-      } else {
+      // The login action will redirect on success. If it returns, it's an error.
+      if (result?.error) {
         toast({
           variant: 'destructive',
           title: 'Login Failed',
-          description: result.error || 'Invalid credentials.',
+          description: result.error,
         });
       }
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'An unexpected error occurred.',
-      });
+    } catch (error: any) {
+        // Next.js redirect throws an error, which we can safely ignore in this case.
+        // For any other error, we want to display it.
+        if (error.digest?.includes('NEXT_REDIRECT')) {
+            // This is the expected redirect error, do nothing.
+        } else {
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'An unexpected error occurred.',
+            });
+        }
     } finally {
       setIsSubmitting(false);
     }

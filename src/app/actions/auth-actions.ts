@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { redirect } from 'next/navigation';
 
 const loginSchema = z.object({
   username: z.string(),
@@ -29,7 +30,8 @@ export async function login(credentials: unknown) {
       maxAge: 60 * 60 * 24, // 1 day
       path: '/',
     });
-    return { success: true };
+    // Redirect to the dashboard after successful login
+    redirect('/admin/dashboard');
   } else {
     return { success: false, error: 'Invalid username or password.' };
   }
