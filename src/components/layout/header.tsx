@@ -1,5 +1,8 @@
+
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search, ShoppingCart, User } from "lucide-react";
 import Logo from "@/components/logo";
@@ -24,6 +27,14 @@ const navLinks = [
 export default function Header() {
   const { cart } = useCart();
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   return (
     <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
@@ -50,7 +61,13 @@ export default function Header() {
         <div className="flex items-center justify-end space-x-4 md:w-[250px]">
           <div className="relative hidden sm:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search..." className="pl-9 w-48" />
+            <Input 
+              placeholder="Search..." 
+              className="pl-9 w-48"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearch}
+            />
           </div>
           <Link href="/cart" className="relative">
             <Button variant="ghost" size="icon">
