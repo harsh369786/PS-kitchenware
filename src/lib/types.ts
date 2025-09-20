@@ -29,3 +29,11 @@ export interface SiteContent {
   heroProducts: HeroProduct[];
   categories: Category[];
 }
+
+export interface Order {
+  id: string;
+  productName: string;
+  quantity: number;
+  date: string; // ISO 8601 format
+  imageUrl: string;
+}

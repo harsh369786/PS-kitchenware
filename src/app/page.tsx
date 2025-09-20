@@ -9,6 +9,7 @@ import CategoryGrid from "@/components/category-grid";
 import ProductDetailModal from "@/components/product-detail-modal";
 import OrderConfirmationDialog from "@/components/order-confirmation-dialog";
 import { sendOrderEmail } from "@/app/actions/send-order-email";
+import { addOrder } from "@/app/actions/order-actions";
 import { useToast } from "@/hooks/use-toast";
 import { getSiteContent } from "@/lib/site-content";
 
@@ -48,15 +49,31 @@ export default function Home() {
 
   const handleBuyNow = async (product: Product, quantity: number) => {
     try {
+      // Create a full URL for the image if it's a relative path
+      let absoluteImageUrl = product.imageUrl;
+      if (absoluteImageUrl.startsWith('/')) {
+        const host = process.env.NEXT_PUBLIC_HOST_URL || window.location.origin;
+        absoluteImageUrl = new URL(absoluteImageUrl, host).href;
+      }
+
+      // First, add the order to our "database"
+      await addOrder({
+        productName: product.name,
+        quantity,
+        imageUrl: absoluteImageUrl
+      });
+
+      // Then, send the confirmation email
       await sendOrderEmail({
         productName: product.name,
         quantity,
-        imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl, // sendOrderEmail will also resolve the URL
       });
+
       setDetailModalOpen(false);
       setConfirmationOpen(true);
     } catch (error) {
-      console.error("Failed to send order email:", error);
+      console.error("Failed to process order:", error);
       toast({
         variant: "destructive",
         title: "Order Failed",

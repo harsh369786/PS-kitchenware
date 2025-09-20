@@ -1,0 +1,45 @@
+"use server";
+
+import { cookies } from 'next/headers';
+import { z } from 'zod';
+
+const loginSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+});
+
+const ADMIN_USERNAME = "superman101";
+const ADMIN_PASSWORD = "1Testmypolicy$";
+const AUTH_COOKIE_NAME = 'ps-auth-token';
+
+export async function login(credentials: unknown) {
+  const parsedCredentials = loginSchema.safeParse(credentials);
+
+  if (!parsedCredentials.success) {
+    return { success: false, error: 'Invalid credentials format.' };
+  }
+
+  const { username, password } = parsedCredentials.data;
+
+  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    // Set a secure, httpOnly cookie to manage the session
+    cookies().set(AUTH_COOKIE_NAME, 'super-secret-auth-token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 60 * 60 * 24, // 1 day
+      path: '/',
+    });
+    return { success: true };
+  } else {
+    return { success: false, error: 'Invalid username or password.' };
+  }
+}
+
+export async function logout() {
+  cookies().delete(AUTH_COOKIE_NAME);
+}
+
+export async function isAuthenticated() {
+    const cookieStore = cookies();
+    return cookieStore.has(AUTH_COOKIE_NAME);
+}

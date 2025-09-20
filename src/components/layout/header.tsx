@@ -64,10 +64,7 @@ export default function Header() {
               <DropdownMenuLabel>Admin</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/admin/content">Content Management</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/admin/product-description">AI Description</Link>
+                <Link href="/admin">Admin Panel</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

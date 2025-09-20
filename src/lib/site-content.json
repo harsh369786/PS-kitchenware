@@ -2,191 +2,106 @@
   "heroProducts": [
     {
       "id": "hero-1",
-      "name": "TEST 1",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "/uploads/hero-hero-1-1758288000269.jpeg",
+      "name": "Laddels ",
+      "tagline": " Har niwaale mein pyaar parosein.",
+      "imageUrl": "/uploads/hero-hero-1-1758303337806.jpeg",
       "imageHint": "kitchen product"
     },
     {
       "id": "hero-2",
-      "name": "Product Example 2",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero2/1200/600",
+      "name": "Jara's ",
+      "tagline": "Your Kitchen's Frying Expert.",
+      "imageUrl": "/uploads/hero-hero-2-1758349865519.png",
       "imageHint": "houseware item"
     },
     {
       "id": "hero-3",
-      "name": "Product Example 3",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero3/1200/600",
+      "name": "Steamer basket and colander's ",
+      "tagline": "Eat Fresh. Eat Healthy. Eat Steamed.",
+      "imageUrl": "/uploads/hero-hero-3-1758349865700.png",
       "imageHint": "modern kitchen"
     },
     {
       "id": "hero-4",
-      "name": "Product Example 4",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero4/1200/600",
+      "name": "Tadka pan ",
+      "tagline": "Swaad ka tadka. / The sizzle of flavor.",
+      "imageUrl": "/uploads/hero-hero-4-1758349865720.jpeg",
       "imageHint": "kitchenware set"
     },
     {
       "id": "hero-5",
-      "name": "Product Example 5",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero5/1200/600",
+      "name": "Grillers ",
+      "tagline": "Be it papad or roti, roast everything with ease.",
+      "imageUrl": "/uploads/hero-hero-5-1758349865724.jpeg",
       "imageHint": "home decor"
     },
     {
       "id": "hero-6",
-      "name": "Product Example 6",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero6/1200/600",
+      "name": "KOTHMiR DABBA ",
+      "tagline": "Rakhe dhaniya-mirch ko taaza, har roz.",
+      "imageUrl": "/uploads/hero-hero-6-1758349865726.jpeg",
       "imageHint": "cooking utensil"
-    },
-    {
-      "id": "hero-7",
-      "name": "Product Example 7",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero7/1200/600",
-      "imageHint": "steel pot"
-    },
-    {
-      "id": "hero-8",
-      "name": "Product Example 8",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero8/1200/600",
-      "imageHint": "ceramic plate"
-    },
-    {
-      "id": "hero-9",
-      "name": "Product Example 9",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero9/1200/600",
-      "imageHint": "glassware"
-    },
-    {
-      "id": "hero-10",
-      "name": "Product Example 10",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero10/1200/600",
-      "imageHint": "kitchen appliance"
-    },
-    {
-      "id": "hero-11",
-      "name": "Product Example 11",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero11/1200/600",
-      "imageHint": "cutlery set"
-    },
-    {
-      "id": "hero-12",
-      "name": "Product Example 12",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero12/1200/600",
-      "imageHint": "serving dish"
-    },
-    {
-      "id": "hero-13",
-      "name": "Product Example 13",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero13/1200/600",
-      "imageHint": "baking tool"
-    },
-    {
-      "id": "hero-14",
-      "name": "Product Example 14",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero14/1200/600",
-      "imageHint": "storage container"
-    },
-    {
-      "id": "hero-15",
-      "name": "Product Example 15",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero15/1200/600",
-      "imageHint": "water bottle"
-    },
-    {
-      "id": "hero-16",
-      "name": "Product Example 16",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero16/1200/600",
-      "imageHint": "coffee mug"
-    },
-    {
-      "id": "hero-17",
-      "name": "Product Example 17",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero17/1200/600",
-      "imageHint": "chopping board"
-    },
-    {
-      "id": "hero-18",
-      "name": "Product Example 18",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero18/1200/600",
-      "imageHint": "spice rack"
-    },
-    {
-      "id": "hero-19",
-      "name": "Product Example 19",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero19/1200/600",
-      "imageHint": "kitchen timer"
-    },
-    {
-      "id": "hero-20",
-      "name": "Product Example 20",
-      "tagline": "Essential for your modern home",
-      "imageUrl": "https://picsum.photos/seed/hero20/1200/600",
-      "imageHint": "tea pot"
     }
   ],
   "categories": [
     {
       "id": "cat-doyas",
-      "name": "Doya’s",
-      "href": "/category/doyas",
-      "imageUrl": "https://picsum.photos/seed/cat2/600/400",
+      "name": "Laddels ",
+      "href": "/category/laddels ",
+      "imageUrl": "/uploads/category-cat-doyas-1758303337905.jpeg",
       "imageHint": "serving spoon",
-      "subcategories": []
-    },
-    {
-      "id": "cat-jaras",
-      "name": "Jara’s",
-      "href": "/category/jaras",
-      "imageUrl": "https://picsum.photos/seed/cat3/600/400",
-      "imageHint": "slotted spoon",
-      "subcategories": []
+      "subcategories": [
+        {
+          "id": "new-subcat-1758295949547",
+          "name": "OGRALA LADDEL ",
+          "href": "/catagory/laddel/Ogralaladdel"
+        },
+        {
+          "id": "new-subcat-1758303052280",
+          "name": "CURVE LADDEL",
+          "href": "/category/curveladdel"
+        },
+        {
+          "id": "new-subcat-1758303157217",
+          "name": "DALWATI LADDEL",
+          "href": "/catagory/dalwatiladdel"
+        },
+        {
+          "id": "new-subcat-1758303212155",
+          "name": "BLACK CHINESE LADDEL ",
+          "href": "/category/blackchineseladdel"
+        }
+      ]
     },
     {
       "id": "cat-steamers",
-      "name": "Steamer and Washer",
-      "href": "/category/steamers",
-      "imageUrl": "https://picsum.photos/seed/cat4/600/400",
+      "name": "Jara's ",
+      "href": "/category/Jara's ",
+      "imageUrl": "/uploads/category-cat-steamers-1758349865734.jpeg",
       "imageHint": "steamer pot",
       "subcategories": []
     },
     {
       "id": "cat-vati",
-      "name": "Vati and Plates",
-      "href": "/category/vati-plates",
-      "imageUrl": "https://picsum.photos/seed/cat5/600/400",
+      "name": "Steamer and Washer",
+      "href": "/category/steamer and washer",
+      "imageUrl": "/uploads/category-cat-vati-1758349865739.png",
       "imageHint": "bowls plates",
       "subcategories": []
     },
     {
       "id": "cat-glasses",
-      "name": "Glasses",
-      "href": "/category/glasses",
-      "imageUrl": "https://picsum.photos/seed/cat6/600/400",
+      "name": "Stainlesssteel Tadka pan ",
+      "href": "/category/tadkapan",
+      "imageUrl": "/uploads/category-cat-glasses-1758349865748.jpeg",
       "imageHint": "drinking glasses",
       "subcategories": []
     },
     {
       "id": "cat-others",
-      "name": "Others",
-      "href": "/category/others",
-      "imageUrl": "https://picsum.photos/seed/cat7/600/400",
+      "name": "Grillers ",
+      "href": "/category/Grillers ",
+      "imageUrl": "/uploads/category-cat-others-1758349865757.jpeg",
       "imageHint": "kitchenware various",
       "subcategories": []
     }
