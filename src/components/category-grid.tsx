@@ -9,7 +9,7 @@ interface CategoryGridProps {
 
 export default function CategoryGrid({ categories }: CategoryGridProps) {
   return (
-    <section className="py-16 sm:py-24 bg-background">
+    <section id="categories" className="py-16 sm:py-24 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-center mb-12 font-headline uppercase tracking-wider">
           Categories
@@ -32,7 +32,7 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                   </h3>
                   <Button
                     variant="default"
-                    className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-primary hover:bg-primary/90"
                   >
                     Shop Now
                   </Button>
