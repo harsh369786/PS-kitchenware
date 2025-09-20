@@ -32,10 +32,10 @@ export default function HeroCarousel({ products, onProductClick }: HeroCarouselP
                   alt={product.name}
                   fill
                   priority={products.indexOf(product) === 0}
-                  className="object-contain bg-neutral-200"
+                  className="object-cover"
                   data-ai-hint={product.imageHint}
                 />
-                <div className="absolute inset-0 bg-black/20" />
+                <div className="absolute inset-0 bg-black/30" />
                 <div className="absolute bottom-0 left-0 p-8 md:p-16 text-white">
                   <div className="max-w-md">
                     <h2 className="text-3xl md:text-5xl font-bold font-headline">{product.name}</h2>
@@ -44,6 +44,7 @@ export default function HeroCarousel({ products, onProductClick }: HeroCarouselP
                       onClick={() => onProductClick(product)}
                       className="mt-4 md:mt-6"
                       size="lg"
+                      variant="secondary"
                     >
                       Shop Now
                     </Button>
