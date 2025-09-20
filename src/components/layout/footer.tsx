@@ -10,6 +10,7 @@ export default function Footer() {
             <Link href="/customer-service" className="hover:text-foreground transition-colors">Customer Service</Link>
             <Link href="/shipping" className="hover:text-foreground transition-colors">Shipping</Link>
             <Link href="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+            <Link href="/contact" className="hover:text-foreground transition-colors">Contact Us</Link>
           </div>
           <div className="flex space-x-4">
             <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors"><Facebook size={20} /></Link>

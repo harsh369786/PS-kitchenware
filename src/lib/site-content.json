@@ -61,7 +61,7 @@
           "id": "new-subcat-1758303052280",
           "name": "CURVE LADDEL",
           "href": "/category/laddels/curve-laddel",
-          "imageUrl": ""
+          "imageUrl": "/uploads/subcategory-new-subcat-1758303052280-1758354209735.webp"
         },
         {
           "id": "new-subcat-1758303157217",
@@ -74,6 +74,13 @@
           "name": "BLACK CHINESE LADDEL ",
           "href": "/category/laddels/black-chinese-laddel",
           "imageUrl": ""
+        },
+        {
+          "id": "new-subcat-1758354037368",
+          "name": "test",
+          "href": "/category/laddels/test",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758354037368-1758354209736.png",
+          "imageHint": ""
         }
       ]
     },

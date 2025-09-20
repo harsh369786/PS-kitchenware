@@ -44,7 +44,6 @@ export default function HeroCarousel({ products, onProductClick }: HeroCarouselP
                       onClick={() => onProductClick(product)}
                       className="mt-4 md:mt-6"
                       size="lg"
-                      variant="secondary"
                     >
                       Shop Now
                     </Button>
