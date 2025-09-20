@@ -46,41 +46,41 @@
   "categories": [
     {
       "id": "cat-doyas",
-      "name": "Laddels ",
-      "href": "/category/laddels ",
+      "name": "Laddels",
+      "href": "/category/laddels",
       "imageUrl": "/uploads/category-cat-doyas-1758353493543.webp",
       "imageHint": "serving spoon",
       "subcategories": [
         {
           "id": "new-subcat-1758295949547",
           "name": "OGRALA LADDEL ",
-          "href": "/catagory/laddel/Ogralaladdel",
+          "href": "/category/laddels/ograla-laddel",
           "imageUrl": "/uploads/subcategory-new-subcat-1758295949547-1758353493545.jpeg"
         },
         {
           "id": "new-subcat-1758303052280",
           "name": "CURVE LADDEL",
-          "href": "/category/curveladdel",
+          "href": "/category/laddels/curve-laddel",
           "imageUrl": ""
         },
         {
           "id": "new-subcat-1758303157217",
           "name": "DALWATI LADDEL",
-          "href": "/catagory/dalwatiladdel",
+          "href": "/category/laddels/dalwati-laddel",
           "imageUrl": ""
         },
         {
           "id": "new-subcat-1758303212155",
           "name": "BLACK CHINESE LADDEL ",
-          "href": "/category/blackchineseladdel",
+          "href": "/category/laddels/black-chinese-laddel",
           "imageUrl": ""
         }
       ]
     },
     {
       "id": "cat-steamers",
-      "name": "Jara's ",
-      "href": "/category/Jara's ",
+      "name": "Jara's",
+      "href": "/category/jaras",
       "imageUrl": "/uploads/category-cat-steamers-1758349865734.jpeg",
       "imageHint": "steamer pot",
       "subcategories": []
@@ -88,23 +88,23 @@
     {
       "id": "cat-vati",
       "name": "Steamer and Washer",
-      "href": "/category/steamer and washer",
+      "href": "/category/steamer-and-washer",
       "imageUrl": "/uploads/category-cat-vati-1758349865739.png",
       "imageHint": "bowls plates",
       "subcategories": []
     },
     {
       "id": "cat-glasses",
-      "name": "Stainlesssteel Tadka pan ",
-      "href": "/category/tadkapan",
+      "name": "Stainlesssteel Tadka pan",
+      "href": "/category/stainlesssteel-tadka-pan",
       "imageUrl": "/uploads/category-cat-glasses-1758349865748.jpeg",
       "imageHint": "drinking glasses",
       "subcategories": []
     },
     {
       "id": "cat-others",
-      "name": "Grillers ",
-      "href": "/category/Grillers ",
+      "name": "Grillers",
+      "href": "/category/grillers",
       "imageUrl": "/uploads/category-cat-others-1758349865757.jpeg",
       "imageHint": "kitchenware various",
       "subcategories": []

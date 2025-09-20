@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -34,7 +34,7 @@ const heroProductSchema = z.object({
 const subCategorySchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Subcategory name is required'),
-  href: z.string().min(1, 'Link is required'),
+  href: z.string(), // href will be auto-generated
   imageUrl: z.string().optional(),
   imageHint: z.string().optional(),
 });
@@ -42,7 +42,7 @@ const subCategorySchema = z.object({
 const categorySchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Category name is required'),
-  href: z.string().min(1, 'Link is required'),
+  href: z.string(), // href will be auto-generated
   imageUrl: z.string().min(1, 'Image is required'),
   imageHint: z.string().optional(),
   subcategories: z.array(subCategorySchema).optional(),
@@ -54,6 +54,19 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
+
+const slugify = (text: string) => {
+  return text
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-');
+};
+
 
 export default function ContentAdminPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -68,13 +81,35 @@ export default function ContentAdminPage() {
     },
   });
 
+  const { control, watch, setValue } = form;
+
+  const watchedCategories = watch('categories');
+
+  useEffect(() => {
+    watchedCategories.forEach((category, categoryIndex) => {
+      const categorySlug = slugify(category.name);
+      const expectedCategoryHref = `/category/${categorySlug}`;
+      if (category.href !== expectedCategoryHref) {
+        setValue(`categories.${categoryIndex}.href`, expectedCategoryHref);
+      }
+      
+      category.subcategories?.forEach((subcategory, subIndex) => {
+        const subcategorySlug = slugify(subcategory.name);
+        const expectedSubHref = `${expectedCategoryHref}/${subcategorySlug}`;
+         if (subcategory.href !== expectedSubHref) {
+           setValue(`categories.${categoryIndex}.subcategories.${subIndex}.href`, expectedSubHref);
+         }
+      });
+    });
+  }, [watchedCategories, setValue]);
+
   const { fields: heroProductFields, append: appendHero, remove: removeHero } = useFieldArray({
-    control: form.control,
+    control,
     name: "heroProducts",
   });
 
   const { fields: categoryFields, append: appendCategory, remove: removeCategory } = useFieldArray({
-    control: form.control,
+    control,
     name: "categories",
   });
 
@@ -123,6 +158,22 @@ export default function ContentAdminPage() {
       control: form.control,
       name: `categories.${categoryIndex}.subcategories`,
     });
+    
+    const categoryName = watch(`categories.${categoryIndex}.name`);
+    const categorySlug = slugify(categoryName);
+
+
+    const handleAppendSubcategory = () => {
+      const newSubName = '';
+      const newSubSlug = slugify(newSubName);
+      append({ 
+        id: `new-subcat-${Date.now()}`, 
+        name: '', 
+        href: `/category/${categorySlug}/${newSubSlug}`, 
+        imageUrl: '', 
+        imageHint: '' 
+      });
+    };
 
     return (
       <div className="ml-6 mt-4 space-y-4 border-l pl-4">
@@ -143,15 +194,17 @@ export default function ContentAdminPage() {
                     )}
                     />
                     <FormField
-                    control={form.control}
-                    name={`categories.${categoryIndex}.subcategories.${index}.href`}
-                    render={({ field }) => (
+                      control={form.control}
+                      name={`categories.${categoryIndex}.subcategories.${index}.href`}
+                      render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Link</FormLabel>
-                        <FormControl><Input {...field} /></FormControl>
-                        <FormMessage />
+                          <FormLabel>Link (auto-generated)</FormLabel>
+                          <FormControl>
+                            <Input {...field} readOnly className="bg-muted" />
+                          </FormControl>
+                          <FormMessage />
                         </FormItem>
-                    )}
+                      )}
                     />
                 </div>
                 <div className="space-y-2">
@@ -182,7 +235,7 @@ export default function ContentAdminPage() {
           type="button"
           size="sm"
           variant="outline"
-          onClick={() => append({ id: `new-subcat-${Date.now()}`, name: '', href: '', imageUrl: '', imageHint: '' })}
+          onClick={handleAppendSubcategory}
         >
           <PlusCircle className="mr-2 h-4 w-4" /> Add Subcategory
         </Button>
@@ -292,13 +345,13 @@ export default function ContentAdminPage() {
                                   </FormItem>
                                 )}
                               />
-                              <FormField
+                               <FormField
                                 control={form.control}
                                 name={`categories.${index}.href`}
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>Link</FormLabel>
-                                    <FormControl><Input {...field} /></FormControl>
+                                    <FormLabel>Link (auto-generated)</FormLabel>
+                                    <FormControl><Input {...field} readOnly className="bg-muted"/></FormControl>
                                     <FormMessage />
                                   </FormItem>
                                 )}
