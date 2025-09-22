@@ -4,7 +4,7 @@
       "id": "hero-1",
       "name": "Laddels ",
       "tagline": " Har niwaale mein pyaar parosein.",
-      "imageUrl": "/uploads/hero-hero-1-1758303337806.jpeg",
+      "imageUrl": "/uploads/hero-hero-1-1758376851732.jpeg",
       "imageHint": "kitchen product"
     },
     {
@@ -48,38 +48,45 @@
       "id": "cat-doyas",
       "name": "Laddels",
       "href": "/category/laddels",
-      "imageUrl": "/uploads/category-cat-doyas-1758353493543.webp",
+      "imageUrl": "/uploads/category-cat-doyas-1758376851776.png",
       "imageHint": "serving spoon",
       "subcategories": [
         {
           "id": "new-subcat-1758295949547",
-          "name": "OGRALA LADDEL ",
-          "href": "/category/laddels/ograla-laddel",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758295949547-1758353493545.jpeg"
+          "name": "OGRALA LADDEL  sizes - 1,2,3,4",
+          "href": "/category/laddels/ograla-laddel-sizes-1234",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758295949547-1758376851828.jpeg"
         },
         {
           "id": "new-subcat-1758303052280",
-          "name": "CURVE LADDEL",
-          "href": "/category/laddels/curve-laddel",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758303052280-1758354209735.webp"
+          "name": "CURVE LADDEL sizes - 3,4,5",
+          "href": "/category/laddels/curve-laddel-sizes-345",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758303052280-1758376851846.jpeg"
         },
         {
           "id": "new-subcat-1758303157217",
-          "name": "DALWATI LADDEL",
-          "href": "/category/laddels/dalwati-laddel",
-          "imageUrl": ""
+          "name": "DALWATI LADDEL  sizes - 1,2",
+          "href": "/category/laddels/dalwati-laddel-sizes-12",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758303157217-1758376851879.jpeg"
         },
         {
           "id": "new-subcat-1758303212155",
-          "name": "BLACK CHINESE LADDEL ",
+          "name": "BLACK CHINESE LADDEL  sizes - 1,2,3,4,5",
           "href": "/category/laddels/black-chinese-laddel",
-          "imageUrl": ""
+          "imageUrl": "/uploads/subcategory-new-subcat-1758303212155-1758376851882.jpeg"
         },
         {
           "id": "new-subcat-1758354037368",
-          "name": "test",
-          "href": "/category/laddels/test",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758354037368-1758354209736.png",
+          "name": "CHIKOOWATI LADDLE   sizes - 1,2,3,4",
+          "href": "/category/laddels/chikoowati-laddle-sizes-1234",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758354037368-1758376851888.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758375020828",
+          "name": "REGULAR LADDEL (With Patti Available )  sizes -5,6",
+          "href": "/category/laddels/regular-laddel-with-patti-available-sizes-56",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758375020828-1758376851894.jpeg",
           "imageHint": ""
         }
       ]
@@ -88,9 +95,45 @@
       "id": "cat-steamers",
       "name": "Jara's",
       "href": "/category/jaras",
-      "imageUrl": "/uploads/category-cat-steamers-1758349865734.jpeg",
+      "imageUrl": "/uploads/category-cat-steamers-1758376851901.jpeg",
       "imageHint": "steamer pot",
-      "subcategories": []
+      "subcategories": [
+        {
+          "id": "new-subcat-1758375068569",
+          "name": "BOONDI JARA size - 1,2,3,4",
+          "href": "/category/jaras/boondi-jara-size-1234",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758375068569-1758376851916.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758375081963",
+          "name": "POHA JARA  sizes - 1,2,3",
+          "href": "/category/jaras/poha-jara-sizes-123",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758375081963-1758376851920.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758375094203",
+          "name": "STEEL HANDLE PURI JARA  sizes - 5,6,7",
+          "href": "/category/jaras/steel-handle-puri-jara-sizes-567",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758375094203-1758376851925.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758375112646",
+          "name": "WOODEN HANDLE PURI JARA   sizes - 5,6,7",
+          "href": "/category/jaras/wooden-handle-puri-jara-sizes-567",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758375112646-1758376851947.png",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758375231636",
+          "name": "DELUXE POHA JARA  sizes - 1,2,3",
+          "href": "/category/jaras/deluxe-poha-jara-sizes-123",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758375231636-1758376851985.jpeg",
+          "imageHint": ""
+        }
+      ]
     },
     {
       "id": "cat-vati",
@@ -98,12 +141,27 @@
       "href": "/category/steamer-and-washer",
       "imageUrl": "/uploads/category-cat-vati-1758349865739.png",
       "imageHint": "bowls plates",
-      "subcategories": []
+      "subcategories": [
+        {
+          "id": "new-subcat-1758375153272",
+          "name": "STEAMER BASKET  sizes - 1,2,3,4",
+          "href": "/category/steamer-and-washer/steamer-basket-sizes-1234",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758375153272-1758376851993.png",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758375183051",
+          "name": "COLANDER SET  sizes - 1,2,3,4,5,6,7",
+          "href": "/category/steamer-and-washer/colander-set-sizes-1234567",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758375183051-1758376852017.png",
+          "imageHint": ""
+        }
+      ]
     },
     {
       "id": "cat-glasses",
-      "name": "Stainlesssteel Tadka pan",
-      "href": "/category/stainlesssteel-tadka-pan",
+      "name": "Stainlesssteel Tadka pan sizes - 1,2",
+      "href": "/category/stainlesssteel-tadka-pan-sizes-12",
       "imageUrl": "/uploads/category-cat-glasses-1758349865748.jpeg",
       "imageHint": "drinking glasses",
       "subcategories": []
@@ -112,9 +170,61 @@
       "id": "cat-others",
       "name": "Grillers",
       "href": "/category/grillers",
-      "imageUrl": "/uploads/category-cat-others-1758349865757.jpeg",
+      "imageUrl": "/uploads/category-cat-others-1758376852022.jpeg",
       "imageHint": "kitchenware various",
-      "subcategories": []
+      "subcategories": [
+        {
+          "id": "new-subcat-1758376185954",
+          "name": "ROUND PAPAD JALI  sizes - 1,2",
+          "href": "/category/grillers/round-papad-jali-sizes-12",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758376185954-1758376852036.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758376215065",
+          "name": "SQUARE PAPAD JALI  sizes - 1,2",
+          "href": "/category/grillers/square-papad-jali-sizes-12",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758376215065-1758376852044.jpeg",
+          "imageHint": ""
+        }
+      ]
+    },
+    {
+      "id": "new-cat-1758376243256",
+      "name": "STAINLESS STEEL DABBA & REFRIGERATOR STORAGE CONTAINER ",
+      "href": "/category/stainless-steel-dabba-refrigerator-storage-container",
+      "imageUrl": "/uploads/category-new-cat-1758376243256-1758376852050.jpeg",
+      "imageHint": "",
+      "subcategories": [
+        {
+          "id": "new-subcat-1758376492806",
+          "name": "FLAT DABBA  (SET OF 4)",
+          "href": "/category/stainless-steel-dabba-refrigerator-storage-container/flat-dabba-set-of-4",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758376492806-1758376852058.png",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758376523762",
+          "name": "SWEET DABBA  (SET OF 4)",
+          "href": "/category/stainless-steel-dabba-refrigerator-storage-container/sweet-dabba-set-of-4",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758376523762-1758376852066.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758376654080",
+          "name": "KOTHMiR DABBA   sizes - 1,2,3",
+          "href": "/category/stainless-steel-dabba-refrigerator-storage-container/kothmir-dabba-sizes-123",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758376654080-1758376852077.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758376690342",
+          "name": "KHAMANI DABBA   sizes - 1,2",
+          "href": "/category/stainless-steel-dabba-refrigerator-storage-container/khamani-dabba-sizes-12",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758376690342-1758376852086.png",
+          "imageHint": ""
+        }
+      ]
     }
   ]
 }
