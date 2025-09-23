@@ -30,9 +30,7 @@ export default function RootLayout({
       <body className="font-body antialiased" suppressHydrationWarning>
         <CartProvider>
           {isAdminPage ? (
-            <>
-              {children}
-            </>
+            <>{children}</>
           ) : (
             <div className="flex flex-col min-h-screen">
               <Header />

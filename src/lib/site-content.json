@@ -2,9 +2,9 @@
   "heroProducts": [
     {
       "id": "hero-1",
-      "name": "Laddels ",
+      "name": "Laddels & Doya's ",
       "tagline": " Har niwaale mein pyaar parosein.",
-      "imageUrl": "/uploads/hero-hero-1-1758376851732.jpeg",
+      "imageUrl": "/uploads/hero-hero-1-1758546352449.png",
       "imageHint": "kitchen product"
     },
     {
@@ -18,7 +18,7 @@
       "id": "hero-3",
       "name": "Steamer basket and colander's ",
       "tagline": "Eat Fresh. Eat Healthy. Eat Steamed.",
-      "imageUrl": "/uploads/hero-hero-3-1758349865700.png",
+      "imageUrl": "/uploads/hero-hero-3-1758564535564.jpeg",
       "imageHint": "modern kitchen"
     },
     {
@@ -32,21 +32,28 @@
       "id": "hero-5",
       "name": "Grillers ",
       "tagline": "Be it papad or roti, roast everything with ease.",
-      "imageUrl": "/uploads/hero-hero-5-1758349865724.jpeg",
+      "imageUrl": "/uploads/hero-hero-5-1758564124496.jpeg",
       "imageHint": "home decor"
     },
     {
       "id": "hero-6",
       "name": "KOTHMiR DABBA ",
       "tagline": "Rakhe dhaniya-mirch ko taaza, har roz.",
-      "imageUrl": "/uploads/hero-hero-6-1758349865726.jpeg",
+      "imageUrl": "/uploads/hero-hero-6-1758642014279.png",
       "imageHint": "cooking utensil"
+    },
+    {
+      "id": "new-hero-1758607679731",
+      "name": "Fancy Glasses ",
+      "tagline": "Unbreakable Beauty.",
+      "imageUrl": "/uploads/hero-new-hero-1758607679731-1758642014317.png",
+      "imageHint": ""
     }
   ],
   "categories": [
     {
       "id": "cat-doyas",
-      "name": "Laddels",
+      "name": "LADDELS & DOYA'S",
       "href": "/category/laddels",
       "imageUrl": "/uploads/category-cat-doyas-1758376851776.png",
       "imageHint": "serving spoon",
@@ -86,7 +93,35 @@
           "id": "new-subcat-1758375020828",
           "name": "REGULAR LADDEL (With Patti Available )  sizes -5,6",
           "href": "/category/laddels/regular-laddel-with-patti-available-sizes-56",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758375020828-1758376851894.jpeg",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758375020828-1758564124505.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758563226834",
+          "name": "DAYA TITAN ",
+          "href": "/category/laddels/daya-titan",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758563226834-1758563532232.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758563251354",
+          "name": "DOYA INDIGO ",
+          "href": "/category/laddels/doya-indigo",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758563251354-1758563532264.png",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758563283652",
+          "name": "DOYA MATKA ",
+          "href": "/category/laddels/doya-matka",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758563283652-1758563532351.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758563308574",
+          "name": "DOYA DAMRU ",
+          "href": "/category/laddels/doya-damru",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758563308574-1758563532354.png",
           "imageHint": ""
         }
       ]
@@ -132,6 +167,13 @@
           "href": "/category/jaras/deluxe-poha-jara-sizes-123",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375231636-1758376851985.jpeg",
           "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758565189289",
+          "name": "RICE JARA. Sizes - 5,6,7",
+          "href": "/category/jaras/rice-jara-sizes-567",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758565189289-1758565255056.png",
+          "imageHint": ""
         }
       ]
     },
@@ -139,89 +181,217 @@
       "id": "cat-vati",
       "name": "Steamer and Washer",
       "href": "/category/steamer-and-washer",
-      "imageUrl": "/uploads/category-cat-vati-1758349865739.png",
+      "imageUrl": "/uploads/category-cat-vati-1758530426540.png",
       "imageHint": "bowls plates",
       "subcategories": [
         {
           "id": "new-subcat-1758375153272",
           "name": "STEAMER BASKET  sizes - 1,2,3,4",
           "href": "/category/steamer-and-washer/steamer-basket-sizes-1234",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758375153272-1758376851993.png",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758375153272-1758530608445.png",
           "imageHint": ""
         },
         {
           "id": "new-subcat-1758375183051",
           "name": "COLANDER SET  sizes - 1,2,3,4,5,6,7",
           "href": "/category/steamer-and-washer/colander-set-sizes-1234567",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758375183051-1758376852017.png",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758375183051-1758530426588.png",
           "imageHint": ""
         }
       ]
     },
     {
       "id": "cat-glasses",
-      "name": "Stainlesssteel Tadka pan sizes - 1,2",
-      "href": "/category/stainlesssteel-tadka-pan-sizes-12",
+      "name": "Stainlesssteel Tadka pan",
+      "href": "/category/stainlesssteel-tadka-pan",
       "imageUrl": "/uploads/category-cat-glasses-1758349865748.jpeg",
       "imageHint": "drinking glasses",
-      "subcategories": []
+      "subcategories": [
+        {
+          "id": "new-subcat-1758564902077",
+          "name": "STAINLESSSTEEL TADKA PAN sizes -1,2",
+          "href": "/category/stainlesssteel-tadka-pan/stainlesssteel-tadka-pan-sizes-12",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758564902077-1758564945076.jpeg",
+          "imageHint": ""
+        }
+      ]
     },
     {
       "id": "cat-others",
-      "name": "Grillers",
-      "href": "/category/grillers",
+      "name": "Grillers & Wire items ",
+      "href": "/category/grillers-wire-items",
       "imageUrl": "/uploads/category-cat-others-1758376852022.jpeg",
       "imageHint": "kitchenware various",
       "subcategories": [
         {
           "id": "new-subcat-1758376185954",
           "name": "ROUND PAPAD JALI  sizes - 1,2",
-          "href": "/category/grillers/round-papad-jali-sizes-12",
+          "href": "/category/grillers-wire-items/round-papad-jali-sizes-12",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376185954-1758376852036.jpeg",
           "imageHint": ""
         },
         {
           "id": "new-subcat-1758376215065",
           "name": "SQUARE PAPAD JALI  sizes - 1,2",
-          "href": "/category/grillers/square-papad-jali-sizes-12",
+          "href": "/category/grillers-wire-items/square-papad-jali-sizes-12",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376215065-1758376852044.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758564308150",
+          "name": "Tabel ring with rubber grip sizes -1,2,3",
+          "href": "/category/grillers-wire-items/tabel-ring-with-rubber-grip-sizes-123",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758564308150-1758564535566.png",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758564388286",
+          "name": "Regular Tabel ring sizes - 1,2,3",
+          "href": "/category/grillers-wire-items/regular-tabel-ring-sizes-123",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758564388286-1758564535568.png",
           "imageHint": ""
         }
       ]
     },
     {
       "id": "new-cat-1758376243256",
-      "name": "STAINLESS STEEL DABBA & REFRIGERATOR STORAGE CONTAINER ",
-      "href": "/category/stainless-steel-dabba-refrigerator-storage-container",
+      "name": "STEEL DABBA & REFRIGERATOR STORAGE CONTAINER ",
+      "href": "/category/steel-dabba-refrigerator-storage-container",
       "imageUrl": "/uploads/category-new-cat-1758376243256-1758376852050.jpeg",
       "imageHint": "",
       "subcategories": [
         {
           "id": "new-subcat-1758376492806",
           "name": "FLAT DABBA  (SET OF 4)",
-          "href": "/category/stainless-steel-dabba-refrigerator-storage-container/flat-dabba-set-of-4",
+          "href": "/category/steel-dabba-refrigerator-storage-container/flat-dabba-set-of-4",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376492806-1758376852058.png",
           "imageHint": ""
         },
         {
           "id": "new-subcat-1758376523762",
           "name": "SWEET DABBA  (SET OF 4)",
-          "href": "/category/stainless-steel-dabba-refrigerator-storage-container/sweet-dabba-set-of-4",
+          "href": "/category/steel-dabba-refrigerator-storage-container/sweet-dabba-set-of-4",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376523762-1758376852066.jpeg",
           "imageHint": ""
         },
         {
           "id": "new-subcat-1758376654080",
           "name": "KOTHMiR DABBA   sizes - 1,2,3",
-          "href": "/category/stainless-steel-dabba-refrigerator-storage-container/kothmir-dabba-sizes-123",
+          "href": "/category/steel-dabba-refrigerator-storage-container/kothmir-dabba-sizes-123",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376654080-1758376852077.jpeg",
           "imageHint": ""
         },
         {
           "id": "new-subcat-1758376690342",
           "name": "KHAMANI DABBA   sizes - 1,2",
-          "href": "/category/stainless-steel-dabba-refrigerator-storage-container/khamani-dabba-sizes-12",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758376690342-1758376852086.png",
+          "href": "/category/steel-dabba-refrigerator-storage-container/khamani-dabba-sizes-12",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758376690342-1758564124506.jpeg",
+          "imageHint": ""
+        }
+      ]
+    },
+    {
+      "id": "new-cat-1758523545038",
+      "name": "OIL dispenser ",
+      "href": "/category/oil-dispenser",
+      "imageUrl": "/uploads/category-new-cat-1758523545038-1758530426598.png",
+      "imageHint": "",
+      "subcategories": [
+        {
+          "id": "new-subcat-1758523585191",
+          "name": "STEEL OIL DISPENSER  sizes - 350ml,500ml,750ml,1000ml ",
+          "href": "/category/oil-dispenser/steel-oil-dispenser-sizes-350ml500ml750ml1000ml",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758523585191-1758530426628.png",
+          "imageHint": ""
+        }
+      ]
+    },
+    {
+      "id": "new-cat-1758525802777",
+      "name": "STEEL BELLY HANDI",
+      "href": "/category/steel-belly-handi",
+      "imageUrl": "/uploads/category-new-cat-1758525802777-1758530426709.png",
+      "imageHint": "",
+      "subcategories": [
+        {
+          "id": "new-subcat-1758525912981",
+          "name": "Steel belly handi sizes - 1,2,3,4",
+          "href": "/category/steel-belly-handi/steel-belly-handi-sizes-1234",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758525912981-1758530426757.png",
+          "imageHint": ""
+        }
+      ]
+    },
+    {
+      "id": "new-cat-1758526147511",
+      "name": "PLATES & BOWLS ",
+      "href": "/category/plates-bowls",
+      "imageUrl": "/uploads/category-new-cat-1758526147511-1758530426796.jpeg",
+      "imageHint": "",
+      "subcategories": [
+        {
+          "id": "new-subcat-1758528505887",
+          "name": "BASUNDI BOWL ",
+          "href": "/category/plates-bowls/basundi-bowl",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758528505887-1758530426818.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758530342313",
+          "name": "HALWA PLATE  sizes - 1,2,3,4",
+          "href": "/category/plates-bowls/halwa-plate-sizes-1234",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758530342313-1758530426851.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758537141388",
+          "name": "DAHI WADA PLATE sizes-1,2",
+          "href": "/category/plates-bowls/dahi-wada-plate-sizes-12",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758537141388-1758537294336.png",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758537183879",
+          "name": "APPLE PLATE sizes - 1,2",
+          "href": "/category/plates-bowls/apple-plate-sizes-12",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758537183879-1758537294362.jpeg",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758537208299",
+          "name": "SADA VATI sizes - 1,2,3",
+          "href": "/category/plates-bowls/sada-vati-sizes-123",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758537208299-1758537294366.png",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758537252626",
+          "name": "CHIKOOWATI sizes -1,2,3,4",
+          "href": "/category/plates-bowls/chikoowati-sizes-1234",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758537252626-1758537294396.png",
+          "imageHint": ""
+        }
+      ]
+    },
+    {
+      "id": "new-cat-1758607598609",
+      "name": "Glasses ",
+      "href": "/category/glasses",
+      "imageUrl": "/uploads/category-new-cat-1758607598609-1758608705078.png",
+      "imageHint": "",
+      "subcategories": [
+        {
+          "id": "new-subcat-1758608641866",
+          "name": "MAHARAJA GLASS ",
+          "href": "/category/glasses/maharaja-glass",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758608641866-1758608705146.png",
+          "imageHint": ""
+        },
+        {
+          "id": "new-subcat-1758608672520",
+          "name": "WINE Glass ",
+          "href": "/category/glasses/wine-glass",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758608672520-1758608705236.png",
           "imageHint": ""
         }
       ]
