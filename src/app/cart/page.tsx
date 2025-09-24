@@ -49,7 +49,6 @@ export default function CartPage() {
       // Send a single email with all cart items
       await sendOrderEmail({ cartItems: cart });
       
-      clearCart();
       setConfirmationOpen(true);
     } catch (error) {
       console.error("Failed to confirm order:", error);
@@ -65,10 +64,11 @@ export default function CartPage() {
   
   const handleCloseConfirmation = () => {
     setConfirmationOpen(false);
+    clearCart();
     router.push('/');
   };
 
-  if (cart.length === 0) {
+  if (cart.length === 0 && !isConfirmationOpen) {
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div className="flex flex-col items-center text-center">
