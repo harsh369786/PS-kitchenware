@@ -7,8 +7,8 @@ import { CartProvider } from '@/context/cart-context';
 import { headers } from 'next/headers';
 
 export const metadata: Metadata = {
-  title: 'PS Essentials E-Store',
-  description: 'A modern, elegant e-commerce website for PS Essentials.',
+  title: 'Ps Kitchenware E-Store',
+  description: 'A modern, elegant e-commerce website for Ps Kitchenware.',
 };
 
 export default function RootLayout({

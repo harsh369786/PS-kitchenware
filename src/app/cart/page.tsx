@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -20,12 +19,11 @@ export default function CartPage() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isConfirmationOpen, setConfirmationOpen] = useState(false);
-  const [orderPlaced, setOrderPlaced] = useState(false);
   const router = useRouter();
 
-  const handleQuantityChange = (productId: string, quantity: number) => {
+  const handleQuantityChange = (cartItemId: string, quantity: number) => {
     if (quantity >= 1) {
-      updateQuantity(productId, quantity);
+      updateQuantity(cartItemId, quantity);
     }
   };
 
@@ -43,14 +41,14 @@ export default function CartPage() {
         await addOrder({
             productName: item.name,
             quantity: item.quantity,
-            imageUrl: absoluteImageUrl
+            imageUrl: absoluteImageUrl,
+            size: item.size
         });
       }
       
       // Send a single email with all cart items
       await sendOrderEmail({ cartItems: cart });
       
-      setOrderPlaced(true);
       clearCart();
       setConfirmationOpen(true);
     } catch (error) {
@@ -67,11 +65,10 @@ export default function CartPage() {
   
   const handleCloseConfirmation = () => {
     setConfirmationOpen(false);
-    setOrderPlaced(false);
     router.push('/');
   };
 
-  if (cart.length === 0 && !orderPlaced) {
+  if (cart.length === 0) {
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div className="flex flex-col items-center text-center">
@@ -104,6 +101,9 @@ export default function CartPage() {
               </div>
               <div className="flex-grow">
                 <h2 className="font-semibold">{item.name}</h2>
+                {item.size && (
+                    <p className="text-sm text-muted-foreground">Size: {item.size}</p>
+                )}
               </div>
               <div className="flex items-center gap-4">
                  <Input

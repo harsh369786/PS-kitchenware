@@ -5,9 +5,9 @@ import type { CartItem, Product } from '@/lib/types';
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: Product, quantity: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addToCart: (product: Product, quantity: number, size?: string) => void;
+  removeFromCart: (cartItemId: string) => void;
+  updateQuantity: (cartItemId: string, quantity: number) => void;
   clearCart: () => void;
 }
 
@@ -19,7 +19,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Load cart from localStorage on initial render
     try {
-      const savedCart = localStorage.getItem('ps-essentials-cart');
+      const savedCart = localStorage.getItem('ps-kitchenware-cart');
       if (savedCart) {
         setCart(JSON.parse(savedCart));
       }
@@ -31,15 +31,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Save cart to localStorage whenever it changes
     try {
-      localStorage.setItem('ps-essentials-cart', JSON.stringify(cart));
+      localStorage.setItem('ps-kitchenware-cart', JSON.stringify(cart));
     } catch (error) {
       console.error("Failed to save cart to localStorage", error);
     }
   }, [cart]);
 
-  const addToCart = (product: Product, quantity: number) => {
+  const addToCart = (product: Product, quantity: number, size?: string) => {
     setCart((prevCart) => {
-      const existingItemIndex = prevCart.findIndex((item) => item.id === product.id);
+      // A unique ID for each cart item, based on product ID and size
+      const cartItemId = size ? `${product.id}-${size}` : product.id;
+      const existingItemIndex = prevCart.findIndex((item) => item.id === cartItemId);
+      
       if (existingItemIndex > -1) {
         // If item exists, update its quantity
         const updatedCart = [...prevCart];
@@ -47,19 +50,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return updatedCart;
       } else {
         // If item doesn't exist, add it to the cart
-        return [...prevCart, { ...product, quantity }];
+        const newCartItem: CartItem = { 
+          ...product, 
+          id: cartItemId, // Override product ID with unique cart item ID
+          quantity, 
+          size 
+        };
+        return [...prevCart, newCartItem];
       }
     });
   };
 
-  const removeFromCart = (productId: string) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+  const removeFromCart = (cartItemId: string) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== cartItemId));
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = (cartItemId: string, quantity: number) => {
     setCart((prevCart) =>
       prevCart.map((item) =>
-        item.id === productId ? { ...item, quantity: Math.max(0, quantity) } : item
+        item.id === cartItemId ? { ...item, quantity: Math.max(0, quantity) } : item
       ).filter(item => item.quantity > 0) // Also remove if quantity becomes 0
     );
   };

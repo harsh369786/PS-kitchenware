@@ -9,6 +9,7 @@ const CartItemSchema = z.object({
   name: z.string(),
   quantity: z.number().min(1),
   imageUrl: z.string(),
+  size: z.string().optional(),
 });
 
 const OrderSchema = z.object({
@@ -34,6 +35,7 @@ function generateCartHTML(cartItems: CartItem[]) {
                 <img src="${absoluteImageUrl}" alt="${item.name}" width="80" style="margin-right: 20px; border-radius: 8px;" />
                 <div>
                     <h3 style="margin: 0; font-size: 16px;">${item.name}</h3>
+                    ${item.size ? `<p style="margin: 5px 0 0;"><strong>Size:</strong> ${item.size}</p>` : ''}
                     <p style="margin: 5px 0 0;"><strong>Quantity:</strong> ${item.quantity}</p>
                 </div>
             </div>
@@ -74,7 +76,7 @@ export async function sendOrderEmail(details: OrderDetails) {
     });
 
     const mailOptions = {
-      from: `"PS Essentials" <${GMAIL_SENDER_EMAIL}>`,
+      from: `"Ps Kitchenware" <${GMAIL_SENDER_EMAIL}>`,
       to: "harsh.shah@finqy.ai",
       subject: `New Order Received`,
       html: `

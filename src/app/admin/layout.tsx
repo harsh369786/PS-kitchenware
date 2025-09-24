@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'PS Essentials Admin',
+  title: 'Ps Kitchenware Admin',
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

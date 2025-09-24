@@ -14,7 +14,7 @@ export default function AboutPage() {
         <div className="prose prose-lg mx-auto text-foreground">
           <p>We are a manufacturer & trader.</p>
           <p>
-            At Ps essentials, we craft high quality stainless steel kitchenware designed to make cooking and serving effortless. Our products are trusted by hotels, restaurants, and households for their durability, elegance, and modern design.
+            At Ps Kitchenware, we craft high quality stainless steel kitchenware designed to make cooking and serving effortless. Our products are trusted by hotels, restaurants, and households for their durability, elegance, and modern design.
           </p>
           <p>
             With a focus on quality, innovation, and timely delivery, we bring you reliable kitchen essentials that blend style with everyday functionality. Whether it’s premium serving items or versatile cooking tools, we are here to elevate your kitchen experience.

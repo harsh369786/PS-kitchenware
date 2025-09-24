@@ -245,6 +245,7 @@ export default function DashboardPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Product</TableHead>
+                <TableHead>Size</TableHead>
                 <TableHead>Quantity</TableHead>
                 <TableHead>Date</TableHead>
               </TableRow>
@@ -253,6 +254,7 @@ export default function DashboardPage() {
               {analytics.recentOrders.map(order => (
                 <TableRow key={order.id}>
                   <TableCell>{order.productName}</TableCell>
+                   <TableCell>{order.size || 'N/A'}</TableCell>
                   <TableCell>{order.quantity}</TableCell>
                   <TableCell>
                     {format(parseISO(order.date), 'MMM dd, yyyy, hh:mm a')}

@@ -4,6 +4,7 @@ export interface Product {
   tagline?: string;
   imageUrl: string;
   imageHint: string;
+  sizes?: string[];
 }
 
 export interface SubCategory {
@@ -12,6 +13,7 @@ export interface SubCategory {
   href: string;
   imageUrl?: string;
   imageHint?: string;
+  sizes?: string[];
 }
 
 export interface Category {
@@ -38,8 +40,10 @@ export interface Order {
   quantity: number;
   date: string; // ISO 8601 format
   imageUrl: string;
+  size?: string;
 }
 
 export interface CartItem extends Product {
     quantity: number;
+    size?: string;
 }

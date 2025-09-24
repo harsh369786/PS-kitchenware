@@ -11,6 +11,7 @@ const orderSchema = z.object({
   id: z.string(),
   productName: z.string(),
   quantity: z.number(),
+  size: z.string().optional(),
   date: z.string().datetime(),
   imageUrl: z.string().url(),
 });

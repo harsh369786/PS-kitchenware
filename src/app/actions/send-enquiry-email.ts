@@ -42,7 +42,7 @@ export async function sendEnquiryEmail(details: EnquiryDetails) {
     });
 
     const mailOptions = {
-      from: `"PS Essentials" <${GMAIL_SENDER_EMAIL}>`,
+      from: `"Ps Kitchenware" <${GMAIL_SENDER_EMAIL}>`,
       to: 'harsh.shah@finqy.ai',
       subject: `Enquiry Form`,
       html: `

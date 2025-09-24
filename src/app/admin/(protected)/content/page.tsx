@@ -22,6 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { SiteContent } from '@/lib/types';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Textarea } from '@/components/ui/textarea';
 
 const heroProductSchema = z.object({
   id: z.string(),
@@ -37,6 +38,7 @@ const subCategorySchema = z.object({
   href: z.string(), // href will be auto-generated
   imageUrl: z.string().optional(),
   imageHint: z.string().optional(),
+  sizes: z.array(z.string()).optional(),
 });
 
 const categorySchema = z.object({
@@ -130,7 +132,17 @@ export default function ContentAdminPage() {
     async function loadContent() {
       try {
         const content = await getSiteContent();
-        form.reset(content);
+        const transformedContent = {
+          ...content,
+          categories: content.categories.map(cat => ({
+            ...cat,
+            subcategories: cat.subcategories?.map(sub => ({
+              ...sub,
+              sizes: sub.sizes || []
+            }))
+          }))
+        };
+        form.reset(transformedContent);
       } catch (error) {
         toast({ variant: 'destructive', title: 'Error', description: 'Failed to load site content.' });
       } finally {
@@ -154,12 +166,23 @@ export default function ContentAdminPage() {
     }
   };
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     setIsSaving(true);
     try {
-      await saveSiteContent(values as SiteContent);
+      const valuesToSave = {
+        ...data,
+        categories: data.categories.map(cat => ({
+          ...cat,
+          subcategories: cat.subcategories?.map(sub => ({
+            ...sub,
+            sizes: sub.sizes,
+          }))
+        }))
+      };
+
+      await saveSiteContent(valuesToSave as SiteContent);
       toast({ title: 'Success', description: 'Content saved successfully.' });
-      form.reset(values); // Resets the dirty state
+      form.reset(valuesToSave); // Resets the dirty state
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to save content.' });
     } finally {
@@ -184,7 +207,8 @@ export default function ContentAdminPage() {
         name: '', 
         href: `/category/${categorySlug}/${newSubSlug}`, 
         imageUrl: '', 
-        imageHint: '' 
+        imageHint: '',
+        sizes: [] 
       });
     };
 
@@ -214,6 +238,27 @@ export default function ContentAdminPage() {
                           <FormLabel>Link (auto-generated)</FormLabel>
                           <FormControl>
                             <Input {...field} readOnly className="bg-muted" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`categories.${categoryIndex}.subcategories.${index}.sizes`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Sizes (comma-separated)</FormLabel>
+                          <FormControl>
+                             <Textarea 
+                              {...field}
+                              value={Array.isArray(field.value) ? field.value.join(', ') : ''}
+                              onChange={(e) => {
+                                const sizes = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
+                                field.onChange(sizes);
+                              }}
+                              placeholder="e.g. S, M, L, XL or 1, 2, 3"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
