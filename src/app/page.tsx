@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -24,7 +25,36 @@ export default function Home() {
   }, []);
 
   const handleProductClick = (product: Product) => {
-    setSelectedProduct(product);
+    if (!siteContent) return;
+
+    // Hero products might not have all details (like sizes). Find the full product
+    // details from the categories to ensure sizes are available in the modal.
+    let fullProduct: Product | undefined = undefined;
+
+    for (const category of siteContent.categories) {
+      if (category.subcategories) {
+        const foundSubcategory = category.subcategories.find(sub => sub.name === product.name);
+        if (foundSubcategory) {
+          fullProduct = {
+            id: foundSubcategory.id,
+            name: foundSubcategory.name,
+            imageUrl: foundSubcategory.imageUrl || category.imageUrl,
+            imageHint: foundSubcategory.imageHint || category.imageHint || "",
+            sizes: foundSubcategory.sizes || [],
+            tagline: product.tagline // Keep hero tagline
+          };
+          break;
+        }
+      }
+    }
+    
+    // If not found in subcategories, use the product from hero but check for sizes in categories.
+    if(!fullProduct) {
+        fullProduct = product;
+    }
+
+
+    setSelectedProduct(fullProduct);
     setDetailModalOpen(true);
   };
 
