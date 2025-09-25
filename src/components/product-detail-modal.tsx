@@ -117,8 +117,8 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
                       <SelectValue placeholder="Select a size" />
                     </SelectTrigger>
                     <SelectContent>
-                      {product.sizes!.map((size) => (
-                        <SelectItem key={size.name} value={size.name}>
+                      {product.sizes!.map((size, index) => (
+                        <SelectItem key={`${size.name}-${index}`} value={size.name}>
                           {size.name} - ₹{(size.price ?? 0).toFixed(2)}
                         </SelectItem>
                       ))}
