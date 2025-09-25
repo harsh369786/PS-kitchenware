@@ -27,7 +27,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Textarea } from '@/components/ui/textarea';
 
 const productSizeSchema = z.object({
-  name: z.string().min(1, "Size name is required"),
+  name: z.string(),
   price: z.coerce.number().min(0, "Price must be non-negative"),
 });
 
@@ -195,14 +195,14 @@ export default function ContentAdminPage() {
           ...content,
           heroProducts: content.heroProducts.map(p => ({ 
             ...p, 
-            price: p.price ?? undefined,
+            price: p.price ?? 0,
             sizes: p.sizes || []
           })),
           categories: content.categories.map(c => ({
             ...c,
             subcategories: c.subcategories?.map(sc => ({ 
                 ...sc, 
-                price: sc.price ?? undefined,
+                price: sc.price ?? 0,
                 sizes: sc.sizes || []
             }))
           }))
@@ -235,9 +235,25 @@ export default function ContentAdminPage() {
   const onSubmit = async (data: FormValues) => {
     setIsSaving(true);
     try {
-      await saveSiteContent(data as SiteContent);
+      // Filter out empty sizes before saving
+      const cleanedData = {
+        ...data,
+        heroProducts: data.heroProducts.map(p => ({
+          ...p,
+          sizes: p.sizes?.filter(s => s.name.trim() !== '')
+        })),
+        categories: data.categories.map(c => ({
+          ...c,
+          subcategories: c.subcategories?.map(sc => ({
+            ...sc,
+            sizes: sc.sizes?.filter(s => s.name.trim() !== '')
+          }))
+        }))
+      };
+      
+      await saveSiteContent(cleanedData as SiteContent);
       toast({ title: 'Success', description: 'Content saved successfully.' });
-      form.reset(data); // Resets the dirty state
+      form.reset(cleanedData); // Resets the dirty state
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to save content.' });
     } finally {
@@ -291,7 +307,7 @@ export default function ContentAdminPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Price (if no sizes)</FormLabel>
-                          <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || undefined)}/></FormControl>
+                          <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || 0)}/></FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -331,7 +347,7 @@ export default function ContentAdminPage() {
             href: `/category/${categorySlug}/${slugify('')}`, 
             imageUrl: '', 
             imageHint: '',
-            price: undefined,
+            price: 0,
             sizes: [] 
           })}
         >
@@ -397,7 +413,7 @@ export default function ContentAdminPage() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Price (if no sizes)</FormLabel>
-                                <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || undefined)} /></FormControl>
+                                <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || 0)} /></FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -426,7 +442,7 @@ export default function ContentAdminPage() {
                       </Button>
                     </Card>
                   ))}
-                  <Button type="button" onClick={() => appendHero({ id: `new-hero-${Date.now()}`, name: '', tagline: '', imageUrl: '', imageHint: '', price: undefined, sizes: [] })}>
+                  <Button type="button" onClick={() => appendHero({ id: `new-hero-${Date.now()}`, name: '', tagline: '', imageUrl: '', imageHint: '', price: 0, sizes: [] })}>
                     <PlusCircle className="mr-2 h-4 w-4" /> Add Hero Banner
                   </Button>
                 </CardContent>
