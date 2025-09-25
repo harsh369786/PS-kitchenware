@@ -5,76 +5,49 @@
       "name": "Ograla laddel",
       "tagline": " Har niwaale mein pyaar parosein.",
       "imageUrl": "/uploads/hero-hero-1-1758546352449.png",
-      "imageHint": "kitchen product",
-      "price": 0,
-      "sizes": [
-        {
-          "name": "10",
-          "price": 200
-        },
-        {
-          "name": "11",
-          "price": 300
-        },
-        {
-          "name": "12",
-          "price": 333
-        }
-      ]
+      "imageHint": "kitchen product"
     },
     {
       "id": "hero-2",
       "name": "BELLY HANDI ",
       "tagline": "Tradition, Served Beautifully.",
       "imageUrl": "/uploads/hero-hero-2-1758710372624.png",
-      "imageHint": "houseware item",
-      "price": 0,
-      "sizes": []
+      "imageHint": "houseware item"
     },
     {
       "id": "hero-3",
       "name": "MAHARAJA Glass",
       "tagline": "Every Sip Feels Royal ",
       "imageUrl": "/uploads/hero-hero-3-1758694490533.png",
-      "imageHint": "modern kitchen",
-      "price": 0,
-      "sizes": []
+      "imageHint": "modern kitchen"
     },
     {
       "id": "hero-4",
       "name": "Tadka pan ",
       "tagline": "Swaad ka tadka. / The sizzle of flavor.",
       "imageUrl": "/uploads/hero-hero-4-1758649964771.png",
-      "imageHint": "kitchenware set",
-      "price": 0,
-      "sizes": []
+      "imageHint": "kitchenware set"
     },
     {
       "id": "hero-5",
       "name": "Steamer basket ",
       "tagline": "\"Steam It. Serve It. Slay It.\"",
       "imageUrl": "/uploads/hero-hero-5-1758694490581.png",
-      "imageHint": "home decor",
-      "price": 0,
-      "sizes": []
+      "imageHint": "home decor"
     },
     {
       "id": "hero-6",
       "name": "KOTHMiR DABBA ",
       "tagline": "Rakhe dhaniya-mirch ko taaza, har roz.",
       "imageUrl": "/uploads/hero-hero-6-1758696455196.png",
-      "imageHint": "cooking utensil",
-      "price": 0,
-      "sizes": []
+      "imageHint": "cooking utensil"
     },
     {
       "id": "new-hero-1758607679731",
       "name": "Papad jali Square ",
       "tagline": "Ghar par WOW-wala Grill.",
       "imageUrl": "/uploads/hero-new-hero-1758607679731-1758694216400.jpeg",
-      "imageHint": "",
-      "price": 0,
-      "sizes": []
+      "imageHint": ""
     }
   ],
   "categories": [
@@ -112,7 +85,12 @@
           "href": "/category/laddels-doyas/curv-laddel",
           "imageUrl": "/uploads/subcategory-new-subcat-1758303052280-1758695962581.png",
           "price": 0,
-          "sizes": []
+          "sizes": [
+            {
+              "name": "10",
+              "price": 501
+            }
+          ]
         },
         {
           "id": "sub-dalwati",
