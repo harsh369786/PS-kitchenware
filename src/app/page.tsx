@@ -16,11 +16,12 @@ export default function Home() {
   const [isConfirmationOpen, setConfirmationOpen] = useState(false);
 
 
+  const fetchContent = async () => {
+    const content = await getSiteContent();
+    setSiteContent(content);
+  };
+
   useEffect(() => {
-    async function fetchContent() {
-      const content = await getSiteContent();
-      setSiteContent(content);
-    }
     fetchContent();
   }, []);
 
@@ -69,6 +70,8 @@ export default function Home() {
   const handleCloseDetailModal = () => {
     setDetailModalOpen(false);
     setSelectedProduct(null);
+    // Refetch content when modal is closed to see updates from admin panel
+    fetchContent();
   };
 
 

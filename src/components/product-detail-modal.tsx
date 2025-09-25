@@ -42,11 +42,18 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     // Reset state when modal opens or product changes
     if (isOpen) {
       setQuantity(1);
-      const defaultSize = hasSizes ? undefined : { name: '', price: product.price || 0 };
-      setSelectedSize(defaultSize);
-      setDisplayPrice(hasSizes ? undefined : product.price);
+      // If there are sizes, the initial state for size and price should be undefined.
+      // Otherwise, use the product's base price.
+      if (hasSizes) {
+        setSelectedSize(undefined);
+        setDisplayPrice(undefined);
+      } else {
+        setSelectedSize({ name: '', price: product.price || 0 });
+        setDisplayPrice(product.price);
+      }
     }
   }, [isOpen, product, hasSizes]);
+
 
   const handleSizeChange = (sizeName: string) => {
     const newSize = product.sizes?.find(s => s.name === sizeName);
