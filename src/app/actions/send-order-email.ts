@@ -10,6 +10,7 @@ const CartItemSchema = z.object({
   quantity: z.number().min(1),
   imageUrl: z.string(),
   size: z.string().optional(),
+  price: z.number(),
 });
 
 const OrderSchema = z.object({
@@ -33,10 +34,14 @@ function generateCartHTML(cartItems: CartItem[]) {
         return `
             <div style="border-bottom: 1px solid #eee; padding: 10px 0; display: flex; align-items: center;">
                 <img src="${absoluteImageUrl}" alt="${item.name}" width="80" style="margin-right: 20px; border-radius: 8px;" />
-                <div>
+                <div style="flex-grow: 1;">
                     <h3 style="margin: 0; font-size: 16px;">${item.name}</h3>
                     ${item.size ? `<p style="margin: 5px 0 0;"><strong>Size:</strong> ${item.size}</p>` : ''}
                     <p style="margin: 5px 0 0;"><strong>Quantity:</strong> ${item.quantity}</p>
+                    <p style="margin: 5px 0 0;"><strong>Price:</strong> ₹${item.price.toFixed(2)}</p>
+                </div>
+                <div style="font-weight: bold; text-align: right;">
+                    ₹${(item.price * item.quantity).toFixed(2)}
                 </div>
             </div>
         `;
@@ -58,6 +63,8 @@ export async function sendOrderEmail(details: OrderDetails) {
       console.log("No items in cart, skipping email.");
       return { success: true, message: "No items to order." };
   }
+  
+  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const { GMAIL_SENDER_EMAIL, GMAIL_APP_PASSWORD } = process.env;
 
@@ -82,8 +89,11 @@ export async function sendOrderEmail(details: OrderDetails) {
       html: `
         <h1>New Order Received</h1>
         <p>A new order has been placed with the following items:</p>
-        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px;">
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; max-width: 600px; margin: auto;">
             ${generateCartHTML(cartItems)}
+            <div style="padding-top: 15px; margin-top: 15px; border-top: 2px solid #333; text-align: right;">
+                <h2 style="margin: 0; font-size: 20px;">Total Price: ₹${totalPrice.toFixed(2)}</h2>
+            </div>
         </div>
       `,
     };
