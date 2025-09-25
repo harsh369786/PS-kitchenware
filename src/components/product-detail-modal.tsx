@@ -36,7 +36,8 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
   const { addToCart } = useCart();
   const { toast } = useToast();
 
-  const hasSizes = product.sizes && product.sizes.length > 0;
+  const validSizes = product.sizes?.filter(s => s && s.name && s.name.trim() !== '') || [];
+  const hasSizes = validSizes.length > 0;
 
   useEffect(() => {
     // Reset state when modal opens or product changes
@@ -56,7 +57,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
 
 
   const handleSizeChange = (sizeName: string) => {
-    const newSize = product.sizes?.find(s => s.name === sizeName);
+    const newSize = validSizes.find(s => s.name === sizeName);
     setSelectedSize(newSize);
     setDisplayPrice(newSize?.price);
   };
@@ -124,9 +125,9 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
                       <SelectValue placeholder="Select a size" />
                     </SelectTrigger>
                     <SelectContent>
-                      {product.sizes!.map((size, index) => (
+                      {validSizes.map((size, index) => (
                         <SelectItem key={`${size.name}-${index}`} value={size.name}>
-                          {size.name} - ₹{(size.price ?? 0).toFixed(2)}
+                          {size.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -154,5 +155,3 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     </Dialog>
   );
 }
-
-
