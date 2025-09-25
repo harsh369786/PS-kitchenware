@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { CartItem, Product } from '@/lib/types';
+import type { CartItem, Product, ProductSize } from '@/lib/types';
 
 interface CartContextType {
   cart: CartItem[];
@@ -39,22 +39,28 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = (product: Product, quantity: number, size?: string) => {
     setCart((prevCart) => {
-      // A unique ID for each cart item, based on product ID and size
       const cartItemId = size ? `${product.id}-${size}` : product.id;
       const existingItemIndex = prevCart.findIndex((item) => item.id === cartItemId);
+
+      let price: number;
+      if (size && product.sizes) {
+          const selectedSize = product.sizes.find(s => s.name === size);
+          price = selectedSize?.price ?? product.price ?? 0;
+      } else {
+          price = product.price ?? 0;
+      }
       
       if (existingItemIndex > -1) {
-        // If item exists, update its quantity
         const updatedCart = [...prevCart];
         updatedCart[existingItemIndex].quantity += quantity;
         return updatedCart;
       } else {
-        // If item doesn't exist, add it to the cart
         const newCartItem: CartItem = { 
           ...product, 
-          id: cartItemId, // Override product ID with unique cart item ID
+          id: cartItemId,
           quantity, 
-          size 
+          size,
+          price,
         };
         return [...prevCart, newCartItem];
       }
@@ -69,7 +75,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setCart((prevCart) =>
       prevCart.map((item) =>
         item.id === cartItemId ? { ...item, quantity: Math.max(0, quantity) } : item
-      ).filter(item => item.quantity > 0) // Also remove if quantity becomes 0
+      ).filter(item => item.quantity > 0)
     );
   };
 

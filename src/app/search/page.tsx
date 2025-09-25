@@ -15,19 +15,8 @@ async function getSearchResults(query: string): Promise<Product[]> {
     const addedProductIds = new Set<string>();
 
     content.categories.forEach((category) => {
-      // Check category name
-      if (category.name.toLowerCase().includes(lowerCaseQuery)) {
-        if(!addedProductIds.has(category.id)){
-           results.push({
-               id: category.id,
-               name: category.name,
-               imageUrl: category.imageUrl,
-               imageHint: category.imageHint || "",
-           });
-           addedProductIds.add(category.id);
-        }
-      }
-
+      // Check category name - not adding category as a product anymore
+      
       // Check subcategory names
       if (category.subcategories) {
         category.subcategories.forEach((sub) => {
@@ -38,12 +27,24 @@ async function getSearchResults(query: string): Promise<Product[]> {
                 name: sub.name,
                 imageUrl: sub.imageUrl || category.imageUrl,
                 imageHint: sub.imageHint || category.imageHint || "",
+                price: sub.price,
+                sizes: sub.sizes,
               });
               addedProductIds.add(sub.id);
             }
           }
         });
       }
+    });
+
+    // Also check hero products
+    content.heroProducts.forEach((product) => {
+        if (product.name.toLowerCase().includes(lowerCaseQuery)) {
+            if (!addedProductIds.has(product.id)) {
+                results.push(product);
+                addedProductIds.add(product.id);
+            }
+        }
     });
 
     return results;

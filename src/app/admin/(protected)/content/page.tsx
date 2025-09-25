@@ -30,21 +30,28 @@ const heroProductSchema = z.object({
   tagline: z.string().optional(),
   imageUrl: z.string().min(1, 'Image is required'),
   imageHint: z.string().optional(),
+  price: z.coerce.number().min(0, "Price must be non-negative").optional(),
+});
+
+const productSizeSchema = z.object({
+  name: z.string().min(1, "Size name is required"),
+  price: z.coerce.number().min(0, "Price must be non-negative"),
 });
 
 const subCategorySchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Subcategory name is required'),
-  href: z.string(), // href will be auto-generated
+  href: z.string(),
   imageUrl: z.string().optional(),
   imageHint: z.string().optional(),
-  sizes: z.array(z.string()).optional(),
+  price: z.coerce.number().min(0).optional(),
+  sizes: z.array(productSizeSchema).optional(),
 });
 
 const categorySchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Category name is required'),
-  href: z.string(), // href will be auto-generated
+  href: z.string(),
   imageUrl: z.string().min(1, 'Image is required'),
   imageHint: z.string().optional(),
   subcategories: z.array(subCategorySchema).optional(),
@@ -84,7 +91,7 @@ export default function ContentAdminPage() {
     },
   });
 
-  const { control, setValue, getValues } = form;
+  const { control, setValue, getValues, watch } = form;
   
   const updateHrefs = useCallback((categoryIndex: number, subcategoryIndex?: number) => {
     const categories = getValues('categories');
@@ -106,7 +113,7 @@ export default function ContentAdminPage() {
           setValue(`categories.${categoryIndex}.subcategories.${subcategoryIndex}.href`, expectedSubHref, { shouldDirty: true, shouldTouch: true });
         }
       }
-    } else { // Update all subcategories for a category
+    } else {
        category.subcategories?.forEach((sub, subIndex) => {
           const subcategorySlug = slugify(sub.name);
           const expectedSubHref = `${expectedCategoryHref}/${subcategorySlug}`;
@@ -132,17 +139,7 @@ export default function ContentAdminPage() {
     async function loadContent() {
       try {
         const content = await getSiteContent();
-        const transformedContent = {
-          ...content,
-          categories: content.categories.map(cat => ({
-            ...cat,
-            subcategories: cat.subcategories?.map(sub => ({
-              ...sub,
-              sizes: sub.sizes || []
-            }))
-          }))
-        };
-        form.reset(transformedContent);
+        form.reset(content);
       } catch (error) {
         toast({ variant: 'destructive', title: 'Error', description: 'Failed to load site content.' });
       } finally {
@@ -169,20 +166,9 @@ export default function ContentAdminPage() {
   const onSubmit = async (data: FormValues) => {
     setIsSaving(true);
     try {
-      const valuesToSave = {
-        ...data,
-        categories: data.categories.map(cat => ({
-          ...cat,
-          subcategories: cat.subcategories?.map(sub => ({
-            ...sub,
-            sizes: sub.sizes,
-          }))
-        }))
-      };
-
-      await saveSiteContent(valuesToSave as SiteContent);
+      await saveSiteContent(data as SiteContent);
       toast({ title: 'Success', description: 'Content saved successfully.' });
-      form.reset(valuesToSave); // Resets the dirty state
+      form.reset(data); // Resets the dirty state
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to save content.' });
     } finally {
@@ -196,28 +182,15 @@ export default function ContentAdminPage() {
       name: `categories.${categoryIndex}.subcategories`,
     });
     
-    const categoryName = form.watch(`categories.${categoryIndex}.name`);
+    const categoryName = watch(`categories.${categoryIndex}.name`);
     const categorySlug = slugify(categoryName);
-
-    const handleAppendSubcategory = () => {
-      const newSubName = '';
-      const newSubSlug = slugify(newSubName);
-      append({ 
-        id: `new-subcat-${Date.now()}`, 
-        name: '', 
-        href: `/category/${categorySlug}/${newSubSlug}`, 
-        imageUrl: '', 
-        imageHint: '',
-        sizes: [] 
-      });
-    };
 
     return (
       <div className="ml-6 mt-4 space-y-4 border-l pl-4">
         <h4 className="font-semibold">Subcategories / Products</h4>
         {fields.map((field, index) => (
           <div key={field.id} className="relative rounded-md border p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                     <FormField
                     control={form.control}
@@ -245,27 +218,17 @@ export default function ContentAdminPage() {
                     />
                     <FormField
                       control={form.control}
-                      name={`categories.${categoryIndex}.subcategories.${index}.sizes`}
+                      name={`categories.${categoryIndex}.subcategories.${index}.price`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Sizes (comma-separated)</FormLabel>
-                          <FormControl>
-                             <Textarea 
-                              {...field}
-                              value={Array.isArray(field.value) ? field.value.join(', ') : ''}
-                              onChange={(e) => {
-                                const sizes = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
-                                field.onChange(sizes);
-                              }}
-                              placeholder="e.g. S, M, L, XL or 1, 2, 3"
-                            />
-                          </FormControl>
+                          <FormLabel>Price (if no sizes)</FormLabel>
+                          <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || 0)}/></FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-4">
                     <FormField
                         control={form.control}
                         name={`categories.${categoryIndex}.subcategories.${index}.imageUrl`}
@@ -283,21 +246,77 @@ export default function ContentAdminPage() {
                      <p className="text-xs text-muted-foreground">If no image is provided, the main category image will be used.</p>
                 </div>
               </div>
-
-            <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} className="absolute top-2 right-2 h-6 w-6">
-              <Trash2 className="h-4 w-4 text-destructive" />
-            </Button>
+              <ProductSizes categoryIndex={categoryIndex} subcategoryIndex={index} />
+              <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} className="absolute top-2 right-2 h-6 w-6">
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </Button>
           </div>
         ))}
         <Button
           type="button"
           size="sm"
           variant="outline"
-          onClick={handleAppendSubcategory}
+          onClick={() => append({ 
+            id: `new-subcat-${Date.now()}`, 
+            name: '', 
+            href: `/category/${categorySlug}/${slugify('')}`, 
+            imageUrl: '', 
+            imageHint: '',
+            price: 0,
+            sizes: [] 
+          })}
         >
           <PlusCircle className="mr-2 h-4 w-4" /> Add Subcategory
         </Button>
       </div>
+    );
+  };
+  
+  const ProductSizes = ({ categoryIndex, subcategoryIndex }: { categoryIndex: number, subcategoryIndex: number }) => {
+    const { fields, append, remove } = useFieldArray({
+      control: form.control,
+      name: `categories.${categoryIndex}.subcategories.${subcategoryIndex}.sizes`
+    });
+
+    return (
+        <div className="mt-4 space-y-2 rounded-md border p-4">
+            <h5 className="font-medium">Sizes & Prices</h5>
+            {fields.map((field, index) => (
+                <div key={field.id} className="flex items-center gap-2">
+                    <FormField
+                        control={form.control}
+                        name={`categories.${categoryIndex}.subcategories.${subcategoryIndex}.sizes.${index}.name`}
+                        render={({ field }) => (
+                            <FormItem className="flex-1">
+                                <FormControl><Input {...field} placeholder="Size Name (e.g. S, M, L)"/></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name={`categories.${categoryIndex}.subcategories.${subcategoryIndex}.sizes.${index}.price`}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl><Input type="number" {...field} placeholder="Price" onChange={e => field.onChange(parseFloat(e.target.value) || 0)} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                </div>
+            ))}
+            <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => append({ name: '', price: 0 })}
+            >
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Size
+            </Button>
+        </div>
     );
   };
 
@@ -317,7 +336,7 @@ export default function ContentAdminPage() {
           <Tabs defaultValue="hero">
             <TabsList>
               <TabsTrigger value="hero">Hero Banners</TabsTrigger>
-              <TabsTrigger value="categories">Categories</TabsTrigger>
+              <TabsTrigger value="categories">Categories & Products</TabsTrigger>
             </TabsList>
             <TabsContent value="hero">
               <Card>
@@ -326,7 +345,7 @@ export default function ContentAdminPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {heroProductFields.map((field, index) => (
-                    <Card key={field.id} className="p-4">
+                    <Card key={field.id} className="p-4 relative">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-4">
                           <FormField
@@ -351,6 +370,17 @@ export default function ContentAdminPage() {
                               </FormItem>
                             )}
                           />
+                           <FormField
+                            control={form.control}
+                            name={`heroProducts.${index}.price`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Price (if no sizes)</FormLabel>
+                                <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || 0)} /></FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
                         </div>
                         <div className="space-y-2">
                            <FormField
@@ -369,12 +399,12 @@ export default function ContentAdminPage() {
                           />
                         </div>
                       </div>
-                      <Button type="button" variant="destructive" size="sm" onClick={() => removeHero(index)} className="mt-4">
+                      <Button type="button" variant="destructive" size="sm" onClick={() => removeHero(index)} className="absolute bottom-4 right-4">
                         <Trash2 className="mr-2 h-4 w-4" /> Remove
                       </Button>
                     </Card>
                   ))}
-                  <Button type="button" onClick={() => appendHero({ id: `new-hero-${Date.now()}`, name: '', tagline: '', imageUrl: '', imageHint: '' })}>
+                  <Button type="button" onClick={() => appendHero({ id: `new-hero-${Date.now()}`, name: '', tagline: '', imageUrl: '', imageHint: '', price: 0 })}>
                     <PlusCircle className="mr-2 h-4 w-4" /> Add Hero Banner
                   </Button>
                 </CardContent>
@@ -434,7 +464,7 @@ export default function ContentAdminPage() {
                           </div>
                           <div className="flex flex-col ml-4">
                              <CollapsibleTrigger asChild>
-                                <Button variant="ghost" size="sm">Edit Subcategories</Button>
+                                <Button variant="ghost" size="sm">Edit Products</Button>
                              </CollapsibleTrigger>
                              <Button type="button" variant="destructive" size="sm" onClick={() => removeCategory(index)} className="mt-2">
                                <Trash2 className="mr-2 h-4 w-4" /> Remove

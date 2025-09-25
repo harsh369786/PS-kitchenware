@@ -1,10 +1,16 @@
+export interface ProductSize {
+  name: string;
+  price: number;
+}
+
 export interface Product {
   id: string;
-  name: string;
+  name:string;
   tagline?: string;
   imageUrl: string;
   imageHint: string;
-  sizes?: string[];
+  price?: number;
+  sizes?: ProductSize[];
 }
 
 export interface SubCategory {
@@ -13,7 +19,8 @@ export interface SubCategory {
   href: string;
   imageUrl?: string;
   imageHint?: string;
-  sizes?: string[];
+  price?: number;
+  sizes?: ProductSize[];
 }
 
 export interface Category {
@@ -41,9 +48,11 @@ export interface Order {
   date: string; // ISO 8601 format
   imageUrl: string;
   size?: string;
+  price?: number;
 }
 
 export interface CartItem extends Product {
     quantity: number;
+    price: number;
     size?: string;
 }

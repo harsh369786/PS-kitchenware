@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Product } from "@/lib/types";
+import type { Product, ProductSize } from "@/lib/types";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
 
@@ -29,7 +30,8 @@ interface ProductDetailModalProps {
 
 export default function ProductDetailModal({ isOpen, onClose, product }: ProductDetailModalProps) {
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
+  const [selectedSize, setSelectedSize] = useState<ProductSize | undefined>(undefined);
+  const [displayPrice, setDisplayPrice] = useState<number | undefined>(product.price);
   const { addToCart } = useCart();
   const { toast } = useToast();
 
@@ -40,10 +42,16 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     if (isOpen) {
       setQuantity(1);
       setSelectedSize(undefined);
+      setDisplayPrice(product.price);
     }
   }, [isOpen, product]);
 
-
+  const handleSizeChange = (sizeName: string) => {
+    const newSize = product.sizes?.find(s => s.name === sizeName);
+    setSelectedSize(newSize);
+    setDisplayPrice(newSize?.price);
+  };
+  
   const handleAddToCartClick = () => {
     if (hasSizes && !selectedSize) {
       toast({
@@ -54,10 +62,11 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     }
     
     if (quantity > 0) {
-      addToCart({ ...product }, quantity, selectedSize);
+      const price = selectedSize?.price ?? product.price ?? 0;
+      addToCart({ ...product, price }, quantity, selectedSize?.name);
       toast({
         title: "Added to Cart",
-        description: `${quantity} x ${product.name}${selectedSize ? ` (Size: ${selectedSize})` : ''} has been added to your cart.`,
+        description: `${quantity} x ${product.name}${selectedSize ? ` (Size: ${selectedSize.name})` : ''} has been added to your cart.`,
       });
       onClose();
     }
@@ -90,19 +99,25 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
           <div className="p-6 flex flex-col justify-center">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold font-headline">{product.name}</DialogTitle>
+              {product.tagline && <DialogDescription>{product.tagline}</DialogDescription>}
             </DialogHeader>
+
             <div className="py-6 space-y-4">
+              <div className="text-3xl font-bold text-primary">
+                 {displayPrice !== undefined ? `₹${displayPrice.toFixed(2)}` : 'Select a size'}
+              </div>
+
               {hasSizes && (
                 <div className="flex items-center space-x-4">
                    <label htmlFor="size" className="text-sm font-medium">Size</label>
-                   <Select value={selectedSize} onValueChange={setSelectedSize}>
+                   <Select onValueChange={handleSizeChange}>
                     <SelectTrigger id="size" className="w-full">
                       <SelectValue placeholder="Select a size" />
                     </SelectTrigger>
                     <SelectContent>
                       {product.sizes!.map((size) => (
-                        <SelectItem key={size} value={size}>
-                          {size}
+                        <SelectItem key={size.name} value={size.name}>
+                          {size.name} - ₹{size.price.toFixed(2)}
                         </SelectItem>
                       ))}
                     </SelectContent>

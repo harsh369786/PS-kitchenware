@@ -9,9 +9,9 @@
     },
     {
       "id": "hero-2",
-      "name": "Puri jara wooden handle ",
-      "tagline": "Your Kitchen's Frying Expert.",
-      "imageUrl": "/uploads/hero-hero-2-1758649964730.png",
+      "name": "BELLY HANDI ",
+      "tagline": "Tradition, Served Beautifully.",
+      "imageUrl": "/uploads/hero-hero-2-1758710372624.png",
       "imageHint": "houseware item"
     },
     {
@@ -53,52 +53,123 @@
   "categories": [
     {
       "id": "cat-laddels",
-      "name": "Laddels",
-      "href": "/category/laddels",
+      "name": "LADDELS & DOYA'S",
+      "href": "/category/laddels-doyas",
       "imageUrl": "/uploads/category-cat-doyas-1758376851776.png",
       "imageHint": "serving spoon",
       "subcategories": [
         {
           "id": "sub-ograla",
           "name": "Ograla laddel",
-          "href": "/category/laddels/ograla-laddel",
+          "href": "/category/laddels-doyas/ograla-laddel",
           "imageUrl": "/uploads/subcategory-new-subcat-1758295949547-1758695962557.png",
-          "sizes": ["1", "2", "3", "4"]
+          "sizes": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
         },
         {
           "id": "sub-curv",
           "name": "Curv laddel",
-          "href": "/category/laddels/curv-laddel",
+          "href": "/category/laddels-doyas/curv-laddel",
           "imageUrl": "/uploads/subcategory-new-subcat-1758303052280-1758695962581.png",
-          "sizes": ["1", "2", "3", "4", "5"]
+          "sizes": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ]
         },
         {
           "id": "sub-dalwati",
           "name": "Dalvati laddel",
-          "href": "/category/laddels/dalwati-laddel",
+          "href": "/category/laddels-doyas/dalvati-laddel",
           "imageUrl": "/uploads/subcategory-new-subcat-1758303157217-1758695962608.png",
-          "sizes": ["1", "2", "3"]
+          "sizes": [
+            "1",
+            "2",
+            "3"
+          ]
         },
         {
           "id": "sub-black-chinese",
           "name": "Black Chinese laddel",
-          "href": "/category/laddels/black-chinese-laddel",
+          "href": "/category/laddels-doyas/black-chinese-laddel",
           "imageUrl": "/uploads/subcategory-new-subcat-1758303212155-1758376851882.jpeg",
-          "sizes": ["1", "2", "3", "4", "5"]
+          "sizes": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ]
         },
         {
           "id": "sub-chikoowati-laddel",
           "name": "Chikoowati laddel",
-          "href": "/category/laddels/chikoowati-laddel",
+          "href": "/category/laddels-doyas/chikoowati-laddel",
           "imageUrl": "/uploads/subcategory-new-subcat-1758354037368-1758376851888.jpeg",
-          "sizes": ["1", "2", "3", "4"]
+          "sizes": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
         },
         {
           "id": "sub-regular-wooden",
           "name": "Regular wooden laddel",
-          "href": "/category/laddels/regular-wooden-laddel",
+          "href": "/category/laddels-doyas/regular-wooden-laddel",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375020828-1758650867774.jpeg",
-          "sizes": ["5", "6"]
+          "sizes": [
+            "5",
+            "6"
+          ]
+        },
+        {
+          "id": "new-subcat-1758702138246",
+          "name": "Curve Chikoowati laddel",
+          "href": "/category/laddels-doyas/curve-chikoowati-laddel",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758702138246-1758703551989.png",
+          "imageHint": "",
+          "sizes": [
+            "1-2-3-4"
+          ]
+        },
+        {
+          "id": "new-subcat-1758702158571",
+          "name": "DOYA INDIGO ",
+          "href": "/category/laddels-doyas/doya-indigo",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758702158571-1758702287188.png",
+          "imageHint": "",
+          "sizes": []
+        },
+        {
+          "id": "new-subcat-1758702168416",
+          "name": "DOYA MATKA ",
+          "href": "/category/laddels-doyas/doya-matka",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758702168416-1758702287193.jpeg",
+          "imageHint": "",
+          "sizes": []
+        },
+        {
+          "id": "new-subcat-1758702185446",
+          "name": "DOYA DAMRU ",
+          "href": "/category/laddels-doyas/doya-damru",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758702185446-1758702287194.png",
+          "imageHint": "",
+          "sizes": []
+        },
+        {
+          "id": "new-subcat-1758703170451",
+          "name": "Doya Titan ",
+          "href": "/category/laddels-doyas/doya-titan",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758703170451-1758703205796.jpeg",
+          "imageHint": "",
+          "sizes": []
         }
       ]
     },
@@ -114,49 +185,78 @@
           "name": "Boondi jara",
           "href": "/category/jaras/boondi-jara",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375068569-1758376851916.jpeg",
-          "sizes": ["1", "2", "3", "4"]
+          "sizes": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
         },
         {
           "id": "sub-big-boondi",
           "name": "Big boondi jara",
           "href": "/category/jaras/big-boondi-jara",
           "imageUrl": "/uploads/subcategory-new-subcat-1758651353960-1758651397560.jpeg",
-          "sizes": ["10", "11", "12"]
+          "sizes": [
+            "10",
+            "11",
+            "12"
+          ]
         },
         {
           "id": "sub-poha-jara",
           "name": "Poha jara",
           "href": "/category/jaras/poha-jara",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375081963-1758376851920.jpeg",
-          "sizes": ["1", "2", "3"]
+          "sizes": [
+            "1",
+            "2",
+            "3"
+          ]
         },
         {
           "id": "sub-delux-poha",
           "name": "Delux poha jara",
           "href": "/category/jaras/delux-poha-jara",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375231636-1758376851985.jpeg",
-          "sizes": ["1", "2", "3"]
+          "sizes": [
+            "1",
+            "2",
+            "3"
+          ]
         },
         {
           "id": "sub-rice-jara",
           "name": "Rice jara",
           "href": "/category/jaras/rice-jara",
           "imageUrl": "/uploads/subcategory-new-subcat-1758565189289-1758565255056.png",
-          "sizes": ["5", "6", "7"]
+          "sizes": [
+            "5",
+            "6",
+            "7"
+          ]
         },
         {
           "id": "sub-steel-puri",
           "name": "Steel handle Puri jara",
           "href": "/category/jaras/steel-handle-puri-jara",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375094203-1758376851925.jpeg",
-          "sizes": ["5", "6", "7"]
+          "sizes": [
+            "5",
+            "6",
+            "7"
+          ]
         },
         {
           "id": "sub-wooden-puri",
           "name": "Wooden handle Puri jara",
           "href": "/category/jaras/wooden-handle-puri-jara",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375112646-1758695962755.png",
-          "sizes": ["5", "6", "7"]
+          "sizes": [
+            "5",
+            "6",
+            "7"
+          ]
         }
       ]
     },
@@ -172,14 +272,27 @@
           "name": "Steamer basket",
           "href": "/category/steamers-colanders/steamer-basket",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375153272-1758530608445.png",
-          "sizes": ["1", "2", "3", "4"]
+          "sizes": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
         },
         {
           "id": "sub-colander-set",
           "name": "Colander set",
           "href": "/category/steamers-colanders/colander-set",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375183051-1758530426588.png",
-          "sizes": ["1", "2", "3", "4", "5", "6", "7"]
+          "sizes": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"
+          ]
         }
       ]
     },
@@ -195,7 +308,10 @@
           "name": "Tadka pan",
           "href": "/category/tadka-pan/tadka-pan",
           "imageUrl": "/uploads/subcategory-new-subcat-1758564902077-1758564945076.jpeg",
-          "sizes": ["1", "2"]
+          "sizes": [
+            "1",
+            "2"
+          ]
         }
       ]
     },
@@ -210,29 +326,43 @@
           "id": "sub-papad-jali-round",
           "name": "Papad jali Round",
           "href": "/category/grillers-table-ring/papad-jali-round",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758376185954-1758376852036.jpeg",
-          "sizes": ["1", "2"]
+          "imageUrl": "/uploads/subcategory-sub-papad-jali-round-1758709581420.png",
+          "sizes": [
+            "1",
+            "2"
+          ]
         },
         {
           "id": "sub-papad-jali-square",
           "name": "Papad jali Square",
           "href": "/category/grillers-table-ring/papad-jali-square",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758376215065-1758376852044.jpeg",
-          "sizes": ["1", "2"]
+          "imageUrl": "/uploads/subcategory-sub-papad-jali-square-1758710179244.png",
+          "sizes": [
+            "1",
+            "2"
+          ]
         },
         {
           "id": "sub-table-ring-rubber",
           "name": "Table ring with rubber grip",
           "href": "/category/grillers-table-ring/table-ring-rubber",
           "imageUrl": "/uploads/subcategory-new-subcat-1758564308150-1758564535566.png",
-          "sizes": ["1", "2", "3"]
+          "sizes": [
+            "1",
+            "2",
+            "3"
+          ]
         },
         {
           "id": "sub-table-ring-regular",
           "name": "Regular Table ring",
           "href": "/category/grillers-table-ring/regular-table-ring",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758564388286-1758564535568.png",
-          "sizes": ["1", "2", "3"]
+          "imageUrl": "/uploads/subcategory-sub-table-ring-regular-1758710179246.png",
+          "sizes": [
+            "1",
+            "2",
+            "3"
+          ]
         }
       ]
     },
@@ -248,28 +378,39 @@
           "name": "Kothmir dabba",
           "href": "/category/refrigerator-storage-container/kothmir-dabba",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376654080-1758376852077.jpeg",
-          "sizes": ["7", "8", "9"]
+          "sizes": [
+            "7",
+            "8",
+            "9"
+          ]
         },
         {
           "id": "sub-flat-dabba",
           "name": "Flat dabba",
           "href": "/category/refrigerator-storage-container/flat-dabba",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376492806-1758376852058.png",
-          "sizes": ["set of 4"]
+          "sizes": [
+            "set of 4"
+          ]
         },
         {
           "id": "sub-sweet-dabba",
           "name": "Sweet dabba",
           "href": "/category/refrigerator-storage-container/sweet-dabba",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376523762-1758376852066.jpeg",
-          "sizes": ["set of 4"]
+          "sizes": [
+            "set of 4"
+          ]
         },
         {
           "id": "sub-khamani-dabba",
           "name": "Khamani dabba",
           "href": "/category/refrigerator-storage-container/khamani-dabba",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376690342-1758695962785.png",
-          "sizes": ["2", "3"]
+          "sizes": [
+            "2",
+            "3"
+          ]
         }
       ]
     },
@@ -285,7 +426,12 @@
           "name": "STEEL OIL DISPENSER",
           "href": "/category/oil-dispenser/steel-oil-dispenser",
           "imageUrl": "/uploads/subcategory-new-subcat-1758523585191-1758530426628.png",
-          "sizes": ["1000ml", "750ml", "500ml", "350ml"]
+          "sizes": [
+            "1000ml",
+            "750ml",
+            "500ml",
+            "350ml"
+          ]
         }
       ]
     },
@@ -301,7 +447,12 @@
           "name": "Belly handi",
           "href": "/category/belly-handi/belly-handi",
           "imageUrl": "/uploads/subcategory-new-subcat-1758525912981-1758530426757.png",
-          "sizes": ["1", "2", "3", "4"]
+          "sizes": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
         }
       ]
     },
@@ -317,49 +468,78 @@
           "name": "Basundi bowl",
           "href": "/category/plates-bowls/basundi-bowl",
           "imageUrl": "/uploads/subcategory-new-subcat-1758528505887-1758530426818.jpeg",
-          "sizes": ["1", "2"]
+          "sizes": [
+            "1",
+            "2"
+          ]
         },
         {
           "id": "sub-halwa-plate",
           "name": "Halwa plate",
           "href": "/category/plates-bowls/halwa-plate",
           "imageUrl": "/uploads/subcategory-new-subcat-1758530342313-1758530426851.jpeg",
-          "sizes": ["1", "2", "3", "4"]
+          "sizes": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
         },
         {
           "id": "sub-dahi-wada",
           "name": "Dahi wada plate",
           "href": "/category/plates-bowls/dahi-wada-plate",
           "imageUrl": "/uploads/subcategory-new-subcat-1758537141388-1758537294336.png",
-          "sizes": ["1", "2", "3"]
+          "sizes": [
+            "1",
+            "2",
+            "3"
+          ]
         },
         {
           "id": "sub-apple-plate",
           "name": "Apple plate",
           "href": "/category/plates-bowls/apple-plate",
           "imageUrl": "/uploads/subcategory-new-subcat-1758537183879-1758537294362.jpeg",
-          "sizes": ["1", "2", "3"]
+          "sizes": [
+            "1",
+            "2",
+            "3"
+          ]
         },
         {
           "id": "sub-sada-vati",
           "name": "Sada vati",
           "href": "/category/plates-bowls/sada-vati",
           "imageUrl": "/uploads/subcategory-new-subcat-1758537208299-1758537294366.png",
-          "sizes": ["1", "2", "3"]
+          "sizes": [
+            "1",
+            "2",
+            "3"
+          ]
         },
         {
           "id": "sub-chikoowati",
           "name": "Chikoowati",
           "href": "/category/plates-bowls/chikoowati",
           "imageUrl": "/uploads/subcategory-new-subcat-1758537252626-1758537294396.png",
-          "sizes": ["1", "2", "3", "4"]
+          "sizes": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
         },
         {
           "id": "sub-mixing-bowl",
           "name": "Mixing bowl",
           "href": "/category/plates-bowls/mixing-bowl",
           "imageUrl": "/uploads/subcategory-new-subcat-1758649940529-1758649964832.jpeg",
-          "sizes": ["1", "2", "3"]
+          "sizes": [
+            "1",
+            "2",
+            "3"
+          ]
         }
       ]
     },
@@ -374,7 +554,8 @@
           "id": "new-subcat-1758649156911",
           "name": "Stainlesssteel Saucepan ",
           "href": "/category/stainlesssteel-saucepan/stainlesssteel-saucepan",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758649156911-1758649964966.jpeg"
+          "imageUrl": "/uploads/subcategory-new-subcat-1758649156911-1758649964966.jpeg",
+          "sizes": []
         }
       ]
     }

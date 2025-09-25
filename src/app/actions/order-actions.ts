@@ -12,6 +12,7 @@ const orderSchema = z.object({
   productName: z.string(),
   quantity: z.number(),
   size: z.string().optional(),
+  price: z.number().optional(),
   date: z.string().datetime(),
   imageUrl: z.string().url(),
 });
@@ -20,6 +21,7 @@ const orderSchema = z.object({
 async function readOrders(): Promise<Order[]> {
   try {
     const data = await fs.readFile(ordersFilePath, "utf-8");
+    if (!data) return [];
     const orders: Order[] = JSON.parse(data);
     return orders.map(order => orderSchema.parse(order));
   } catch (error) {

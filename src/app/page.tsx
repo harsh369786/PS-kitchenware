@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { Product, Category, SiteContent } from "@/lib/types";
+import type { Product, Category, SiteContent, ProductSize } from "@/lib/types";
 import HeroCarousel from "@/components/hero-carousel";
 import CategoryGrid from "@/components/category-grid";
 import ProductDetailModal from "@/components/product-detail-modal";
@@ -27,10 +27,9 @@ export default function Home() {
   const handleProductClick = (product: Product) => {
     if (!siteContent) return;
 
-    // Hero products might not have all details (like sizes). Find the full product
-    // details from the categories to ensure sizes are available in the modal.
     let fullProduct: Product | undefined = undefined;
 
+    // Search for the product in subcategories to get its full details (sizes, price etc)
     for (const category of siteContent.categories) {
       if (category.subcategories) {
         const foundSubcategory = category.subcategories.find(sub => sub.name === product.name);
@@ -40,19 +39,20 @@ export default function Home() {
             name: foundSubcategory.name,
             imageUrl: foundSubcategory.imageUrl || category.imageUrl,
             imageHint: foundSubcategory.imageHint || category.imageHint || "",
-            sizes: foundSubcategory.sizes || [],
-            tagline: product.tagline // Keep hero tagline
+            price: foundSubcategory.price,
+            sizes: foundSubcategory.sizes,
+            tagline: product.tagline // Keep hero tagline if it exists
           };
           break;
         }
       }
     }
     
-    // If not found in subcategories, use the product from hero but check for sizes in categories.
+    // If not found in subcategories, it might be a hero-only product or a category itself.
+    // Use the clicked product data, ensuring it has a price.
     if(!fullProduct) {
-        fullProduct = product;
+        fullProduct = { ...product, price: product.price || 0 };
     }
-
 
     setSelectedProduct(fullProduct);
     setDetailModalOpen(true);

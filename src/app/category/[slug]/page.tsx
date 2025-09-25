@@ -16,7 +16,8 @@ async function getCategory(slug: string): Promise<{ category: Category | null, p
         name: sub.name,
         imageUrl: sub.imageUrl || currentCategory.imageUrl, 
         imageHint: sub.imageHint || currentCategory.imageHint || "",
-        sizes: sub.sizes || [],
+        price: sub.price,
+        sizes: sub.sizes,
       }));
       return { category: currentCategory, products: categoryProducts };
     }

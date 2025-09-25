@@ -43,8 +43,11 @@ export default function CategoryProductGrid({ products }: CategoryProductGridPro
                     />
                   </div>
                   <div className="p-4 text-center">
-                    <h4 className="font-semibold text-base mb-4 truncate">{product.name}</h4>
-                    <Button onClick={() => handleProductClick(product)} className="bg-primary hover:bg-primary/90">Buy Now</Button>
+                    <h4 className="font-semibold text-base mb-2 truncate">{product.name}</h4>
+                    <p className="text-muted-foreground text-sm mb-4">
+                      {product.price ? `₹${product.price}` : 'From ₹...'}
+                    </p>
+                    <Button onClick={() => handleProductClick(product)} className="bg-primary hover:bg-primary/90">Shop Now</Button>
                   </div>
                 </CardContent>
               </Card>

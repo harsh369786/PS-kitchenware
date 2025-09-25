@@ -22,6 +22,7 @@ const initialHeroProducts = PlaceHolderImages.filter((p) => p.id.startsWith("her
     tagline: `Essential for your modern home`,
     imageUrl: p.imageUrl,
     imageHint: p.imageHint,
+    price: 0,
 }));
 
 const initialContent: SiteContent = {

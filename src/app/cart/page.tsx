@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import { Loader2, Trash2, ShoppingCart } from "lucide-react";
 import { sendOrderEmail } from "@/app/actions/send-order-email";
 import { addOrder } from "@/app/actions/order-actions";
 import OrderConfirmationDialog from "@/components/order-confirmation-dialog";
-import type { CartItem } from "@/lib/types";
+import { Separator } from "@/components/ui/separator";
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
@@ -26,6 +26,10 @@ export default function CartPage() {
       updateQuantity(cartItemId, quantity);
     }
   };
+
+  const totalPrice = useMemo(() => {
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  }, [cart]);
 
   const handleConfirmOrder = async () => {
     setIsSubmitting(true);
@@ -42,11 +46,11 @@ export default function CartPage() {
             productName: item.name,
             quantity: item.quantity,
             imageUrl: absoluteImageUrl,
-            size: item.size
+            size: item.size,
+            price: item.price,
         });
       }
       
-      // Send a single email with all cart items
       await sendOrderEmail({ cartItems: cart });
       
       setConfirmationOpen(true);
@@ -87,47 +91,72 @@ export default function CartPage() {
     <>
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold font-headline mb-8">Your Cart</h1>
-      <div className="flex flex-col gap-8">
-        <div className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-4">
           {cart.map((item) => (
-            <div key={item.id} className="flex items-center gap-4 border-b pb-4">
-              <div className="relative h-24 w-24 rounded-md overflow-hidden">
+            <div key={item.id} className="flex items-center gap-4 border rounded-lg p-4">
+              <div className="relative h-24 w-24 rounded-md overflow-hidden flex-shrink-0">
                 <Image
                   src={item.imageUrl}
                   alt={item.name}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover"
                 />
               </div>
-              <div className="flex-grow">
-                <h2 className="font-semibold">{item.name}</h2>
-                {item.size && (
-                    <p className="text-sm text-muted-foreground">Size: {item.size}</p>
-                )}
-              </div>
-              <div className="flex items-center gap-4">
-                 <Input
+              <div className="flex-grow grid grid-cols-2 md:grid-cols-4 items-center gap-4">
+                <div className="md:col-span-1">
+                    <h2 className="font-semibold">{item.name}</h2>
+                    {item.size && (
+                        <p className="text-sm text-muted-foreground">Size: {item.size}</p>
+                    )}
+                </div>
+                 <div className="text-sm">₹{item.price.toFixed(2)}</div>
+                <div className="flex items-center gap-2">
+                   <Input
                     type="number"
                     min="1"
                     value={item.quantity}
                     onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
                     className="w-20 text-center"
                   />
-                <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.id)}>
+                </div>
+                 <div className="font-semibold text-right">₹{(item.price * item.quantity).toFixed(2)}</div>
+              </div>
+               <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.id)} className="ml-4">
                   <Trash2 className="h-5 w-5 text-destructive" />
                 </Button>
-              </div>
             </div>
           ))}
         </div>
-        <div className="flex justify-end">
-          <Button onClick={handleConfirmOrder} size="lg" disabled={isSubmitting || cart.length === 0} className="bg-primary hover:bg-primary/90">
+        
+        <div className="lg:col-span-1">
+          <div className="border rounded-lg p-6 sticky top-24">
+            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+            <div className="space-y-2">
+                <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>₹{totalPrice.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                </div>
+            </div>
+            <Separator className="my-4" />
+            <div className="flex justify-between font-bold text-lg">
+                <span>Total</span>
+                <span>₹{totalPrice.toFixed(2)}</span>
+            </div>
+            <Button onClick={handleConfirmOrder} size="lg" disabled={isSubmitting || cart.length === 0} className="w-full mt-6 bg-primary hover:bg-primary/90">
              {isSubmitting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : null}
-            Confirm Order
-          </Button>
+              Confirm Order
+            </Button>
+          </div>
         </div>
+
       </div>
     </div>
     <OrderConfirmationDialog
