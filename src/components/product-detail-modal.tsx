@@ -42,13 +42,11 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     // Reset state when modal opens or product changes
     if (isOpen) {
       setQuantity(1);
-      // If there are sizes, the initial state for size and price should be undefined.
-      // Otherwise, use the product's base price.
       if (hasSizes) {
         setSelectedSize(undefined);
         setDisplayPrice(undefined);
       } else {
-        setSelectedSize({ name: '', price: product.price || 0 });
+        setSelectedSize(undefined); // No sizes for this product
         setDisplayPrice(product.price);
       }
     }
@@ -86,7 +84,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     if (!isNaN(value) && value > 0) {
         setQuantity(value);
     } else if (e.target.value === '') {
-        setQuantity(0);
+        setQuantity(0); // Allow clearing the input
     }
   };
   
