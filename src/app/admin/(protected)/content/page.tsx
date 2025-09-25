@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -140,7 +141,18 @@ export default function ContentAdminPage() {
     async function loadContent() {
       try {
         const content = await getSiteContent();
-        form.reset(content);
+        
+        // Ensure all products/subcategories have a defined price to prevent uncontrolled inputs
+        const sanitizedContent = {
+          ...content,
+          heroProducts: content.heroProducts.map(p => ({ ...p, price: p.price ?? 0 })),
+          categories: content.categories.map(c => ({
+            ...c,
+            subcategories: c.subcategories?.map(sc => ({ ...sc, price: sc.price ?? 0 }))
+          }))
+        };
+
+        form.reset(sanitizedContent);
       } catch (error) {
         toast({ variant: 'destructive', title: 'Error', description: 'Failed to load site content.' });
       } finally {
@@ -495,5 +507,7 @@ export default function ContentAdminPage() {
     </div>
   );
 }
+
+    
 
     
