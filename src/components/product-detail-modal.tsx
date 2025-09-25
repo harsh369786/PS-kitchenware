@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -41,10 +42,11 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     // Reset state when modal opens or product changes
     if (isOpen) {
       setQuantity(1);
-      setSelectedSize(undefined);
-      setDisplayPrice(product.price);
+      const defaultSize = hasSizes && product.sizes?.[0].name ? product.sizes[0] : undefined;
+      setSelectedSize(defaultSize);
+      setDisplayPrice(defaultSize?.price ?? product.price);
     }
-  }, [isOpen, product]);
+  }, [isOpen, product, hasSizes]);
 
   const handleSizeChange = (sizeName: string) => {
     const newSize = product.sizes?.find(s => s.name === sizeName);
@@ -110,14 +112,14 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
               {hasSizes && (
                 <div className="flex items-center space-x-4">
                    <label htmlFor="size" className="text-sm font-medium">Size</label>
-                   <Select onValueChange={handleSizeChange}>
+                   <Select onValueChange={handleSizeChange} defaultValue={selectedSize?.name}>
                     <SelectTrigger id="size" className="w-full">
                       <SelectValue placeholder="Select a size" />
                     </SelectTrigger>
                     <SelectContent>
                       {product.sizes!.map((size) => (
                         <SelectItem key={size.name} value={size.name}>
-                          {size.name} - ₹{size.price.toFixed(2)}
+                          {size.name} - ₹{(size.price ?? 0).toFixed(2)}
                         </SelectItem>
                       ))}
                     </SelectContent>
