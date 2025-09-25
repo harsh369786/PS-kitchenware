@@ -26,6 +26,11 @@ import type { SiteContent } from '@/lib/types';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Textarea } from '@/components/ui/textarea';
 
+const productSizeSchema = z.object({
+  name: z.string().min(1, "Size name is required"),
+  price: z.coerce.number().min(0, "Price must be non-negative"),
+});
+
 const heroProductSchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Product name is required'),
@@ -33,11 +38,7 @@ const heroProductSchema = z.object({
   imageUrl: z.string().min(1, 'Image is required'),
   imageHint: z.string().optional(),
   price: z.coerce.number().min(0, "Price must be non-negative").optional(),
-});
-
-const productSizeSchema = z.object({
-  name: z.string().min(1, "Size name is required"),
-  price: z.coerce.number().min(0, "Price must be non-negative"),
+  sizes: z.array(productSizeSchema).optional(),
 });
 
 const subCategorySchema = z.object({
@@ -78,6 +79,54 @@ const slugify = (text: string) => {
     .replace(/[^\w-]+/g, '')
     .replace(/--+/g, '-');
 };
+
+const ProductSizes = ({ control, fieldNamePrefix }: { control: any, fieldNamePrefix: string }) => {
+    const { fields, append, remove } = useFieldArray({
+      control: control,
+      name: `${fieldNamePrefix}.sizes`
+    });
+
+    return (
+        <div className="mt-4 space-y-2 rounded-md border p-4">
+            <h5 className="font-medium">Sizes & Prices</h5>
+            {fields.map((field, index) => (
+                <div key={field.id} className="flex items-center gap-2">
+                    <FormField
+                        control={control}
+                        name={`${fieldNamePrefix}.sizes.${index}.name`}
+                        render={({ field }) => (
+                            <FormItem className="flex-1">
+                                <FormControl><Input {...field} placeholder="Size Name (e.g. S, M, L)"/></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={control}
+                        name={`${fieldNamePrefix}.sizes.${index}.price`}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl><Input type="number" {...field} placeholder="Price" onChange={e => field.onChange(parseFloat(e.target.value) || 0)} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                </div>
+            ))}
+            <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => append({ name: '', price: 0 })}
+            >
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Size
+            </Button>
+        </div>
+    );
+  };
 
 
 export default function ContentAdminPage() {
@@ -142,13 +191,20 @@ export default function ContentAdminPage() {
       try {
         const content = await getSiteContent();
         
-        // Ensure all products/subcategories have a defined price to prevent uncontrolled inputs
         const sanitizedContent = {
           ...content,
-          heroProducts: content.heroProducts.map(p => ({ ...p, price: p.price ?? 0 })),
+          heroProducts: content.heroProducts.map(p => ({ 
+            ...p, 
+            price: p.price ?? undefined,
+            sizes: p.sizes || []
+          })),
           categories: content.categories.map(c => ({
             ...c,
-            subcategories: c.subcategories?.map(sc => ({ ...sc, price: sc.price ?? 0 }))
+            subcategories: c.subcategories?.map(sc => ({ 
+                ...sc, 
+                price: sc.price ?? undefined,
+                sizes: sc.sizes || []
+            }))
           }))
         };
 
@@ -235,7 +291,7 @@ export default function ContentAdminPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Price (if no sizes)</FormLabel>
-                          <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || 0)}/></FormControl>
+                          <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || undefined)}/></FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -259,7 +315,7 @@ export default function ContentAdminPage() {
                      <p className="text-xs text-muted-foreground">If no image is provided, the main category image will be used.</p>
                 </div>
               </div>
-              <ProductSizes categoryIndex={categoryIndex} subcategoryIndex={index} />
+              <ProductSizes control={form.control} fieldNamePrefix={`categories.${categoryIndex}.subcategories.${index}`} />
               <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} className="absolute top-2 right-2 h-6 w-6">
                 <Trash2 className="h-4 w-4 text-destructive" />
               </Button>
@@ -275,7 +331,7 @@ export default function ContentAdminPage() {
             href: `/category/${categorySlug}/${slugify('')}`, 
             imageUrl: '', 
             imageHint: '',
-            price: 0,
+            price: undefined,
             sizes: [] 
           })}
         >
@@ -285,54 +341,6 @@ export default function ContentAdminPage() {
     );
   };
   
-  const ProductSizes = ({ categoryIndex, subcategoryIndex }: { categoryIndex: number, subcategoryIndex: number }) => {
-    const { fields, append, remove } = useFieldArray({
-      control: form.control,
-      name: `categories.${categoryIndex}.subcategories.${subcategoryIndex}.sizes`
-    });
-
-    return (
-        <div className="mt-4 space-y-2 rounded-md border p-4">
-            <h5 className="font-medium">Sizes & Prices</h5>
-            {fields.map((field, index) => (
-                <div key={field.id} className="flex items-center gap-2">
-                    <FormField
-                        control={form.control}
-                        name={`categories.${categoryIndex}.subcategories.${subcategoryIndex}.sizes.${index}.name`}
-                        render={({ field }) => (
-                            <FormItem className="flex-1">
-                                <FormControl><Input {...field} placeholder="Size Name (e.g. S, M, L)"/></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name={`categories.${categoryIndex}.subcategories.${subcategoryIndex}.sizes.${index}.price`}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormControl><Input type="number" {...field} placeholder="Price" onChange={e => field.onChange(parseFloat(e.target.value) || 0)} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                </div>
-            ))}
-            <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                onClick={() => append({ name: '', price: 0 })}
-            >
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Size
-            </Button>
-        </div>
-    );
-  };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -389,7 +397,7 @@ export default function ContentAdminPage() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Price (if no sizes)</FormLabel>
-                                <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || 0)} /></FormControl>
+                                <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || undefined)} /></FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -412,12 +420,13 @@ export default function ContentAdminPage() {
                           />
                         </div>
                       </div>
+                      <ProductSizes control={form.control} fieldNamePrefix={`heroProducts.${index}`} />
                       <Button type="button" variant="destructive" size="sm" onClick={() => removeHero(index)} className="absolute bottom-4 right-4">
                         <Trash2 className="mr-2 h-4 w-4" /> Remove
                       </Button>
                     </Card>
                   ))}
-                  <Button type="button" onClick={() => appendHero({ id: `new-hero-${Date.now()}`, name: '', tagline: '', imageUrl: '', imageHint: '', price: 0 })}>
+                  <Button type="button" onClick={() => appendHero({ id: `new-hero-${Date.now()}`, name: '', tagline: '', imageUrl: '', imageHint: '', price: undefined, sizes: [] })}>
                     <PlusCircle className="mr-2 h-4 w-4" /> Add Hero Banner
                   </Button>
                 </CardContent>
@@ -507,7 +516,3 @@ export default function ContentAdminPage() {
     </div>
   );
 }
-
-    
-
-    

@@ -33,7 +33,7 @@ export interface Category {
 }
 
 export interface HeroProduct extends Product {
-  // Currently same as Product, can be extended
+  // Now supports sizes just like a regular product.
 }
 
 export interface SiteContent {

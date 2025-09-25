@@ -47,11 +47,19 @@ export default function Home() {
         }
       }
     }
+
+    // If not found in subcategories, it might be a hero-only product.
+    // Check if the hero product itself has sizes defined.
+    if (!fullProduct) {
+        const heroProduct = siteContent.heroProducts.find(p => p.id === product.id);
+        if (heroProduct) {
+            fullProduct = heroProduct;
+        }
+    }
     
-    // If not found in subcategories, it might be a hero-only product or a category itself.
-    // Use the clicked product data, ensuring it has a price.
+    // Fallback to the clicked product data.
     if(!fullProduct) {
-        fullProduct = { ...product, price: product.price || 0 };
+        fullProduct = { ...product };
     }
 
     setSelectedProduct(fullProduct);
