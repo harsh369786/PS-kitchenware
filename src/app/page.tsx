@@ -78,7 +78,7 @@ export default function Home() {
   return (
     <div className="bg-background">
       <HeroCarousel products={siteContent.heroProducts} onProductClick={handleProductClick} />
-      <CategoryGrid categories={site.categories} />
+      <CategoryGrid categories={siteContent.categories} />
       
       {selectedProduct && (
         <ProductDetailModal
