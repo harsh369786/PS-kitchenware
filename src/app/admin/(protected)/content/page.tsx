@@ -108,7 +108,10 @@ const ProductSizes = ({ control, fieldNamePrefix }: { control: any, fieldNamePre
                                     type="number" 
                                     placeholder="Price"
                                     {...field}
-                                    onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)}
+                                    onChange={e => {
+                                        const value = e.target.value;
+                                        field.onChange(value === '' ? undefined : Number(value));
+                                    }}
                                     value={field.value ?? ''}
                                   />
                                 </FormControl>
@@ -319,7 +322,10 @@ export default function ContentAdminPage() {
                                     type="number"
                                     placeholder="Price"
                                     {...field}
-                                    onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)}
+                                    onChange={e => {
+                                        const value = e.target.value;
+                                        field.onChange(value === '' ? undefined : Number(value));
+                                    }}
                                     value={field.value ?? ''}
                                   />
                                 </FormControl>
@@ -535,3 +541,4 @@ export default function ContentAdminPage() {
     </div>
   );
 }
+
