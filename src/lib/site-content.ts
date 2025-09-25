@@ -1,8 +1,10 @@
+
 "use server";
 import { promises as fs } from "fs";
 import path from "path";
 import type { SiteContent } from "./types";
 import { PlaceHolderImages } from "./placeholder-images";
+import { revalidatePath } from 'next/cache';
 
 const contentFilePath = path.join(process.cwd(), "src/lib/site-content.json");
 
@@ -22,7 +24,6 @@ const initialHeroProducts = PlaceHolderImages.filter((p) => p.id.startsWith("her
     tagline: `Essential for your modern home`,
     imageUrl: p.imageUrl,
     imageHint: p.imageHint,
-    price: 0,
 }));
 
 const initialContent: SiteContent = {
@@ -91,6 +92,11 @@ export async function saveSiteContent(content: SiteContent): Promise<void> {
     }
 
     await fs.writeFile(contentFilePath, JSON.stringify(content, null, 2));
+    
+    // Revalidate paths to show updated content
+    revalidatePath('/');
+    revalidatePath('/category/[slug]', 'page');
+
   } catch (error) {
     console.error("Error saving site content:", error);
     throw new Error("Failed to save site content.");

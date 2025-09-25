@@ -42,9 +42,9 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     // Reset state when modal opens or product changes
     if (isOpen) {
       setQuantity(1);
-      const defaultSize = hasSizes && product.sizes?.[0].name ? product.sizes[0] : undefined;
+      const defaultSize = hasSizes ? undefined : { name: '', price: product.price || 0 };
       setSelectedSize(defaultSize);
-      setDisplayPrice(defaultSize?.price ?? product.price);
+      setDisplayPrice(hasSizes ? undefined : product.price);
     }
   }, [isOpen, product, hasSizes]);
 
@@ -68,7 +68,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
       addToCart({ ...product, price }, quantity, selectedSize?.name);
       toast({
         title: "Added to Cart",
-        description: `${quantity} x ${product.name}${selectedSize ? ` (Size: ${selectedSize.name})` : ''} has been added to your cart.`,
+        description: `${quantity} x ${product.name}${selectedSize?.name ? ` (Size: ${selectedSize.name})` : ''} has been added to your cart.`,
       });
       onClose();
     }
@@ -112,7 +112,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
               {hasSizes && (
                 <div className="flex items-center space-x-4">
                    <label htmlFor="size" className="text-sm font-medium">Size</label>
-                   <Select onValueChange={handleSizeChange} defaultValue={selectedSize?.name}>
+                   <Select onValueChange={handleSizeChange} value={selectedSize?.name}>
                     <SelectTrigger id="size" className="w-full">
                       <SelectValue placeholder="Select a size" />
                     </SelectTrigger>
