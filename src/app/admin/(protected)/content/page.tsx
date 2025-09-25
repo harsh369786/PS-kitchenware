@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -97,26 +98,21 @@ const ProductSizes = ({ control, fieldNamePrefix }: { control: any, fieldNamePre
                             </FormItem>
                         )}
                     />
-                    <Controller
+                    <FormField
                         control={control}
                         name={`${fieldNamePrefix}.sizes.${index}.price`}
-                        render={({ field: { onChange, onBlur, value }, fieldState }) => (
+                        render={({ field }) => (
                             <FormItem>
                                 <FormControl>
                                   <Input 
                                     type="number" 
-                                    onBlur={onBlur}
-                                    onChange={e => {
-                                      const val = e.target.value;
-                                      // Allow clearing the input, which results in NaN
-                                      // and is then converted to undefined by the schema.
-                                      onChange(val === '' ? undefined : parseFloat(val));
-                                    }}
-                                    value={value ?? ''}
                                     placeholder="Price"
+                                    {...field}
+                                    onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)}
+                                    value={field.value ?? ''}
                                   />
                                 </FormControl>
-                                <FormMessage>{fieldState.error?.message}</FormMessage>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -256,8 +252,8 @@ export default function ContentAdminPage() {
           ...c,
           subcategories: c.subcategories?.map(sc => ({
             ...sc,
-            price: Number.isNaN(Number(sc.price)) ? undefined : Number(sc.price),
-            sizes: sc.sizes?.filter(s => s && s.name && s.name.trim() !== '').map(s => ({...s, price: Number.isNaN(Number(s.price)) ? undefined : Number(s.price) }))
+            price: sc.price,
+            sizes: sc.sizes?.filter(s => s && s.name && s.name.trim() !== '').map(s => ({...s, price: s.price }))
           }))
         }))
       };
@@ -312,25 +308,22 @@ export default function ContentAdminPage() {
                         </FormItem>
                       )}
                     />
-                     <Controller
+                     <FormField
                         control={control}
                         name={`categories.${categoryIndex}.subcategories.${index}.price`}
-                        render={({ field: { onChange, onBlur, value }, fieldState }) => (
+                        render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Price (if no sizes)</FormLabel>
                                 <FormControl>
                                   <Input 
                                     type="number"
-                                    onBlur={onBlur}
-                                    onChange={e => {
-                                      const val = e.target.value;
-                                      onChange(val === '' ? undefined : parseFloat(val));
-                                    }}
-                                    value={value ?? ''}
                                     placeholder="Price"
+                                    {...field}
+                                    onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)}
+                                    value={field.value ?? ''}
                                   />
                                 </FormControl>
-                                <FormMessage>{fieldState.error?.message}</FormMessage>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
