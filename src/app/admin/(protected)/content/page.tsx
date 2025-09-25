@@ -98,26 +98,28 @@ const ProductSizes = ({ control, fieldNamePrefix }: { control: any, fieldNamePre
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={control}
-                        name={`${fieldNamePrefix}.sizes.${index}.price`}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormControl>
-                                  <Input 
-                                    type="number" 
+                    <Controller
+                      control={control}
+                      name={`${fieldNamePrefix}.sizes.${index}.price`}
+                      render={({ field: { onChange, onBlur, value }, fieldState }) => (
+                        <FormItem>
+                            <FormControl>
+                                <Input
+                                    type="number"
                                     placeholder="Price"
-                                    {...field}
+                                    onBlur={onBlur}
                                     onChange={e => {
                                         const value = e.target.value;
-                                        field.onChange(value === '' ? undefined : Number(value));
+                                        // Allow clearing the input. Store as undefined if empty.
+                                        onChange(value === '' ? undefined : parseFloat(value));
                                     }}
-                                    value={field.value ?? ''}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                                    // Display an empty string if value is null, undefined, or NaN
+                                    value={value === undefined || value === null || isNaN(value) ? '' : value}
+                                />
+                            </FormControl>
+                             <FormMessage />
+                        </FormItem>
+                      )}
                     />
                     <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
                         <Trash2 className="h-4 w-4 text-destructive" />
@@ -255,8 +257,10 @@ export default function ContentAdminPage() {
           ...c,
           subcategories: c.subcategories?.map(sc => ({
             ...sc,
-            price: sc.price,
-            sizes: sc.sizes?.filter(s => s && s.name && s.name.trim() !== '').map(s => ({...s, price: s.price }))
+            price: sc.price ? Number(sc.price) : undefined,
+            sizes: sc.sizes
+              ?.filter(s => s && s.name && s.name.trim() !== '')
+              .map(s => ({...s, price: s.price ? Number(s.price) : 0 }))
           }))
         }))
       };
@@ -311,22 +315,22 @@ export default function ContentAdminPage() {
                         </FormItem>
                       )}
                     />
-                     <FormField
+                     <Controller
                         control={control}
                         name={`categories.${categoryIndex}.subcategories.${index}.price`}
-                        render={({ field }) => (
+                        render={({ field: { onChange, onBlur, value } }) => (
                             <FormItem>
                                 <FormLabel>Price (if no sizes)</FormLabel>
                                 <FormControl>
                                   <Input 
                                     type="number"
                                     placeholder="Price"
-                                    {...field}
+                                    onBlur={onBlur}
                                     onChange={e => {
                                         const value = e.target.value;
-                                        field.onChange(value === '' ? undefined : Number(value));
+                                        onChange(value === '' ? undefined : parseFloat(value));
                                     }}
-                                    value={field.value ?? ''}
+                                    value={value === undefined || value === null || isNaN(value) ? '' : value}
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -542,3 +546,6 @@ export default function ContentAdminPage() {
   );
 }
 
+
+
+    
