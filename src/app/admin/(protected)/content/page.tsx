@@ -106,12 +106,17 @@ const ProductSizes = ({ control, fieldNamePrefix }: { control: any, fieldNamePre
                                   <Input 
                                     type="number" 
                                     onBlur={onBlur}
-                                    onChange={e => onChange(e.target.value === '' ? undefined : e.target.valueAsNumber)}
+                                    onChange={e => {
+                                      const val = e.target.value;
+                                      // Allow clearing the input, which results in NaN
+                                      // and is then converted to undefined by the schema.
+                                      onChange(val === '' ? undefined : parseFloat(val));
+                                    }}
                                     value={value ?? ''}
                                     placeholder="Price"
                                   />
                                 </FormControl>
-                                {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+                                <FormMessage>{fieldState.error?.message}</FormMessage>
                             </FormItem>
                         )}
                     />
@@ -251,8 +256,8 @@ export default function ContentAdminPage() {
           ...c,
           subcategories: c.subcategories?.map(sc => ({
             ...sc,
-            price: Number(sc.price || 0),
-            sizes: sc.sizes?.filter(s => s && s.name && s.name.trim() !== '').map(s => ({...s, price: Number(s.price || 0)}))
+            price: Number.isNaN(Number(sc.price)) ? undefined : Number(sc.price),
+            sizes: sc.sizes?.filter(s => s && s.name && s.name.trim() !== '').map(s => ({...s, price: Number.isNaN(Number(s.price)) ? undefined : Number(s.price) }))
           }))
         }))
       };
@@ -317,12 +322,15 @@ export default function ContentAdminPage() {
                                   <Input 
                                     type="number"
                                     onBlur={onBlur}
-                                    onChange={e => onChange(e.target.value === '' ? undefined : e.target.valueAsNumber)}
+                                    onChange={e => {
+                                      const val = e.target.value;
+                                      onChange(val === '' ? undefined : parseFloat(val));
+                                    }}
                                     value={value ?? ''}
                                     placeholder="Price"
                                   />
                                 </FormControl>
-                                {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+                                <FormMessage>{fieldState.error?.message}</FormMessage>
                             </FormItem>
                         )}
                     />
@@ -534,5 +542,3 @@ export default function ContentAdminPage() {
     </div>
   );
 }
-
-    
