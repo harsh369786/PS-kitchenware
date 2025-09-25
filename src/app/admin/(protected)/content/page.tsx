@@ -27,8 +27,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Textarea } from '@/components/ui/textarea';
 
 const productSizeSchema = z.object({
-  name: z.string(),
-  price: z.coerce.number().min(0, "Price must be non-negative"),
+  name: z.string().optional(),
+  price: z.coerce.number().min(0, "Price must be non-negative").optional(),
 });
 
 const heroProductSchema = z.object({
@@ -204,7 +204,7 @@ export default function ContentAdminPage() {
                 ...sc, 
                 price: sc.price ?? 0,
                 sizes: sc.sizes || []
-            }))
+            })) || []
           }))
         };
 
@@ -240,13 +240,13 @@ export default function ContentAdminPage() {
         ...data,
         heroProducts: data.heroProducts.map(p => ({
           ...p,
-          sizes: p.sizes?.filter(s => s.name.trim() !== '')
+          sizes: p.sizes?.filter(s => s && s.name && s.name.trim() !== '')
         })),
         categories: data.categories.map(c => ({
           ...c,
           subcategories: c.subcategories?.map(sc => ({
             ...sc,
-            sizes: sc.sizes?.filter(s => s.name.trim() !== '')
+            sizes: sc.sizes?.filter(s => s && s.name && s.name.trim() !== '')
           }))
         }))
       };
@@ -532,3 +532,5 @@ export default function ContentAdminPage() {
     </div>
   );
 }
+
+    
