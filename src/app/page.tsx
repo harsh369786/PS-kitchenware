@@ -31,6 +31,7 @@ export default function Home() {
     let fullProduct: Product | undefined = undefined;
 
     // Search for the product in subcategories to get its full details (sizes, price etc)
+    // This is the source of truth for all product details.
     for (const category of siteContent.categories) {
       if (category.subcategories) {
         const foundSubcategory = category.subcategories.find(sub => sub.name === product.name);
@@ -38,8 +39,8 @@ export default function Home() {
           fullProduct = {
             id: foundSubcategory.id,
             name: foundSubcategory.name,
-            imageUrl: foundSubcategory.imageUrl || category.imageUrl,
-            imageHint: foundSubcategory.imageHint || category.imageHint || "",
+            imageUrl: product.imageUrl, // Keep hero image if it was clicked from hero
+            imageHint: product.imageHint,
             price: foundSubcategory.price,
             sizes: foundSubcategory.sizes,
             tagline: product.tagline // Keep hero tagline if it exists
@@ -48,17 +49,8 @@ export default function Home() {
         }
       }
     }
-
-    // If not found in subcategories, it might be a hero-only product.
-    // Check if the hero product itself has sizes defined.
-    if (!fullProduct) {
-        const heroProduct = siteContent.heroProducts.find(p => p.id === product.id);
-        if (heroProduct) {
-            fullProduct = heroProduct;
-        }
-    }
     
-    // Fallback to the clicked product data.
+    // Fallback to the clicked product data if not found in categories (should not happen for hero products)
     if(!fullProduct) {
         fullProduct = { ...product };
     }
@@ -86,7 +78,7 @@ export default function Home() {
   return (
     <div className="bg-background">
       <HeroCarousel products={siteContent.heroProducts} onProductClick={handleProductClick} />
-      <CategoryGrid categories={siteContent.categories} />
+      <CategoryGrid categories={site.categories} />
       
       {selectedProduct && (
         <ProductDetailModal
@@ -103,5 +95,3 @@ export default function Home() {
     </div>
   );
 }
-
-

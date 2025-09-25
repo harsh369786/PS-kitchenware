@@ -1,3 +1,4 @@
+
 export interface ProductSize {
   name: string;
   price: number;
@@ -32,8 +33,8 @@ export interface Category {
   subcategories?: SubCategory[];
 }
 
-export interface HeroProduct extends Product {
-  // Now supports sizes just like a regular product.
+export interface HeroProduct extends Omit<Product, 'price' | 'sizes'> {
+  // Hero products are for display. Price/size are sourced from the actual product.
 }
 
 export interface SiteContent {

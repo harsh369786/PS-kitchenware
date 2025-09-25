@@ -1,9 +1,8 @@
 
-
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { getSiteContent, saveSiteContent } from '@/lib/site-content';
@@ -22,13 +21,12 @@ import { Loader2, PlusCircle, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { SiteContent } from '@/lib/types';
+import type { SiteContent, HeroProduct } from '@/lib/types';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Textarea } from '@/components/ui/textarea';
 
 const productSizeSchema = z.object({
   name: z.string().optional(),
-  price: z.coerce.number().min(0, "Price must be non-negative").optional(),
+  price: z.coerce.number().optional(),
 });
 
 const heroProductSchema = z.object({
@@ -37,8 +35,6 @@ const heroProductSchema = z.object({
   tagline: z.string().optional(),
   imageUrl: z.string().min(1, 'Image is required'),
   imageHint: z.string().optional(),
-  price: z.coerce.number().min(0, "Price must be non-negative").optional(),
-  sizes: z.array(productSizeSchema).optional(),
 });
 
 const subCategorySchema = z.object({
@@ -47,7 +43,7 @@ const subCategorySchema = z.object({
   href: z.string(),
   imageUrl: z.string().optional(),
   imageHint: z.string().optional(),
-  price: z.coerce.number().min(0).optional(),
+  price: z.coerce.number().optional(),
   sizes: z.array(productSizeSchema).optional(),
 });
 
@@ -101,21 +97,21 @@ const ProductSizes = ({ control, fieldNamePrefix }: { control: any, fieldNamePre
                             </FormItem>
                         )}
                     />
-                    <FormField
+                    <Controller
                         control={control}
                         name={`${fieldNamePrefix}.sizes.${index}.price`}
-                        render={({ field }) => (
+                        render={({ field: { onChange, onBlur, value }, fieldState }) => (
                             <FormItem>
                                 <FormControl>
                                   <Input 
                                     type="number" 
-                                    {...field} 
-                                    placeholder="Price" 
-                                    onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
-                                    value={field.value ?? ''}
+                                    onBlur={onBlur}
+                                    onChange={e => onChange(e.target.value === '' ? undefined : e.target.valueAsNumber)}
+                                    value={value ?? ''}
+                                    placeholder="Price"
                                   />
                                 </FormControl>
-                                <FormMessage />
+                                {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
                             </FormItem>
                         )}
                     />
@@ -134,8 +130,7 @@ const ProductSizes = ({ control, fieldNamePrefix }: { control: any, fieldNamePre
             </Button>
         </div>
     );
-  };
-
+};
 
 export default function ContentAdminPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -200,11 +195,12 @@ export default function ContentAdminPage() {
         const content = await getSiteContent();
         
         const sanitizedContent = {
-          ...content,
           heroProducts: content.heroProducts.map(p => ({ 
-            ...p, 
-            price: p.price ?? undefined,
-            sizes: p.sizes?.map(s => ({...s, price: s.price ?? undefined})) || []
+            id: p.id,
+            name: p.name,
+            tagline: p.tagline,
+            imageUrl: p.imageUrl,
+            imageHint: p.imageHint,
           })),
           categories: content.categories.map(c => ({
             ...c,
@@ -243,12 +239,13 @@ export default function ContentAdminPage() {
   const onSubmit = async (data: FormValues) => {
     setIsSaving(true);
     try {
-      const cleanedData = {
-        ...data,
+      const cleanedData: SiteContent = {
         heroProducts: data.heroProducts.map(p => ({
-          ...p,
-          price: Number(p.price || 0),
-          sizes: p.sizes?.filter(s => s && s.name && s.name.trim() !== '').map(s => ({...s, price: Number(s.price || 0)}))
+            id: p.id,
+            name: p.name,
+            tagline: p.tagline || '',
+            imageUrl: p.imageUrl,
+            imageHint: p.imageHint || '',
         })),
         categories: data.categories.map(c => ({
           ...c,
@@ -260,9 +257,9 @@ export default function ContentAdminPage() {
         }))
       };
       
-      await saveSiteContent(cleanedData as SiteContent);
+      await saveSiteContent(cleanedData);
       toast({ title: 'Success', description: 'Content saved successfully.' });
-      form.reset(cleanedData); // Resets the dirty state
+      form.reset(data); // Reset with the data from the form to keep it, but mark as not dirty
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to save content.' });
     } finally {
@@ -310,24 +307,24 @@ export default function ContentAdminPage() {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={form.control}
-                      name={`categories.${categoryIndex}.subcategories.${index}.price`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Price (if no sizes)</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="number" 
-                                {...field} 
-                                placeholder="Price" 
-                                onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
-                                value={field.value ?? ''}
-                              />
-                            </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                     <Controller
+                        control={control}
+                        name={`categories.${categoryIndex}.subcategories.${index}.price`}
+                        render={({ field: { onChange, onBlur, value }, fieldState }) => (
+                            <FormItem>
+                                <FormLabel>Price (if no sizes)</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    type="number"
+                                    onBlur={onBlur}
+                                    onChange={e => onChange(e.target.value === '' ? undefined : e.target.valueAsNumber)}
+                                    value={value ?? ''}
+                                    placeholder="Price"
+                                  />
+                                </FormControl>
+                                {fieldState.error && <FormMessage>{fieldState.error.message}</FormMessage>}
+                            </FormItem>
+                        )}
                     />
                 </div>
                 <div className="space-y-4">
@@ -424,25 +421,6 @@ export default function ContentAdminPage() {
                               </FormItem>
                             )}
                           />
-                           <FormField
-                            control={form.control}
-                            name={`heroProducts.${index}.price`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Price (if no sizes)</FormLabel>
-                                 <FormControl>
-                                  <Input 
-                                    type="number" 
-                                    {...field} 
-                                    placeholder="Price" 
-                                    onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
-                                    value={field.value ?? ''}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
                         </div>
                         <div className="space-y-2">
                            <FormField
@@ -461,13 +439,12 @@ export default function ContentAdminPage() {
                           />
                         </div>
                       </div>
-                      <ProductSizes control={form.control} fieldNamePrefix={`heroProducts.${index}`} />
                       <Button type="button" variant="destructive" size="sm" onClick={() => removeHero(index)} className="absolute bottom-4 right-4">
                         <Trash2 className="mr-2 h-4 w-4" /> Remove
                       </Button>
                     </Card>
                   ))}
-                  <Button type="button" onClick={() => appendHero({ id: `new-hero-${Date.now()}`, name: '', tagline: '', imageUrl: '', imageHint: '', price: undefined, sizes: [] })}>
+                  <Button type="button" onClick={() => appendHero({ id: `new-hero-${Date.now()}`, name: '', tagline: '', imageUrl: '', imageHint: '' })}>
                     <PlusCircle className="mr-2 h-4 w-4" /> Add Hero Banner
                   </Button>
                 </CardContent>
@@ -557,7 +534,3 @@ export default function ContentAdminPage() {
     </div>
   );
 }
-
-    
-
-    
