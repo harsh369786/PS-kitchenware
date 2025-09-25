@@ -43,10 +43,12 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     if (isOpen) {
       setQuantity(1);
       if (hasSizes) {
+        // Product has sizes, so clear price until one is selected
         setSelectedSize(undefined);
         setDisplayPrice(undefined);
       } else {
-        setSelectedSize(undefined); // No sizes for this product
+        // Product does not have sizes
+        setSelectedSize(undefined); 
         setDisplayPrice(product.price);
       }
     }
@@ -152,3 +154,4 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     </Dialog>
   );
 }
+
