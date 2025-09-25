@@ -196,14 +196,14 @@ export default function ContentAdminPage() {
           heroProducts: content.heroProducts.map(p => ({ 
             ...p, 
             price: p.price ?? 0,
-            sizes: p.sizes || []
+            sizes: p.sizes?.map(s => ({...s, price: s.price ?? 0})) || []
           })),
           categories: content.categories.map(c => ({
             ...c,
             subcategories: c.subcategories?.map(sc => ({ 
                 ...sc, 
                 price: sc.price ?? 0,
-                sizes: sc.sizes || []
+                sizes: sc.sizes?.map(s => ({...s, price: s.price ?? 0})) || []
             })) || []
           }))
         };
@@ -235,18 +235,19 @@ export default function ContentAdminPage() {
   const onSubmit = async (data: FormValues) => {
     setIsSaving(true);
     try {
-      // Filter out empty sizes before saving
       const cleanedData = {
         ...data,
         heroProducts: data.heroProducts.map(p => ({
           ...p,
-          sizes: p.sizes?.filter(s => s && s.name && s.name.trim() !== '')
+          price: Number(p.price || 0),
+          sizes: p.sizes?.filter(s => s && s.name && s.name.trim() !== '').map(s => ({...s, price: Number(s.price || 0)}))
         })),
         categories: data.categories.map(c => ({
           ...c,
           subcategories: c.subcategories?.map(sc => ({
             ...sc,
-            sizes: sc.sizes?.filter(s => s && s.name && s.name.trim() !== '')
+            price: Number(sc.price || 0),
+            sizes: sc.sizes?.filter(s => s && s.name && s.name.trim() !== '').map(s => ({...s, price: Number(s.price || 0)}))
           }))
         }))
       };
@@ -532,5 +533,7 @@ export default function ContentAdminPage() {
     </div>
   );
 }
+
+    
 
     
