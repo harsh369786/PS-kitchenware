@@ -106,7 +106,15 @@ const ProductSizes = ({ control, fieldNamePrefix }: { control: any, fieldNamePre
                         name={`${fieldNamePrefix}.sizes.${index}.price`}
                         render={({ field }) => (
                             <FormItem>
-                                <FormControl><Input type="number" {...field} placeholder="Price" onChange={e => field.onChange(parseFloat(e.target.value) || 0)} /></FormControl>
+                                <FormControl>
+                                  <Input 
+                                    type="number" 
+                                    {...field} 
+                                    placeholder="Price" 
+                                    onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                                    value={field.value ?? ''}
+                                  />
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -120,7 +128,7 @@ const ProductSizes = ({ control, fieldNamePrefix }: { control: any, fieldNamePre
                 type="button"
                 size="sm"
                 variant="outline"
-                onClick={() => append({ name: '', price: 0 })}
+                onClick={() => append({ name: '', price: undefined })}
             >
                 <PlusCircle className="mr-2 h-4 w-4" /> Add Size
             </Button>
@@ -195,15 +203,15 @@ export default function ContentAdminPage() {
           ...content,
           heroProducts: content.heroProducts.map(p => ({ 
             ...p, 
-            price: p.price ?? 0,
-            sizes: p.sizes?.map(s => ({...s, price: s.price ?? 0})) || []
+            price: p.price ?? undefined,
+            sizes: p.sizes?.map(s => ({...s, price: s.price ?? undefined})) || []
           })),
           categories: content.categories.map(c => ({
             ...c,
             subcategories: c.subcategories?.map(sc => ({ 
                 ...sc, 
-                price: sc.price ?? 0,
-                sizes: sc.sizes?.map(s => ({...s, price: s.price ?? 0})) || []
+                price: sc.price ?? undefined,
+                sizes: sc.sizes?.map(s => ({...s, price: s.price ?? undefined})) || []
             })) || []
           }))
         };
@@ -308,7 +316,15 @@ export default function ContentAdminPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Price (if no sizes)</FormLabel>
-                          <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || 0)}/></FormControl>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                {...field} 
+                                placeholder="Price" 
+                                onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                                value={field.value ?? ''}
+                              />
+                            </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -348,7 +364,7 @@ export default function ContentAdminPage() {
             href: `/category/${categorySlug}/${slugify('')}`, 
             imageUrl: '', 
             imageHint: '',
-            price: 0,
+            price: undefined,
             sizes: [] 
           })}
         >
@@ -414,7 +430,15 @@ export default function ContentAdminPage() {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>Price (if no sizes)</FormLabel>
-                                <FormControl><Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || 0)} /></FormControl>
+                                 <FormControl>
+                                  <Input 
+                                    type="number" 
+                                    {...field} 
+                                    placeholder="Price" 
+                                    onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                                    value={field.value ?? ''}
+                                  />
+                                </FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -443,7 +467,7 @@ export default function ContentAdminPage() {
                       </Button>
                     </Card>
                   ))}
-                  <Button type="button" onClick={() => appendHero({ id: `new-hero-${Date.now()}`, name: '', tagline: '', imageUrl: '', imageHint: '', price: 0, sizes: [] })}>
+                  <Button type="button" onClick={() => appendHero({ id: `new-hero-${Date.now()}`, name: '', tagline: '', imageUrl: '', imageHint: '', price: undefined, sizes: [] })}>
                     <PlusCircle className="mr-2 h-4 w-4" /> Add Hero Banner
                   </Button>
                 </CardContent>

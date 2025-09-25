@@ -94,7 +94,7 @@ export async function saveSiteContent(content: SiteContent): Promise<void> {
     await fs.writeFile(contentFilePath, JSON.stringify(content, null, 2));
     
     // Revalidate paths to show updated content
-    revalidatePath('/', 'layout');
+    revalidatePath('/', 'page');
     revalidatePath('/category/[slug]', 'page');
     revalidatePath('/search', 'page');
 
