@@ -32,14 +32,14 @@
       "id": "hero-5",
       "name": "Steamer basket ",
       "tagline": "\"Steam It. Serve It. Slay It.\"",
-      "imageUrl": "/uploads/hero-hero-5-1758694490581.png",
+      "imageUrl": "/uploads/hero-hero-5-1758968489184.png",
       "imageHint": "home decor"
     },
     {
       "id": "hero-6",
       "name": "KOTHMiR DABBA ",
       "tagline": "Rakhe dhaniya-mirch ko taaza, har roz.",
-      "imageUrl": "/uploads/hero-hero-6-1758696455196.png",
+      "imageUrl": "/uploads/hero-hero-6-1758956563308.png",
       "imageHint": "cooking utensil"
     },
     {
@@ -62,11 +62,11 @@
           "id": "sub-ograla",
           "name": "Ograla laddel",
           "href": "/category/laddels-doyas/ograla-laddel",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758295949547-1758695962557.png",
+          "imageUrl": "/uploads/subcategory-sub-ograla-1758952818108.png",
           "sizes": [
             {
               "name": "10",
-              "price": 500
+              "price": 0
             }
           ]
         },
@@ -74,7 +74,7 @@
           "id": "sub-curv",
           "name": "Curv laddel",
           "href": "/category/laddels-doyas/curv-laddel",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758303052280-1758695962581.png",
+          "imageUrl": "/uploads/subcategory-sub-curv-1758952818186.png",
           "sizes": [
             {
               "name": "10",
@@ -90,29 +90,85 @@
           "id": "sub-dalwati",
           "name": "Dalvati laddel",
           "href": "/category/laddels-doyas/dalvati-laddel",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758303157217-1758695962608.png",
-          "sizes": []
+          "imageUrl": "/uploads/subcategory-sub-dalwati-1758952818215.png",
+          "sizes": [
+            {
+              "name": "1",
+              "price": 129
+            },
+            {
+              "name": "2",
+              "price": 139
+            }
+          ]
         },
         {
           "id": "sub-black-chinese",
           "name": "Black Chinese laddel",
           "href": "/category/laddels-doyas/black-chinese-laddel",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758303212155-1758376851882.jpeg",
-          "sizes": []
+          "imageUrl": "/uploads/subcategory-sub-black-chinese-1758954599691.png",
+          "sizes": [
+            {
+              "name": "1",
+              "price": 115
+            },
+            {
+              "name": "2",
+              "price": 125
+            },
+            {
+              "name": "3",
+              "price": 135
+            },
+            {
+              "name": "4",
+              "price": 145
+            },
+            {
+              "name": "5",
+              "price": 155
+            }
+          ]
         },
         {
           "id": "sub-chikoowati-laddel",
           "name": "Chikoowati laddel",
           "href": "/category/laddels-doyas/chikoowati-laddel",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758354037368-1758376851888.jpeg",
-          "sizes": []
+          "imageUrl": "/uploads/subcategory-sub-chikoowati-laddel-1758952818267.png",
+          "sizes": [
+            {
+              "name": "1",
+              "price": 120
+            },
+            {
+              "name": "2",
+              "price": 130
+            },
+            {
+              "name": "3",
+              "price": 140
+            },
+            {
+              "name": "4",
+              "price": 150
+            }
+          ]
         },
         {
           "id": "sub-regular-wooden",
           "name": "Regular wooden laddel",
           "href": "/category/laddels-doyas/regular-wooden-laddel",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375020828-1758650867774.jpeg",
-          "sizes": []
+          "sizes": [
+            {
+              "name": "5",
+              "price": 115
+            },
+            {
+              "name": "6",
+              "price": 125
+            }
+          ]
         },
         {
           "id": "new-subcat-1758702138246",
@@ -120,38 +176,59 @@
           "href": "/category/laddels-doyas/curve-chikoowati-laddel",
           "imageUrl": "/uploads/subcategory-new-subcat-1758702138246-1758703551989.png",
           "imageHint": "",
-          "sizes": []
+          "sizes": [
+            {
+              "name": "1",
+              "price": 130
+            },
+            {
+              "name": "2",
+              "price": 140
+            },
+            {
+              "name": "3",
+              "price": 150
+            },
+            {
+              "name": "4",
+              "price": 160
+            }
+          ]
         },
         {
           "id": "new-subcat-1758702158571",
           "name": "DOYA INDIGO ",
           "href": "/category/laddels-doyas/doya-indigo",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758702158571-1758702287188.png",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758702158571-1758954599771.png",
           "imageHint": "",
+          "price": 149,
           "sizes": []
         },
         {
           "id": "new-subcat-1758702168416",
           "name": "DOYA MATKA ",
           "href": "/category/laddels-doyas/doya-matka",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758702168416-1758702287193.jpeg",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758702168416-1758958954798.png",
           "imageHint": "",
+          "price": 179,
           "sizes": []
         },
         {
           "id": "new-subcat-1758702185446",
           "name": "DOYA DAMRU ",
           "href": "/category/laddels-doyas/doya-damru",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758702185446-1758702287194.png",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758702185446-1758958954841.png",
           "imageHint": "",
+          "price": 149,
           "sizes": []
         },
         {
           "id": "new-subcat-1758703170451",
           "name": "Doya Titan ",
           "href": "/category/laddels-doyas/doya-titan",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758703170451-1758703205796.jpeg",
+          "imageUrl": "/uploads/subcategory-new-subcat-1758703170451-1758958954848.png",
           "imageHint": "",
+          "price": 149,
           "sizes": []
         }
       ]
@@ -167,50 +244,133 @@
           "id": "sub-boondi-jara",
           "name": "Boondi jara",
           "href": "/category/jaras/boondi-jara",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758375068569-1758376851916.jpeg",
-          "sizes": []
+          "imageUrl": "/uploads/subcategory-sub-boondi-jara-1758965727463.png",
+          "sizes": [
+            {
+              "name": "1",
+              "price": 120
+            },
+            {
+              "name": "2",
+              "price": 130
+            },
+            {
+              "name": "3",
+              "price": 140
+            },
+            {
+              "name": "4",
+              "price": 150
+            }
+          ]
         },
         {
           "id": "sub-big-boondi",
           "name": "Big boondi jara",
           "href": "/category/jaras/big-boondi-jara",
           "imageUrl": "/uploads/subcategory-new-subcat-1758651353960-1758651397560.jpeg",
-          "sizes": []
+          "sizes": [
+            {
+              "name": "10",
+              "price": 299
+            },
+            {
+              "name": "11",
+              "price": 399
+            },
+            {
+              "name": "12",
+              "price": 499
+            }
+          ]
         },
         {
           "id": "sub-poha-jara",
           "name": "Poha jara",
           "href": "/category/jaras/poha-jara",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758375081963-1758376851920.jpeg",
-          "sizes": []
+          "imageUrl": "/uploads/subcategory-sub-poha-jara-1758965727528.png",
+          "sizes": [
+            {
+              "name": "1",
+              "price": 120
+            },
+            {
+              "name": "2",
+              "price": 130
+            },
+            {
+              "name": "3",
+              "price": 140
+            }
+          ]
         },
         {
           "id": "sub-delux-poha",
           "name": "Delux poha jara",
           "href": "/category/jaras/delux-poha-jara",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758375231636-1758376851985.jpeg",
+          "imageUrl": "/uploads/subcategory-sub-delux-poha-1758965727628.png",
+          "price": 199,
           "sizes": []
         },
         {
           "id": "sub-rice-jara",
           "name": "Rice jara",
           "href": "/category/jaras/rice-jara",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758565189289-1758565255056.png",
-          "sizes": []
+          "imageUrl": "/uploads/subcategory-sub-rice-jara-1758966654111.png",
+          "sizes": [
+            {
+              "name": "5",
+              "price": 129
+            },
+            {
+              "name": "6",
+              "price": 139
+            },
+            {
+              "name": "7",
+              "price": 149
+            }
+          ]
         },
         {
           "id": "sub-steel-puri",
           "name": "Steel handle Puri jara",
           "href": "/category/jaras/steel-handle-puri-jara",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375094203-1758376851925.jpeg",
-          "sizes": []
+          "sizes": [
+            {
+              "name": "5",
+              "price": 175
+            },
+            {
+              "name": "6",
+              "price": 199
+            },
+            {
+              "name": "7",
+              "price": 225
+            }
+          ]
         },
         {
           "id": "sub-wooden-puri",
           "name": "Wooden handle Puri jara",
           "href": "/category/jaras/wooden-handle-puri-jara",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758375112646-1758695962755.png",
-          "sizes": []
+          "imageUrl": "/uploads/subcategory-sub-wooden-puri-1758966654230.png",
+          "sizes": [
+            {
+              "name": "5",
+              "price": 175
+            },
+            {
+              "name": "6",
+              "price": 200
+            },
+            {
+              "name": "7",
+              "price": 249
+            }
+          ]
         }
       ]
     },
@@ -218,22 +378,68 @@
       "id": "cat-steamers",
       "name": "Steamers & Colanders",
       "href": "/category/steamers-colanders",
-      "imageUrl": "/uploads/category-cat-vati-1758530426540.png",
+      "imageUrl": "/uploads/category-cat-steamers-1758966484502.png",
       "imageHint": "bowls plates",
       "subcategories": [
         {
           "id": "sub-steamer-basket",
           "name": "Steamer basket",
           "href": "/category/steamers-colanders/steamer-basket",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758375153272-1758530608445.png",
-          "sizes": []
+          "imageUrl": "/uploads/subcategory-sub-steamer-basket-1758966484561.jpeg",
+          "sizes": [
+            {
+              "name": "1",
+              "price": 299
+            },
+            {
+              "name": "2",
+              "price": 399
+            },
+            {
+              "name": "3",
+              "price": 499
+            },
+            {
+              "name": "4",
+              "price": 599
+            }
+          ]
         },
         {
           "id": "sub-colander-set",
           "name": "Colander set",
           "href": "/category/steamers-colanders/colander-set",
           "imageUrl": "/uploads/subcategory-new-subcat-1758375183051-1758530426588.png",
-          "sizes": []
+          "sizes": [
+            {
+              "name": "1",
+              "price": 299
+            },
+            {
+              "name": "2",
+              "price": 499
+            },
+            {
+              "name": "3",
+              "price": 799
+            },
+            {
+              "name": "4",
+              "price": 1099
+            },
+            {
+              "name": "5",
+              "price": 1299
+            },
+            {
+              "name": "6",
+              "price": 1599
+            },
+            {
+              "name": "7",
+              "price": 1899
+            }
+          ]
         }
       ]
     },
@@ -249,6 +455,7 @@
           "name": "Tadka pan",
           "href": "/category/tadka-pan/tadka-pan",
           "imageUrl": "/uploads/subcategory-new-subcat-1758564902077-1758564945076.jpeg",
+          "price": 499,
           "sizes": []
         }
       ]
@@ -265,20 +472,39 @@
           "name": "Papad jali Round",
           "href": "/category/grillers-table-ring/papad-jali-round",
           "imageUrl": "/uploads/subcategory-sub-papad-jali-round-1758709581420.png",
-          "sizes": []
+          "sizes": [
+            {
+              "name": "1",
+              "price": 169
+            },
+            {
+              "name": "2",
+              "price": 199
+            }
+          ]
         },
         {
           "id": "sub-papad-jali-square",
           "name": "Papad jali Square",
           "href": "/category/grillers-table-ring/papad-jali-square",
           "imageUrl": "/uploads/subcategory-sub-papad-jali-square-1758710179244.png",
-          "sizes": []
+          "sizes": [
+            {
+              "name": "1",
+              "price": 169
+            },
+            {
+              "name": "2",
+              "price": 199
+            }
+          ]
         },
         {
           "id": "sub-table-ring-rubber",
           "name": "Table ring with rubber grip",
           "href": "/category/grillers-table-ring/table-ring-rubber",
           "imageUrl": "/uploads/subcategory-new-subcat-1758564308150-1758564535566.png",
+          "price": 149,
           "sizes": []
         },
         {
@@ -286,6 +512,7 @@
           "name": "Regular Table ring",
           "href": "/category/grillers-table-ring/regular-table-ring",
           "imageUrl": "/uploads/subcategory-sub-table-ring-regular-1758710179246.png",
+          "price": 129,
           "sizes": []
         }
       ]
@@ -302,6 +529,7 @@
           "name": "Kothmir dabba",
           "href": "/category/refrigerator-storage-container/kothmir-dabba",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376654080-1758376852077.jpeg",
+          "price": 249,
           "sizes": []
         },
         {
@@ -309,20 +537,55 @@
           "name": "Flat dabba",
           "href": "/category/refrigerator-storage-container/flat-dabba",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376492806-1758376852058.png",
-          "sizes": []
+          "sizes": [
+            {
+              "name": "1",
+              "price": 169
+            },
+            {
+              "name": "2",
+              "price": 199
+            },
+            {
+              "name": "3",
+              "price": 249
+            },
+            {
+              "name": "4",
+              "price": 299
+            }
+          ]
         },
         {
           "id": "sub-sweet-dabba",
           "name": "Sweet dabba",
           "href": "/category/refrigerator-storage-container/sweet-dabba",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376523762-1758376852066.jpeg",
-          "sizes": []
+          "sizes": [
+            {
+              "name": "1",
+              "price": 180
+            },
+            {
+              "name": "2",
+              "price": 200
+            },
+            {
+              "name": "3",
+              "price": 270
+            },
+            {
+              "name": "4",
+              "price": 360
+            }
+          ]
         },
         {
           "id": "sub-khamani-dabba",
           "name": "Khamani dabba",
           "href": "/category/refrigerator-storage-container/khamani-dabba",
           "imageUrl": "/uploads/subcategory-new-subcat-1758376690342-1758695962785.png",
+          "price": 179,
           "sizes": []
         }
       ]
@@ -338,7 +601,7 @@
           "id": "sub-oil-dispenser",
           "name": "STEEL OIL DISPENSER",
           "href": "/category/oil-dispenser/steel-oil-dispenser",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758523585191-1758530426628.png",
+          "imageUrl": "/uploads/subcategory-sub-oil-dispenser-1758967479407.png",
           "sizes": []
         }
       ]
@@ -371,6 +634,7 @@
           "name": "Basundi bowl",
           "href": "/category/plates-bowls/basundi-bowl",
           "imageUrl": "/uploads/subcategory-new-subcat-1758528505887-1758530426818.jpeg",
+          "price": 99,
           "sizes": []
         },
         {
@@ -378,6 +642,7 @@
           "name": "Halwa plate",
           "href": "/category/plates-bowls/halwa-plate",
           "imageUrl": "/uploads/subcategory-new-subcat-1758530342313-1758530426851.jpeg",
+          "price": 105,
           "sizes": []
         },
         {
@@ -385,6 +650,7 @@
           "name": "Dahi wada plate",
           "href": "/category/plates-bowls/dahi-wada-plate",
           "imageUrl": "/uploads/subcategory-new-subcat-1758537141388-1758537294336.png",
+          "price": 149,
           "sizes": []
         },
         {
@@ -392,6 +658,7 @@
           "name": "Apple plate",
           "href": "/category/plates-bowls/apple-plate",
           "imageUrl": "/uploads/subcategory-new-subcat-1758537183879-1758537294362.jpeg",
+          "price": 185,
           "sizes": []
         },
         {
@@ -399,6 +666,7 @@
           "name": "Sada vati",
           "href": "/category/plates-bowls/sada-vati",
           "imageUrl": "/uploads/subcategory-new-subcat-1758537208299-1758537294366.png",
+          "price": 220,
           "sizes": []
         },
         {
@@ -406,14 +674,28 @@
           "name": "Chikoowati",
           "href": "/category/plates-bowls/chikoowati",
           "imageUrl": "/uploads/subcategory-new-subcat-1758537252626-1758537294396.png",
+          "price": 299,
           "sizes": []
         },
         {
           "id": "sub-mixing-bowl",
           "name": "Mixing bowl",
           "href": "/category/plates-bowls/mixing-bowl",
-          "imageUrl": "/uploads/subcategory-new-subcat-1758649940529-1758649964832.jpeg",
-          "sizes": []
+          "imageUrl": "/uploads/subcategory-sub-mixing-bowl-1758967479434.png",
+          "sizes": [
+            {
+              "name": "1",
+              "price": 110
+            },
+            {
+              "name": "2",
+              "price": 125
+            },
+            {
+              "name": "3",
+              "price": 135
+            }
+          ]
         }
       ]
     },
@@ -429,6 +711,7 @@
           "name": "Stainlesssteel Saucepan ",
           "href": "/category/stainlesssteel-saucepan/stainlesssteel-saucepan",
           "imageUrl": "/uploads/subcategory-new-subcat-1758649156911-1758649964966.jpeg",
+          "price": 299,
           "sizes": []
         }
       ]

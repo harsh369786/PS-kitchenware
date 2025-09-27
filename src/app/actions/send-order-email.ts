@@ -23,9 +23,9 @@ function getHost() {
     return process.env.NEXT_PUBLIC_HOST_URL || 'http://localhost:9002';
 }
 
-function generateCartHTML(cartItems: CartItem[]) {
+function generateCartHTML(cartItems: CartItem[], totalPrice: number) {
     const host = getHost();
-    return cartItems.map(item => {
+    const itemsHTML = cartItems.map(item => {
         // Ensure imageUrl is an absolute URL
         let absoluteImageUrl = item.imageUrl.startsWith('/') 
             ? new URL(item.imageUrl, host).href
@@ -46,6 +46,15 @@ function generateCartHTML(cartItems: CartItem[]) {
             </div>
         `;
     }).join('');
+
+    return `
+      <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; max-width: 600px; margin: auto;">
+          ${itemsHTML}
+          <div style="padding-top: 15px; margin-top: 15px; border-top: 2px solid #333; text-align: right;">
+              <h2 style="margin: 0; font-size: 20px;">Total Price: ₹${totalPrice.toFixed(2)}</h2>
+          </div>
+      </div>
+    `;
 }
 
 
@@ -89,12 +98,7 @@ export async function sendOrderEmail(details: OrderDetails) {
       html: `
         <h1>New Order Received</h1>
         <p>A new order has been placed with the following items:</p>
-        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; max-width: 600px; margin: auto;">
-            ${generateCartHTML(cartItems)}
-            <div style="padding-top: 15px; margin-top: 15px; border-top: 2px solid #333; text-align: right;">
-                <h2 style="margin: 0; font-size: 20px;">Total Price: ₹${totalPrice.toFixed(2)}</h2>
-            </div>
-        </div>
+        ${generateCartHTML(cartItems, totalPrice)}
       `,
     };
 
