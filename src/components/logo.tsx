@@ -1,11 +1,17 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Logo() {
   return (
     <Link href="/" className="flex items-center justify-center h-auto">
-      <span className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-        Ps Kitchenware
-      </span>
+      <Image 
+        src="/logo.png" 
+        alt="Ps Kitchenware Logo" 
+        width={250} 
+        height={50}
+        className="h-auto"
+        priority
+      />
     </Link>
   );
 }
