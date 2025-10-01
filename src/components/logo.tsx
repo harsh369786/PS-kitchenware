@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Logo() {
   return (
-    <Link href="/" className="block w-[250px] h-[50px]">
+    <Link href="/">
       <Image 
         src="/logo.png" 
         alt="Ps Kitchenware Logo" 
