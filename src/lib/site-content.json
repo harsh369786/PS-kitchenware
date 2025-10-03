@@ -2,7 +2,7 @@
   "heroProducts": [
     {
       "id": "hero-1",
-      "name": "Ograla laddel",
+      "name": "Ograla",
       "tagline": " Har niwaale mein pyaar parosein.",
       "imageUrl": "/uploads/hero-hero-1-1758546352449.png",
       "imageHint": "kitchen product"
@@ -11,20 +11,20 @@
       "id": "hero-2",
       "name": "BELLY HANDI ",
       "tagline": "Tradition, Served Beautifully.",
-      "imageUrl": "/uploads/hero-hero-2-1758710372624.png",
+      "imageUrl": "/uploads/hero-hero-2-1759327400355.png",
       "imageHint": "houseware item"
     },
     {
       "id": "hero-3",
-      "name": "MAHARAJA Glass",
+      "name": "Set of 6 Glasses with Tray.",
       "tagline": "Every Sip Feels Royal ",
-      "imageUrl": "/uploads/hero-hero-3-1758694490533.png",
+      "imageUrl": "/uploads/hero-hero-3-1759328313847.png",
       "imageHint": "modern kitchen"
     },
     {
       "id": "hero-4",
       "name": "Tadka pan ",
-      "tagline": "Swaad ka tadka. / The sizzle of flavor.",
+      "tagline": "Swaad ka tadka.",
       "imageUrl": "/uploads/hero-hero-4-1758649964771.png",
       "imageHint": "kitchenware set"
     },
@@ -32,14 +32,14 @@
       "id": "hero-5",
       "name": "Steamer basket ",
       "tagline": "\"Steam It. Serve It. Slay It.\"",
-      "imageUrl": "/uploads/hero-hero-5-1758968489184.png",
+      "imageUrl": "/uploads/hero-hero-5-1759327400410.png",
       "imageHint": "home decor"
     },
     {
       "id": "hero-6",
       "name": "KOTHMiR DABBA ",
       "tagline": "Rakhe dhaniya-mirch ko taaza, har roz.",
-      "imageUrl": "/uploads/hero-hero-6-1758956563308.png",
+      "imageUrl": "/uploads/hero-hero-6-1759327400467.png",
       "imageHint": "cooking utensil"
     },
     {
@@ -712,6 +712,31 @@
           "href": "/category/stainlesssteel-saucepan/stainlesssteel-saucepan",
           "imageUrl": "/uploads/subcategory-new-subcat-1758649156911-1758649964966.jpeg",
           "price": 299,
+          "sizes": []
+        }
+      ]
+    },
+    {
+      "id": "new-cat-1759328779622",
+      "name": "Glasses ",
+      "href": "/category/glasses",
+      "imageUrl": "/uploads/category-new-cat-1759328779622-1759328897048.png",
+      "imageHint": "",
+      "subcategories": [
+        {
+          "id": "new-subcat-1759328814688",
+          "name": "Hammered Maharaja glass",
+          "href": "/category/glasses/hammered-maharaja-glass",
+          "imageUrl": "/uploads/subcategory-new-subcat-1759328814688-1759328897119.jpeg",
+          "imageHint": "",
+          "sizes": []
+        },
+        {
+          "id": "new-subcat-1759328857137",
+          "name": "Wine glass",
+          "href": "/category/glasses/wine-glass",
+          "imageUrl": "/uploads/subcategory-new-subcat-1759328857137-1759328897156.jpeg",
+          "imageHint": "",
           "sizes": []
         }
       ]
