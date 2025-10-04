@@ -9,13 +9,13 @@ import { revalidatePath } from 'next/cache';
 const contentFilePath = path.join(process.cwd(), "src/lib/site-content.json");
 
 const initialCategories = [
-    { id: "cat-laddles", name: "Laddles and Palta’s", href: "/category/laddles", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-laddles')?.imageUrl || '', imageHint: 'laddles kitchen' },
-    { id: "cat-doyas", name: "Doya’s", href: "/category/doyas", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-doyas')?.imageUrl || '', imageHint: 'serving spoon' },
-    { id: "cat-jaras", name: "Jara’s", href: "/category/jaras", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-jaras')?.imageUrl || '', imageHint: 'slotted spoon' },
-    { id: "cat-steamers", name: "Steamer and Washer", href: "/category/steamers", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-steamers')?.imageUrl || '', imageHint: 'steamer pot' },
-    { id: "cat-vati", name: "Vati and Plates", href: "/category/vati-plates", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-vati')?.imageUrl || '', imageHint: 'bowls plates' },
-    { id: "cat-glasses", name: "Glasses", href: "/category/glasses", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-glasses')?.imageUrl || '', imageHint: 'drinking glasses' },
-    { id: "cat-others", name: "Others", href: "/category/others", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-others')?.imageUrl || '', imageHint: 'kitchenware various' },
+    { id: "cat-laddles", name: "Laddles and Palta’s", href: "/category/laddles", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-laddles')?.imageUrl ?? '', imageHint: 'laddles kitchen' },
+    { id: "cat-doyas", name: "Doya’s", href: "/category/doyas", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-doyas')?.imageUrl ?? '', imageHint: 'serving spoon' },
+    { id: "cat-jaras", name: "Jara’s", href: "/category/jaras", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-jaras')?.imageUrl ?? '', imageHint: 'slotted spoon' },
+    { id: "cat-steamers", name: "Steamer and Washer", href: "/category/steamers", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-steamers')?.imageUrl ?? '', imageHint: 'steamer pot' },
+    { id: "cat-vati", name: "Vati and Plates", href: "/category/vati-plates", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-vati')?.imageUrl ?? '', imageHint: 'bowls plates' },
+    { id: "cat-glasses", name: "Glasses", href: "/category/glasses", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-glasses')?.imageUrl ?? '', imageHint: 'drinking glasses' },
+    { id: "cat-others", name: "Others", href: "/category/others", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-others')?.imageUrl ?? '', imageHint: 'kitchenware various' },
 ].map(cat => ({ ...cat, imageUrl: cat.imageUrl || `https://picsum.photos/seed/${cat.id}/600/400`, subcategories: [] }));
 
 const initialHeroProducts = PlaceHolderImages.filter((p) => p.id.startsWith("hero-")).map((p, i) => ({
