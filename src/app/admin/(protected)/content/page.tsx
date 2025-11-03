@@ -159,10 +159,10 @@ export default function ContentAdminPage() {
 
   const { control, setValue, getValues, watch, reset } = form;
 
+  const watchedCategories = watch('categories');
   const allProducts: SubCategory[] = useMemo(() => {
-    const categories = watch('categories');
-    return categories.flatMap(cat => cat.subcategories || []);
-  }, [watch]);
+    return watchedCategories.flatMap(cat => cat.subcategories || []);
+  }, [watchedCategories]);
   
   const updateHrefs = useCallback((categoryIndex: number, subcategoryIndex?: number) => {
     const categories = getValues('categories');
