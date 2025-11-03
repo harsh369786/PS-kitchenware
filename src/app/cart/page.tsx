@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -148,7 +149,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span>Free</span>
+                    <span className="text-muted-foreground">Calculated at next step</span>
                 </div>
             </div>
             <Separator className="my-4" />
@@ -156,6 +157,9 @@ export default function CartPage() {
                 <span>Total</span>
                 <span>₹{totalPrice.toFixed(2)}</span>
             </div>
+             <p className="text-xs text-muted-foreground mt-2">
+                Shipping charges will vary depending on the delivery location.
+            </p>
             <Button onClick={handleConfirmOrderClick} size="lg" disabled={isSubmitting || cart.length === 0} className="w-full mt-6 bg-primary hover:bg-primary/90">
              {isSubmitting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
