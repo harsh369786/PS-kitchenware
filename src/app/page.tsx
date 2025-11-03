@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { Product, Category, SiteContent, ProductSize } from "@/lib/types";
+import type { Product, SiteContent, HeroProduct } from "@/lib/types";
 import HeroCarousel from "@/components/hero-carousel";
 import CategoryGrid from "@/components/category-grid";
 import ProductDetailModal from "@/components/product-detail-modal";
@@ -34,7 +34,7 @@ export default function Home() {
     // This is the source of truth for all product details.
     for (const category of siteContent.categories) {
       if (category.subcategories) {
-        const foundSubcategory = category.subcategories.find(sub => sub.name === product.name);
+        const foundSubcategory = category.subcategories.find(sub => sub.id === product.id);
         if (foundSubcategory) {
           fullProduct = {
             id: foundSubcategory.id,
@@ -75,9 +75,43 @@ export default function Home() {
     );
   }
 
+  const heroProductsWithDetails: Product[] = siteContent.heroProducts.map(heroProduct => {
+    let baseProduct: Product | undefined;
+    for (const category of siteContent.categories) {
+      const found = category.subcategories?.find(sub => sub.id === heroProduct.productId);
+      if (found) {
+        baseProduct = {
+          id: found.id,
+          name: found.name,
+          imageUrl: found.imageUrl || category.imageUrl,
+          imageHint: found.imageHint || category.imageHint || '',
+          price: found.price,
+          sizes: found.sizes
+        };
+        break;
+      }
+    }
+    
+    if (!baseProduct) {
+      return {
+        id: heroProduct.productId,
+        name: 'Product not found',
+        imageUrl: '',
+        imageHint: ''
+      }
+    }
+
+    return {
+      ...baseProduct,
+      imageUrl: heroProduct.imageUrl || baseProduct.imageUrl,
+      imageHint: heroProduct.imageHint || baseProduct.imageHint,
+      tagline: heroProduct.tagline
+    }
+  });
+
   return (
     <div className="bg-background">
-      <HeroCarousel products={siteContent.heroProducts} onProductClick={handleProductClick} />
+      <HeroCarousel products={heroProductsWithDetails} onProductClick={handleProductClick} />
       <CategoryGrid categories={siteContent.categories} />
       
       {selectedProduct && (
@@ -95,5 +129,3 @@ export default function Home() {
     </div>
   );
 }
-
-    

@@ -33,8 +33,12 @@ export interface Category {
   subcategories?: SubCategory[];
 }
 
-export interface HeroProduct extends Omit<Product, 'price' | 'sizes'> {
-  // Hero products are for display. Price/size are sourced from the actual product.
+export interface HeroProduct {
+  productId: string; // The ID of the product from a category's subcategory
+  // The following are overrides for the hero display
+  tagline?: string;
+  imageUrl?: string;
+  imageHint?: string;
 }
 
 export interface SiteContent {

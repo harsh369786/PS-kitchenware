@@ -16,18 +16,17 @@ const initialCategories = [
     { id: "cat-vati", name: "Vati and Plates", href: "/category/vati-plates", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-vati')?.imageUrl ?? '', imageHint: 'bowls plates' },
     { id: "cat-glasses", name: "Glasses", href: "/category/glasses", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-glasses')?.imageUrl ?? '', imageHint: 'drinking glasses' },
     { id: "cat-others", name: "Others", href: "/category/others", imageUrl: PlaceHolderImages.find(p => p.id === 'cat-others')?.imageUrl ?? '', imageHint: 'kitchenware various' },
-].map(cat => ({ ...cat, imageUrl: cat.imageUrl || `https://picsum.photos/seed/${cat.id}/600/400`, subcategories: [] }));
+].map(cat => ({ ...cat, imageUrl: cat.imageUrl, subcategories: [] }));
 
-const initialHeroProducts = PlaceHolderImages.filter((p) => p.id.startsWith("hero-")).map((p, i) => ({
-    id: p.id,
-    name: `Product Example ${i + 1}`,
+const initialHeroProducts = PlaceHolderImages.filter((p) => p.id.startsWith("hero-")).slice(0, 5).map((p, i) => ({
+    productId: `prod-${i}`,
     tagline: `Essential for your modern home`,
     imageUrl: p.imageUrl,
     imageHint: p.imageHint,
 }));
 
 const initialContent: SiteContent = {
-    heroProducts: initialHeroProducts,
+    heroProducts: [],
     categories: initialCategories
 };
 
@@ -35,6 +34,11 @@ export async function getSiteContent(): Promise<SiteContent> {
   try {
     const fileContent = await fs.readFile(contentFilePath, "utf-8");
     const content = JSON.parse(fileContent) as SiteContent;
+    
+    if (!content.heroProducts) {
+      content.heroProducts = [];
+    }
+
     // Ensure categories have a subcategories array
     content.categories.forEach(cat => {
         if (!cat.subcategories) {
@@ -77,7 +81,9 @@ export async function saveSiteContent(content: SiteContent): Promise<void> {
   try {
     
     for (const product of content.heroProducts) {
-        product.imageUrl = await processImage(product.imageUrl, `hero-${product.id}`);
+        if (product.imageUrl) {
+          product.imageUrl = await processImage(product.imageUrl, `hero-${product.productId}`);
+        }
     }
 
     for (const category of content.categories) {
@@ -98,5 +104,3 @@ export async function saveSiteContent(content: SiteContent): Promise<void> {
     throw new Error("Failed to save site content.");
   }
 }
-
-    

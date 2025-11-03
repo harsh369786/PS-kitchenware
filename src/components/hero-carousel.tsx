@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay";
 import {
@@ -16,6 +17,10 @@ interface HeroCarouselProps {
 }
 
 export default function HeroCarousel({ products, onProductClick }: HeroCarouselProps) {
+  if (!products || products.length === 0) {
+    return null;
+  }
+  
   return (
     <section className="w-full">
       <Carousel

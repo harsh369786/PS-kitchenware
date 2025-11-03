@@ -1,57 +1,50 @@
+
 {
   "heroProducts": [
     {
-      "id": "hero-1",
-      "name": "Ograla",
+      "productId": "sub-ograla",
       "tagline": " Har niwaale mein pyaar parosein.",
       "imageUrl": "/uploads/hero-hero-1-1758546352449.png",
       "imageHint": "kitchen product"
     },
     {
-      "id": "hero-2",
-      "name": "BELLY HANDI ",
+      "productId": "sub-belly-handi",
       "tagline": "Tradition, Served Beautifully.",
       "imageUrl": "/uploads/hero-hero-2-1759327400355.png",
       "imageHint": "houseware item"
     },
     {
-      "id": "hero-3",
-      "name": "Set of 6 Glasses with Tray.",
+      "productId": "new-subcat-1759328814688",
       "tagline": "Every Sip Feels Royal ",
       "imageUrl": "/uploads/hero-hero-3-1759328313847.png",
       "imageHint": "modern kitchen"
     },
     {
-      "id": "hero-4",
-      "name": "Tadka pan ",
+      "productId": "sub-tadka-pan",
       "tagline": "Swaad ka tadka.",
       "imageUrl": "/uploads/hero-hero-4-1758649964771.png",
       "imageHint": "kitchenware set"
     },
     {
-      "id": "hero-5",
-      "name": "Steamer basket ",
+      "productId": "sub-steamer-basket",
       "tagline": "\"Steam It. Serve It. Slay It.\"",
       "imageUrl": "/uploads/hero-hero-5-1759327400410.png",
       "imageHint": "home decor"
     },
     {
-      "id": "hero-6",
-      "name": "KOTHMiR DABBA ",
+      "productId": "sub-kothmir-dabba",
       "tagline": "Rakhe dhaniya-mirch ko taaza, har roz.",
       "imageUrl": "/uploads/hero-hero-6-1759327400467.png",
       "imageHint": "cooking utensil"
     },
     {
-      "id": "new-hero-1758607679731",
-      "name": "Papad jali Square ",
+      "productId": "sub-papad-jali-square",
       "tagline": "Ghar par WOW-wala Grill.",
       "imageUrl": "/uploads/hero-new-hero-1758607679731-1758694216400.jpeg",
       "imageHint": ""
     },
     {
-      "id": "new-hero-1759584851825",
-      "name": "DRYFRUITS TRAY",
+      "productId": "new-subcat-1759585169593",
       "tagline": "Crunchy, healthy, happy.",
       "imageUrl": "/uploads/hero-new-hero-1759584851825-1759585084274.png",
       "imageHint": ""
@@ -70,10 +63,15 @@
           "name": "Ograla laddel",
           "href": "/category/laddels-doyas/ograla-laddel",
           "imageUrl": "/uploads/subcategory-sub-ograla-1758952818108.png",
+          "price": 100,
           "sizes": [
             {
               "name": "10",
-              "price": 0
+              "price": 100
+            },
+            {
+              "name": "12",
+              "price": 120
             }
           ]
         },

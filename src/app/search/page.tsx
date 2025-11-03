@@ -14,31 +14,16 @@ async function getSearchResults(query: string): Promise<Product[]> {
     const results: Product[] = [];
     const addedProductIds = new Set<string>();
 
-    content.categories.forEach((category) => {
-      // Check category name - not adding category as a product anymore
-      
-      // Check subcategory names
-      if (category.subcategories) {
-        category.subcategories.forEach((sub) => {
-          if (sub.name.toLowerCase().includes(lowerCaseQuery)) {
-            if(!addedProductIds.has(sub.id)){
-               results.push({
-                id: sub.id,
-                name: sub.name,
-                imageUrl: sub.imageUrl || category.imageUrl,
-                imageHint: sub.imageHint || category.imageHint || "",
-                price: sub.price,
-                sizes: sub.sizes,
-              });
-              addedProductIds.add(sub.id);
-            }
-          }
-        });
-      }
-    });
+    const allProducts = content.categories.flatMap(category =>
+        (category.subcategories || []).map(sub => ({
+            ...sub,
+            imageUrl: sub.imageUrl || category.imageUrl,
+            imageHint: sub.imageHint || category.imageHint || "",
+        }))
+    );
 
-    // Also check hero products
-    content.heroProducts.forEach((product) => {
+    // Check subcategory names
+    allProducts.forEach((product) => {
         if (product.name.toLowerCase().includes(lowerCaseQuery)) {
             if (!addedProductIds.has(product.id)) {
                 results.push(product);
@@ -46,6 +31,23 @@ async function getSearchResults(query: string): Promise<Product[]> {
             }
         }
     });
+
+    // Also check hero products
+    content.heroProducts.forEach((heroProduct) => {
+        const productDetails = allProducts.find(p => p.id === heroProduct.productId);
+        if (productDetails && productDetails.name.toLowerCase().includes(lowerCaseQuery)) {
+            if (!addedProductIds.has(productDetails.id)) {
+                results.push({
+                  ...productDetails,
+                  imageUrl: heroProduct.imageUrl || productDetails.imageUrl,
+                  imageHint: heroProduct.imageHint || productDetails.imageHint,
+                  tagline: heroProduct.tagline || productDetails.tagline,
+                });
+                addedProductIds.add(productDetails.id);
+            }
+        }
+    });
+
 
     return results;
   } catch (error) {

@@ -2,8 +2,8 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { getSiteContent, saveSiteContent } from '@/lib/site-content';
@@ -22,8 +22,16 @@ import { Loader2, PlusCircle, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { SiteContent, HeroProduct } from '@/lib/types';
+import type { SiteContent, HeroProduct, SubCategory } from '@/lib/types';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 
 const productSizeSchema = z.object({
   name: z.string().optional(),
@@ -31,12 +39,12 @@ const productSizeSchema = z.object({
 });
 
 const heroProductSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1, 'Product name is required'),
+  productId: z.string().min(1, 'Product selection is required'),
   tagline: z.string().optional(),
-  imageUrl: z.string().min(1, 'Image is required'),
+  imageUrl: z.string().optional(),
   imageHint: z.string().optional(),
 });
+
 
 const subCategorySchema = z.object({
   id: z.string(),
@@ -52,7 +60,7 @@ const categorySchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Category name is required'),
   href: z.string(),
-  imageUrl: z.string().min(1, 'Image is required'),
+imageUrl: z.string().min(1, 'Image is required'),
   imageHint: z.string().optional(),
   subcategories: z.array(subCategorySchema).optional(),
 });
@@ -150,6 +158,10 @@ export default function ContentAdminPage() {
   });
 
   const { control, setValue, getValues, watch } = form;
+
+  const allProducts: SubCategory[] = useMemo(() => {
+    return getValues('categories').flatMap(cat => cat.subcategories || []);
+  }, [watch('categories')]);
   
   const updateHrefs = useCallback((categoryIndex: number, subcategoryIndex?: number) => {
     const categories = getValues('categories');
@@ -200,8 +212,7 @@ export default function ContentAdminPage() {
         
         const sanitizedContent = {
           heroProducts: content.heroProducts.map(p => ({ 
-            id: p.id,
-            name: p.name,
+            productId: p.productId,
             tagline: p.tagline,
             imageUrl: p.imageUrl,
             imageHint: p.imageHint,
@@ -245,10 +256,9 @@ export default function ContentAdminPage() {
     try {
       const cleanedData: SiteContent = {
         heroProducts: data.heroProducts.map(p => ({
-            id: p.id,
-            name: p.name,
+            productId: p.productId,
             tagline: p.tagline || '',
-            imageUrl: p.imageUrl,
+            imageUrl: p.imageUrl || '',
             imageHint: p.imageHint || '',
         })),
         categories: data.categories.map(c => ({
@@ -410,11 +420,22 @@ export default function ContentAdminPage() {
                         <div className="space-y-4">
                           <FormField
                             control={form.control}
-                            name={`heroProducts.${index}.name`}
+                            name={`heroProducts.${index}.productId`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Product Name</FormLabel>
-                                <FormControl><Input {...field} /></FormControl>
+                                <FormLabel>Product</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a product to feature" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {allProducts.map(p => (
+                                            <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -424,8 +445,8 @@ export default function ContentAdminPage() {
                             name={`heroProducts.${index}.tagline`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Tagline</FormLabel>
-                                <FormControl><Input {...field} /></FormControl>
+                                <FormLabel>Tagline (Optional)</FormLabel>
+                                <FormControl><Input {...field} placeholder="Override product tagline"/></FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -437,12 +458,13 @@ export default function ContentAdminPage() {
                             name={`heroProducts.${index}.imageUrl`}
                             render={({ field: { onChange, value } }) => (
                               <FormItem>
-                                <FormLabel>Image</FormLabel>
+                                <FormLabel>Image (Optional)</FormLabel>
                                 {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
                                 <FormControl>
                                   <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
                                 </FormControl>
                                 <FormMessage />
+                                <p className="text-xs text-muted-foreground">If no image is provided, the original product image will be used.</p>
                               </FormItem>
                             )}
                           />
@@ -453,7 +475,7 @@ export default function ContentAdminPage() {
                       </Button>
                     </Card>
                   ))}
-                  <Button type="button" onClick={() => appendHero({ id: `new-hero-${Date.now()}`, name: '', tagline: '', imageUrl: '', imageHint: '' })}>
+                  <Button type="button" onClick={() => appendHero({ productId: '', tagline: '', imageUrl: '', imageHint: '' })}>
                     <PlusCircle className="mr-2 h-4 w-4" /> Add Hero Banner
                   </Button>
                 </CardContent>
@@ -543,7 +565,3 @@ export default function ContentAdminPage() {
     </div>
   );
 }
-
-    
-
-    
