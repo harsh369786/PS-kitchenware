@@ -13,8 +13,15 @@ const CartItemSchema = z.object({
   price: z.number(),
 });
 
+const AddressSchema = z.object({
+  name: z.string(),
+  phone: z.string(),
+  address: z.string(),
+});
+
 const OrderSchema = z.object({
   cartItems: z.array(CartItemSchema),
+  address: AddressSchema,
 });
 
 type OrderDetails = z.infer<typeof OrderSchema>;
@@ -62,7 +69,7 @@ export async function sendOrderEmail(details: OrderDetails) {
     throw new Error("Invalid order details.");
   }
   
-  const { cartItems } = validation.data;
+  const { cartItems, address } = validation.data;
   
   if (cartItems.length === 0) {
       console.log("No items in cart, skipping email.");
@@ -93,7 +100,15 @@ export async function sendOrderEmail(details: OrderDetails) {
       subject: `New Order Received`,
       html: `
         <h1>New Order Received</h1>
-        <p>A new order has been placed with the following items:</p>
+        
+        <h2>Delivery Details</h2>
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; max-width: 600px; margin: auto; margin-bottom: 20px;">
+          <p><strong>Name:</strong> ${address.name}</p>
+          <p><strong>Phone:</strong> ${address.phone}</p>
+          <p><strong>Address:</strong><br/>${address.address.replace(/\n/g, '<br/>')}</p>
+        </div>
+
+        <h2>Order Items</h2>
         ${generateCartHTML(cartItems)}
         <div style="max-width: 600px; margin: auto; padding-top: 15px; margin-top: 15px; border-top: 2px solid #333; text-align: right;">
           <h2 style="margin: 0; font-size: 20px;">Total Price: ₹${totalPrice.toFixed(2)}</h2>

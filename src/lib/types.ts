@@ -57,3 +57,9 @@ export interface CartItem extends Product {
     price: number;
     size?: string;
 }
+
+export interface Address {
+  name: string;
+  phone: string;
+  address: string;
+}

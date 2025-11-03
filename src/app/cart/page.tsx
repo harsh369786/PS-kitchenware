@@ -12,13 +12,16 @@ import { Loader2, Trash2, ShoppingCart } from "lucide-react";
 import { sendOrderEmail } from "@/app/actions/send-order-email";
 import { addOrder } from "@/app/actions/order-actions";
 import OrderConfirmationDialog from "@/components/order-confirmation-dialog";
+import AddressDialog from "@/components/address-dialog";
 import { Separator } from "@/components/ui/separator";
+import type { Address } from "@/lib/types";
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isConfirmationOpen, setConfirmationOpen] = useState(false);
+  const [isAddressModalOpen, setAddressModalOpen] = useState(false);
   const router = useRouter();
 
   const handleQuantityChange = (cartItemId: string, quantity: number) => {
@@ -31,7 +34,12 @@ export default function CartPage() {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   }, [cart]);
 
-  const handleConfirmOrder = async () => {
+  const handleConfirmOrderClick = () => {
+    setAddressModalOpen(true);
+  };
+  
+  const handleAddressSubmit = async (address: Address) => {
+    setAddressModalOpen(false);
     setIsSubmitting(true);
     try {
       // Add each cart item as a separate order
@@ -51,7 +59,7 @@ export default function CartPage() {
         });
       }
       
-      await sendOrderEmail({ cartItems: cart });
+      await sendOrderEmail({ cartItems: cart, address });
       
       setConfirmationOpen(true);
     } catch (error) {
@@ -148,7 +156,7 @@ export default function CartPage() {
                 <span>Total</span>
                 <span>₹{totalPrice.toFixed(2)}</span>
             </div>
-            <Button onClick={handleConfirmOrder} size="lg" disabled={isSubmitting || cart.length === 0} className="w-full mt-6 bg-primary hover:bg-primary/90">
+            <Button onClick={handleConfirmOrderClick} size="lg" disabled={isSubmitting || cart.length === 0} className="w-full mt-6 bg-primary hover:bg-primary/90">
              {isSubmitting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : null}
@@ -159,6 +167,12 @@ export default function CartPage() {
 
       </div>
     </div>
+    <AddressDialog
+      isOpen={isAddressModalOpen}
+      onClose={() => setAddressModalOpen(false)}
+      onSubmit={handleAddressSubmit}
+      isSubmitting={isSubmitting}
+    />
     <OrderConfirmationDialog
         isOpen={isConfirmationOpen}
         onClose={handleCloseConfirmation}

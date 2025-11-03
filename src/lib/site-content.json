@@ -48,6 +48,13 @@
       "tagline": "Ghar par WOW-wala Grill.",
       "imageUrl": "/uploads/hero-new-hero-1758607679731-1758694216400.jpeg",
       "imageHint": ""
+    },
+    {
+      "id": "new-hero-1759584851825",
+      "name": "DRYFRUITS TRAY",
+      "tagline": "Crunchy, healthy, happy.",
+      "imageUrl": "/uploads/hero-new-hero-1759584851825-1759585084274.png",
+      "imageHint": ""
     }
   ],
   "categories": [
@@ -737,6 +744,24 @@
           "href": "/category/glasses/wine-glass",
           "imageUrl": "/uploads/subcategory-new-subcat-1759328857137-1759328897156.jpeg",
           "imageHint": "",
+          "sizes": []
+        }
+      ]
+    },
+    {
+      "id": "new-cat-1759585022771",
+      "name": "DRYFRUITS TRAY ",
+      "href": "/category/dryfruits-tray",
+      "imageUrl": "/uploads/category-new-cat-1759585022771-1759585219903.png",
+      "imageHint": "",
+      "subcategories": [
+        {
+          "id": "new-subcat-1759585169593",
+          "name": "DRYFRUITS TRAY ",
+          "href": "/category/dryfruits-tray/dryfruits-tray",
+          "imageUrl": "/uploads/subcategory-new-subcat-1759585169593-1759585219907.jpeg",
+          "imageHint": "",
+          "price": 499,
           "sizes": []
         }
       ]
