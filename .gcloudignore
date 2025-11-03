@@ -1,0 +1,20 @@
+# This file specifies files and directories that should not be
+# uploaded to Google Cloud when deploying.
+
+.gcloudignore
+.git
+.gitignore
+
+# Node.js dependencies
+node_modules/
+
+# Ignore local environment variables
+.env
+
+# Ignore uploaded images from the deployment bundle
+# These are served directly, not part of the function code.
+public/uploads/
+
+# Next.js build artifacts
+.next/
+out/
