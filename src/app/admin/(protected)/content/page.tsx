@@ -164,7 +164,7 @@ export default function ContentAdminPage() {
     return watchedCategories.flatMap(cat => cat.subcategories || []);
   }, [watchedCategories]);
   
-  const updateHrefs = useCallback((categoryIndex: number, subcategoryIndex?: number) => {
+  const updateHrefs = (categoryIndex: number, subcategoryIndex?: number) => {
     const categories = getValues('categories');
     const category = categories[categoryIndex];
     if (!category) return;
@@ -193,7 +193,7 @@ export default function ContentAdminPage() {
            }
        });
     }
-  }, [getValues, setValue]);
+  };
 
 
   const { fields: heroProductFields, append: appendHero, remove: removeHero } = useFieldArray({
