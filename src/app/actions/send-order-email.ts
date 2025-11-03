@@ -17,6 +17,8 @@ const AddressSchema = z.object({
   name: z.string(),
   phone: z.string(),
   address: z.string(),
+  pincode: z.string(),
+  email: z.string().email(),
 });
 
 const OrderSchema = z.object({
@@ -105,7 +107,9 @@ export async function sendOrderEmail(details: OrderDetails) {
         <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; max-width: 600px; margin: auto; margin-bottom: 20px;">
           <p><strong>Name:</strong> ${address.name}</p>
           <p><strong>Phone:</strong> ${address.phone}</p>
+          <p><strong>Email:</strong> ${address.email}</p>
           <p><strong>Address:</strong><br/>${address.address.replace(/\n/g, '<br/>')}</p>
+          <p><strong>Pincode:</strong> ${address.pincode}</p>
         </div>
 
         <h2>Order Items</h2>

@@ -67,4 +67,6 @@ export interface Address {
   name: string;
   phone: string;
   address: string;
+  pincode: string;
+  email: string;
 }

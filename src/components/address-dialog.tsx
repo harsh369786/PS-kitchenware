@@ -36,7 +36,9 @@ interface AddressDialogProps {
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   phone: z.string().regex(/^\d{10}$/, 'Phone number must be 10 digits'),
+  email: z.string().email('Please enter a valid email address'),
   address: z.string().min(10, 'Please enter a full address'),
+  pincode: z.string().regex(/^\d{6}$/, 'Pincode must be 6 digits'),
 });
 
 export default function AddressDialog({ isOpen, onClose, onSubmit, isSubmitting }: AddressDialogProps) {
@@ -45,7 +47,9 @@ export default function AddressDialog({ isOpen, onClose, onSubmit, isSubmitting 
     defaultValues: {
       name: '',
       phone: '',
+      email: '',
       address: '',
+      pincode: '',
     },
   });
 
@@ -79,19 +83,34 @@ export default function AddressDialog({ isOpen, onClose, onSubmit, isSubmitting 
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="10-digit mobile number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                        <Input placeholder="10-digit mobile number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+                <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                        <Input placeholder="you@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+            </div>
             <FormField
               control={form.control}
               name="address"
@@ -100,11 +119,24 @@ export default function AddressDialog({ isOpen, onClose, onSubmit, isSubmitting 
                   <FormLabel>Full Address</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Include house number, street, city, state, and ZIP code"
+                      placeholder="Include house number, street, city, and state"
                       className="resize-none"
-                      rows={4}
+                      rows={3}
                       {...field}
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="pincode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pincode</FormLabel>
+                  <FormControl>
+                    <Input placeholder="6-digit pincode" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
