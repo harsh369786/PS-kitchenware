@@ -157,11 +157,12 @@ export default function ContentAdminPage() {
     },
   });
 
-  const { control, setValue, getValues, watch } = form;
+  const { control, setValue, getValues, watch, reset } = form;
 
   const allProducts: SubCategory[] = useMemo(() => {
-    return getValues('categories').flatMap(cat => cat.subcategories || []);
-  }, [watch('categories')]);
+    const categories = watch('categories');
+    return categories.flatMap(cat => cat.subcategories || []);
+  }, [watch]);
   
   const updateHrefs = useCallback((categoryIndex: number, subcategoryIndex?: number) => {
     const categories = getValues('categories');
@@ -227,7 +228,7 @@ export default function ContentAdminPage() {
           }))
         };
 
-        form.reset(sanitizedContent);
+        reset(sanitizedContent);
       } catch (error) {
         toast({ variant: 'destructive', title: 'Error', description: 'Failed to load site content.' });
       } finally {
@@ -235,7 +236,7 @@ export default function ContentAdminPage() {
       }
     }
     loadContent();
-  }, [form, toast]);
+  }, [reset, toast]);
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -275,7 +276,7 @@ export default function ContentAdminPage() {
       
       await saveSiteContent(cleanedData);
       toast({ title: 'Success', description: 'Content saved successfully.' });
-      form.reset(data); // Reset with the data from the form to keep it, but mark as not dirty
+      reset(data); // Reset with the data from the form to keep it, but mark as not dirty
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to save content.' });
     } finally {
@@ -285,7 +286,7 @@ export default function ContentAdminPage() {
 
   const Subcategories = ({ categoryIndex }: { categoryIndex: number }) => {
     const { fields, append, remove } = useFieldArray({
-      control: form.control,
+      control: control,
       name: `categories.${categoryIndex}.subcategories`,
     });
     
@@ -300,7 +301,7 @@ export default function ContentAdminPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                     <FormField
-                    control={form.control}
+                    control={control}
                     name={`categories.${categoryIndex}.subcategories.${index}.name`}
                     render={({ field }) => (
                         <FormItem>
@@ -311,7 +312,7 @@ export default function ContentAdminPage() {
                     )}
                     />
                     <FormField
-                      control={form.control}
+                      control={control}
                       name={`categories.${categoryIndex}.subcategories.${index}.href`}
                       render={({ field }) => (
                         <FormItem>
@@ -348,7 +349,7 @@ export default function ContentAdminPage() {
                 </div>
                 <div className="space-y-4">
                     <FormField
-                        control={form.control}
+                        control={control}
                         name={`categories.${categoryIndex}.subcategories.${index}.imageUrl`}
                         render={({ field: { onChange, value } }) => (
                         <FormItem>
@@ -364,7 +365,7 @@ export default function ContentAdminPage() {
                      <p className="text-xs text-muted-foreground">If no image is provided, the main category image will be used.</p>
                 </div>
               </div>
-              <ProductSizes control={form.control} fieldNamePrefix={`categories.${categoryIndex}.subcategories.${index}`} />
+              <ProductSizes control={control} fieldNamePrefix={`categories.${categoryIndex}.subcategories.${index}`} />
               <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} className="absolute top-2 right-2 h-6 w-6">
                 <Trash2 className="h-4 w-4 text-destructive" />
               </Button>
@@ -419,7 +420,7 @@ export default function ContentAdminPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-4">
                           <FormField
-                            control={form.control}
+                            control={control}
                             name={`heroProducts.${index}.productId`}
                             render={({ field }) => (
                               <FormItem>
@@ -441,7 +442,7 @@ export default function ContentAdminPage() {
                             )}
                           />
                           <FormField
-                            control={form.control}
+                            control={control}
                             name={`heroProducts.${index}.tagline`}
                             render={({ field }) => (
                               <FormItem>
@@ -454,7 +455,7 @@ export default function ContentAdminPage() {
                         </div>
                         <div className="space-y-2">
                            <FormField
-                            control={form.control}
+                            control={control}
                             name={`heroProducts.${index}.imageUrl`}
                             render={({ field: { onChange, value } }) => (
                               <FormItem>
@@ -494,7 +495,7 @@ export default function ContentAdminPage() {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
                             <div className="space-y-4">
                               <FormField
-                                control={form.control}
+                                control={control}
                                 name={`categories.${index}.name`}
                                 render={({ field }) => (
                                   <FormItem>
@@ -505,7 +506,7 @@ export default function ContentAdminPage() {
                                 )}
                               />
                                <FormField
-                                control={form.control}
+                                control={control}
                                 name={`categories.${index}.href`}
                                 render={({ field }) => (
                                   <FormItem>
@@ -518,7 +519,7 @@ export default function ContentAdminPage() {
                             </div>
                             <div className="space-y-2">
                               <FormField
-                                control={form.control}
+                                control={control}
                                 name={`categories.${index}.imageUrl`}
                                 render={({ field: { onChange, value } }) => (
                                   <FormItem>
