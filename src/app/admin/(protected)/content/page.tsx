@@ -236,7 +236,8 @@ export default function ContentAdminPage() {
       }
     }
     loadContent();
-  }, [reset, toast]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toast]);
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
