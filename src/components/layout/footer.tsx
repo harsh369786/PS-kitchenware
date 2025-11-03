@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Twitter, Instagram } from "lucide-react";
+import { Instagram } from "lucide-react";
 import ContactForm from "@/components/contact-form";
 
 export default function Footer() {
@@ -16,9 +16,7 @@ export default function Footer() {
              <div className="md:pl-4">
                 <h2 className="text-2xl font-bold font-headline mb-4">Follow Us</h2>
                  <div className="flex space-x-4">
-                    <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors"><Facebook size={24} /></Link>
-                    <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors"><Twitter size={24} /></Link>
-                    <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors"><Instagram size={24} /></Link>
+                    <Link href="https://www.instagram.com/pskitchenware11?igsh=bW5tdDZ4NzJudTlk" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors"><Instagram size={24} /></Link>
                 </div>
             </div>
             <div className="mt-8 text-sm text-muted-foreground md:pl-4">

@@ -137,5 +137,13 @@
     "price": 100,
     "date": "2025-11-03T10:16:41.120Z",
     "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/hero-hero-1-1758546352449.png"
+  },
+  {
+    "id": "order_1762167519060_5n2ojgu",
+    "productName": "DRYFRUITS TRAY ",
+    "quantity": 4,
+    "price": 499,
+    "date": "2025-11-03T10:58:39.060Z",
+    "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/subcategory-new-subcat-1759585169593-1759585219907.jpeg"
   }
 ]
