@@ -30,6 +30,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    outputFileTracingExcludes: {
+      '**/*': [
+        './public/uploads/**',
+      ],
+    },
+  },
 };
 
 export default nextConfig;
