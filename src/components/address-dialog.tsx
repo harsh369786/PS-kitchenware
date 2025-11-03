@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
 import type { Address } from '@/lib/types';
+import { Separator } from './ui/separator';
 
 interface AddressDialogProps {
   isOpen: boolean;
@@ -109,6 +110,10 @@ export default function AddressDialog({ isOpen, onClose, onSubmit, isSubmitting 
                 </FormItem>
               )}
             />
+            <Separator className="my-4" />
+            <p className="text-xs text-center text-muted-foreground">
+                Shipping charges will vary depending on the delivery location. We will confirm the final amount with you.
+            </p>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
                 Cancel

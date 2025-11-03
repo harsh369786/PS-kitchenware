@@ -119,5 +119,23 @@
     "price": 0,
     "date": "2025-11-03T07:21:53.661Z",
     "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/hero-hero-1-1758546352449.png"
+  },
+  {
+    "id": "order_1762165000740_vk96ppn",
+    "productName": "Boondi jara",
+    "quantity": 3,
+    "size": "2",
+    "price": 130,
+    "date": "2025-11-03T10:16:40.740Z",
+    "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/subcategory-sub-boondi-jara-1758965727463.png"
+  },
+  {
+    "id": "order_1762165001119_bctoy1k",
+    "productName": "Ograla laddel",
+    "quantity": 1,
+    "size": "10",
+    "price": 100,
+    "date": "2025-11-03T10:16:41.120Z",
+    "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/hero-hero-1-1758546352449.png"
   }
 ]
