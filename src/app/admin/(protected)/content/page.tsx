@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -376,15 +376,19 @@ export default function ContentAdminPage() {
           type="button"
           size="sm"
           variant="outline"
-          onClick={() => append({ 
-            id: `new-subcat-${Date.now()}`, 
-            name: '', 
-            href: `/category/${categorySlug}/${slugify('')}`, 
-            imageUrl: '', 
-            imageHint: '',
-            price: undefined,
-            sizes: [] 
-          })}
+          onClick={() => {
+            const newId = `new-subcat-${Date.now()}`;
+            const categorySlugVal = slugify(getValues(`categories.${categoryIndex}.name`));
+            append({ 
+              id: newId, 
+              name: '', 
+              href: `/category/${categorySlugVal}/${slugify('')}`, 
+              imageUrl: '', 
+              imageHint: '',
+              price: undefined,
+              sizes: [] 
+            })
+          }}
         >
           <PlusCircle className="mr-2 h-4 w-4" /> Add Subcategory
         </Button>
