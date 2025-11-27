@@ -154,5 +154,14 @@
     "price": 399,
     "date": "2025-11-04T07:27:44.827Z",
     "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/subcategory-sub-steamer-basket-1758966484561.jpeg"
+  },
+  {
+    "id": "order_1764238025515_7tuhh7m",
+    "productName": "Curv laddel",
+    "quantity": 2,
+    "size": "10",
+    "price": 501,
+    "date": "2025-11-27T10:07:05.516Z",
+    "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/subcategory-sub-curv-1758952818186.png"
   }
 ]
