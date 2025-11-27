@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -98,10 +96,9 @@ export default function ContentAdminPage() {
     },
   });
 
-  const { control, setValue, getValues, watch, reset } = form;
+  const { control, setValue, getValues, reset } = form;
 
-  const watchedCategories = watch('categories');
-  const allProducts: SubCategory[] = watchedCategories.flatMap(cat => cat.subcategories || []);
+  const allProducts: SubCategory[] = getValues('categories').flatMap(cat => cat.subcategories || []);
   
   const updateHrefs = useCallback((categoryIndex: number, subcategoryIndex?: number) => {
     const categories = getValues('categories');
@@ -176,7 +173,7 @@ export default function ContentAdminPage() {
     }
     loadContent();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reset]);
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -491,5 +488,7 @@ export default function ContentAdminPage() {
     </div>
   );
 }
+
+    
 
     
