@@ -20,6 +20,8 @@ const orderSchema = z.object({
 
 async function readOrders(): Promise<Order[]> {
   try {
+    // In a serverless environment, the filesystem is often read-only.
+    // We can still read the initial state of the file.
     const data = await fs.readFile(ordersFilePath, "utf-8");
     if (!data) return [];
     const orders: Order[] = JSON.parse(data);
@@ -35,11 +37,17 @@ async function readOrders(): Promise<Order[]> {
 }
 
 async function writeOrders(orders: Order[]): Promise<void> {
-  try {
-    await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2));
-  } catch (error) {
-    console.error("Failed to write orders file:", error);
-    throw new Error("Could not save orders.");
+  // Vercel has a read-only filesystem, so we cannot write files.
+  // This function is disabled for production environments.
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2));
+    } catch (error) {
+      console.error("Failed to write orders file:", error);
+      throw new Error("Could not save orders.");
+    }
+  } else {
+    console.log("Skipping file write in production environment.");
   }
 }
 
@@ -48,6 +56,10 @@ export async function getOrders(): Promise<Order[]> {
 }
 
 export async function addOrder(newOrder: Omit<Order, 'id' | 'date'>): Promise<void> {
+  // This function no longer writes to the filesystem in production.
+  // It only exists to maintain the structure and for local development.
+  // The primary notification mechanism is email.
+
   const orders = await readOrders();
   const orderWithTimestamp: Order = {
     ...newOrder,
@@ -57,8 +69,8 @@ export async function addOrder(newOrder: Omit<Order, 'id' | 'date'>): Promise<vo
 
   const validatedOrder = orderSchema.parse(orderWithTimestamp);
   orders.push(validatedOrder);
-  await writeOrders(orders);
+  await writeOrders(orders); // This will only run in development now
   
-  // Revalidate the dashboard path to trigger data refresh
+  // Revalidate the dashboard path to trigger data refresh if needed
   revalidatePath('/admin/dashboard');
 }

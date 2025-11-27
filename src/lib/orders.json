@@ -145,5 +145,14 @@
     "price": 499,
     "date": "2025-11-03T10:58:39.060Z",
     "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/subcategory-new-subcat-1759585169593-1759585219907.jpeg"
+  },
+  {
+    "id": "order_1762241264827_k5zu2gs",
+    "productName": "Steamer basket",
+    "quantity": 3,
+    "size": "2",
+    "price": 399,
+    "date": "2025-11-04T07:27:44.827Z",
+    "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/subcategory-sub-steamer-basket-1758966484561.jpeg"
   }
 ]
