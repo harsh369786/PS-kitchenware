@@ -22,7 +22,6 @@ import { Loader2, PlusCircle, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import type { SiteContent, SubCategory } from '@/lib/types';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   Select,
   SelectContent,
@@ -424,8 +423,7 @@ export default function ContentAdminPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               {categoryFields.map((field, index) => (
-                 <Collapsible key={field.id} asChild>
-                  <Card className="p-4">
+                  <Card key={field.id} className="p-4">
                     <div className="flex justify-between items-start">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
                         <div className="space-y-4">
@@ -470,19 +468,13 @@ export default function ContentAdminPage() {
                         </div>
                       </div>
                       <div className="flex flex-col ml-4">
-                         <CollapsibleTrigger asChild>
-                            <Button variant="ghost" size="sm">Edit Products</Button>
-                         </CollapsibleTrigger>
                          <Button type="button" variant="destructive" size="sm" onClick={() => removeCategory(index)} className="mt-2">
                            <Trash2 className="mr-2 h-4 w-4" /> Remove
                          </Button>
                        </div>
                     </div>
-                    <CollapsibleContent>
                       <Subcategories categoryIndex={index} />
-                    </CollapsibleContent>
                   </Card>
-                </Collapsible>
               ))}
               <Button type="button" onClick={() => appendCategory({ id: `new-cat-${Date.now()}`, name: '', href: '', imageUrl: '', imageHint: '', subcategories: [] })}>
                 <PlusCircle className="mr-2 h-4 w-4" /> Add Category
@@ -499,3 +491,5 @@ export default function ContentAdminPage() {
     </div>
   );
 }
+
+    
