@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -102,9 +102,7 @@ export default function ContentAdminPage() {
   const { control, setValue, getValues, watch, reset } = form;
 
   const watchedCategories = watch('categories');
-  const allProducts: SubCategory[] = useMemo(() => {
-    return watchedCategories.flatMap(cat => cat.subcategories || []);
-  }, [watchedCategories]);
+  const allProducts: SubCategory[] = watchedCategories.flatMap(cat => cat.subcategories || []);
   
   const updateHrefs = useCallback((categoryIndex: number, subcategoryIndex?: number) => {
     const categories = getValues('categories');
