@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -21,8 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, PlusCircle, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { SiteContent, HeroProduct, SubCategory } from '@/lib/types';
+import type { SiteContent, SubCategory } from '@/lib/types';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   Select,
@@ -107,7 +106,7 @@ export default function ContentAdminPage() {
     return watchedCategories.flatMap(cat => cat.subcategories || []);
   }, [watchedCategories]);
   
-  const updateHrefs = (categoryIndex: number, subcategoryIndex?: number) => {
+  const updateHrefs = useCallback((categoryIndex: number, subcategoryIndex?: number) => {
     const categories = getValues('categories');
     const category = categories[categoryIndex];
     if (!category) return;
@@ -136,7 +135,7 @@ export default function ContentAdminPage() {
            }
        });
     }
-  };
+  }, [getValues, setValue]);
 
 
   const { fields: heroProductFields, append: appendHero, remove: removeHero } = useFieldArray({
@@ -220,7 +219,7 @@ export default function ContentAdminPage() {
       
       await saveSiteContent(cleanedData);
       toast({ title: 'Success', description: 'Content saved successfully.' });
-      reset(data); // Reset with the data from the form to keep it, but mark as not dirty
+      reset(data);
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to save content.' });
     } finally {
@@ -234,9 +233,6 @@ export default function ContentAdminPage() {
       name: `categories.${categoryIndex}.subcategories`,
     });
     
-    const categoryName = watch(`categories.${categoryIndex}.name`);
-    const categorySlug = slugify(categoryName);
-
     return (
       <div className="ml-6 mt-4 space-y-4 border-l pl-4">
         <h4 className="font-semibold">Subcategories / Products</h4>
@@ -352,158 +348,149 @@ export default function ContentAdminPage() {
       <h1 className="text-3xl font-bold mb-6">Site Content Management</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <Tabs defaultValue="hero">
-            <TabsList>
-              <TabsTrigger value="hero">Hero Banners</TabsTrigger>
-              <TabsTrigger value="categories">Categories & Products</TabsTrigger>
-            </TabsList>
-            <TabsContent value="hero">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Hero Banners</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {heroProductFields.map((field, index) => (
-                    <Card key={field.id} className="p-4 relative">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Hero Banners</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {heroProductFields.map((field, index) => (
+                <Card key={field.id} className="p-4 relative">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-4">
+                      <FormField
+                        control={control}
+                        name={`heroProducts.${index}.productId`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Product</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a product to feature" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {allProducts.map(p => (
+                                        <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={control}
+                        name={`heroProducts.${index}.tagline`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tagline (Optional)</FormLabel>
+                            <FormControl><Input {...field} placeholder="Override product tagline"/></FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                       <FormField
+                        control={control}
+                        name={`heroProducts.${index}.imageUrl`}
+                        render={({ field: { onChange, value } }) => (
+                          <FormItem>
+                            <FormLabel>Image (Optional)</FormLabel>
+                            {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
+                            <FormControl>
+                              <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
+                            </FormControl>
+                            <FormMessage />
+                            <p className="text-xs text-muted-foreground">If no image is provided, the original product image will be used.</p>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <Button type="button" variant="destructive" size="sm" onClick={() => removeHero(index)} className="absolute bottom-4 right-4">
+                    <Trash2 className="mr-2 h-4 w-4" /> Remove
+                  </Button>
+                </Card>
+              ))}
+              <Button type="button" onClick={() => appendHero({ productId: '', tagline: '', imageUrl: '', imageHint: '' })}>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Hero Banner
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Categories & Products</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {categoryFields.map((field, index) => (
+                 <Collapsible key={field.id} asChild>
+                  <Card className="p-4">
+                    <div className="flex justify-between items-start">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
                         <div className="space-y-4">
                           <FormField
                             control={control}
-                            name={`heroProducts.${index}.productId`}
+                            name={`categories.${index}.name`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Product</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a product to feature" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {allProducts.map(p => (
-                                            <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                <FormLabel>Category Name</FormLabel>
+                                <FormControl><Input {...field} onBlur={() => updateHrefs(index)}/></FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
                           />
-                          <FormField
+                           <FormField
                             control={control}
-                            name={`heroProducts.${index}.tagline`}
+                            name={`categories.${index}.href`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Tagline (Optional)</FormLabel>
-                                <FormControl><Input {...field} placeholder="Override product tagline"/></FormControl>
+                                <FormLabel>Link (auto-generated)</FormLabel>
+                                <FormControl><Input {...field} readOnly className="bg-muted"/></FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
                           />
                         </div>
                         <div className="space-y-2">
-                           <FormField
+                          <FormField
                             control={control}
-                            name={`heroProducts.${index}.imageUrl`}
+                            name={`categories.${index}.imageUrl`}
                             render={({ field: { onChange, value } }) => (
                               <FormItem>
-                                <FormLabel>Image (Optional)</FormLabel>
+                                <FormLabel>Image</FormLabel>
                                 {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
                                 <FormControl>
                                   <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
                                 </FormControl>
                                 <FormMessage />
-                                <p className="text-xs text-muted-foreground">If no image is provided, the original product image will be used.</p>
                               </FormItem>
                             )}
                           />
                         </div>
                       </div>
-                      <Button type="button" variant="destructive" size="sm" onClick={() => removeHero(index)} className="absolute bottom-4 right-4">
-                        <Trash2 className="mr-2 h-4 w-4" /> Remove
-                      </Button>
-                    </Card>
-                  ))}
-                  <Button type="button" onClick={() => appendHero({ productId: '', tagline: '', imageUrl: '', imageHint: '' })}>
-                    <PlusCircle className="mr-2 h-4 w-4" /> Add Hero Banner
-                  </Button>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="categories">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Categories</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {categoryFields.map((field, index) => (
-                     <Collapsible key={field.id} asChild>
-                      <Card className="p-4">
-                        <div className="flex justify-between items-start">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
-                            <div className="space-y-4">
-                              <FormField
-                                control={control}
-                                name={`categories.${index}.name`}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Category Name</FormLabel>
-                                    <FormControl><Input {...field} onBlur={() => updateHrefs(index)}/></FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                               <FormField
-                                control={control}
-                                name={`categories.${index}.href`}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Link (auto-generated)</FormLabel>
-                                    <FormControl><Input {...field} readOnly className="bg-muted"/></FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <FormField
-                                control={control}
-                                name={`categories.${index}.imageUrl`}
-                                render={({ field: { onChange, value } }) => (
-                                  <FormItem>
-                                    <FormLabel>Image</FormLabel>
-                                    {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
-                                    <FormControl>
-                                      <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-                          </div>
-                          <div className="flex flex-col ml-4">
-                             <CollapsibleTrigger asChild>
-                                <Button variant="ghost" size="sm">Edit Products</Button>
-                             </CollapsibleTrigger>
-                             <Button type="button" variant="destructive" size="sm" onClick={() => removeCategory(index)} className="mt-2">
-                               <Trash2 className="mr-2 h-4 w-4" /> Remove
-                             </Button>
-                           </div>
-                        </div>
-                        <CollapsibleContent>
-                          <Subcategories categoryIndex={index} />
-                        </CollapsibleContent>
-                      </Card>
-                    </Collapsible>
-                  ))}
-                  <Button type="button" onClick={() => appendCategory({ id: `new-cat-${Date.now()}`, name: '', href: '', imageUrl: '', imageHint: '', subcategories: [] })}>
-                    <PlusCircle className="mr-2 h-4 w-4" /> Add Category
-                  </Button>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                      <div className="flex flex-col ml-4">
+                         <CollapsibleTrigger asChild>
+                            <Button variant="ghost" size="sm">Edit Products</Button>
+                         </CollapsibleTrigger>
+                         <Button type="button" variant="destructive" size="sm" onClick={() => removeCategory(index)} className="mt-2">
+                           <Trash2 className="mr-2 h-4 w-4" /> Remove
+                         </Button>
+                       </div>
+                    </div>
+                    <CollapsibleContent>
+                      <Subcategories categoryIndex={index} />
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              ))}
+              <Button type="button" onClick={() => appendCategory({ id: `new-cat-${Date.now()}`, name: '', href: '', imageUrl: '', imageHint: '', subcategories: [] })}>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Category
+              </Button>
+            </CardContent>
+          </Card>
           
           <Button type="submit" disabled={isSaving || !form.formState.isDirty} size="lg">
             {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
