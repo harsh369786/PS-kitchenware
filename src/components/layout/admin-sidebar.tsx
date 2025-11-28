@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, ShoppingBag, Bot } from "lucide-react";
+import { LayoutDashboard, ShoppingBag } from "lucide-react";
 import Logo from "@/components/logo";
 
 export default function AdminSidebar() {
@@ -15,11 +15,7 @@ export default function AdminSidebar() {
             </Link>
             <Link href="/admin/content" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                 <ShoppingBag className="h-4 w-4" />
-                Product Management
-            </Link>
-            <Link href="/admin/product-description" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-                <Bot className="h-4 w-4" />
-                AI Product Description
+                Content Management
             </Link>
         </nav>
     </aside>

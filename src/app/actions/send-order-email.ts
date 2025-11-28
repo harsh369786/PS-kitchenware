@@ -8,7 +8,7 @@ const CartItemSchema = z.object({
   id: z.string(),
   name: z.string(),
   quantity: z.number().min(1),
-  imageUrl: z.string(),
+  imageUrl: z.string().url(), // Expect a full URL
   size: z.string().optional(),
   price: z.number(),
 });
@@ -28,20 +28,12 @@ const OrderSchema = z.object({
 
 type OrderDetails = z.infer<typeof OrderSchema>;
 
-function getHost() {
-    return process.env.NEXT_PUBLIC_HOST_URL || 'http://localhost:9002';
-}
-
 function generateCartHTML(cartItems: CartItem[]) {
-    const host = getHost();
     const itemsHTML = cartItems.map(item => {
-        let absoluteImageUrl = item.imageUrl.startsWith('/') 
-            ? new URL(item.imageUrl, host).href
-            : item.imageUrl;
-
+        // The imageUrl is now expected to be an absolute URL
         return `
             <div style="border-bottom: 1px solid #eee; padding: 10px 0; display: flex; align-items: center;">
-                <img src="${absoluteImageUrl}" alt="${item.name}" width="80" style="margin-right: 20px; border-radius: 8px;" />
+                <img src="${item.imageUrl}" alt="${item.name}" width="80" style="margin-right: 20px; border-radius: 8px;" />
                 <div style="flex-grow: 1;">
                     <h3 style="margin: 0; font-size: 16px;">${item.name}</h3>
                     ${item.size ? `<p style="margin: 5px 0 0;"><strong>Size:</strong> ${item.size}</p>` : ''}

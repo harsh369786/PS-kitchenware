@@ -17,6 +17,14 @@ import AddressDialog from "@/components/address-dialog";
 import { Separator } from "@/components/ui/separator";
 import type { Address } from "@/lib/types";
 
+function getAbsoluteUrl(path: string) {
+    if (path.startsWith('http')) {
+        return path;
+    }
+    // This function runs on the client, so window.location.origin is safe.
+    return new URL(path, window.location.origin).href;
+}
+
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
   const { toast } = useToast();
@@ -43,24 +51,24 @@ export default function CartPage() {
     setAddressModalOpen(false);
     setIsSubmitting(true);
     try {
-      // Add each cart item as a separate order
-      for (const item of cart) {
-        let absoluteImageUrl = item.imageUrl;
-         if (absoluteImageUrl.startsWith('/')) {
-            const host = process.env.NEXT_PUBLIC_HOST_URL || window.location.origin;
-            absoluteImageUrl = new URL(absoluteImageUrl, host).href;
-        }
+      // Create absolute URLs for all items before sending to server actions.
+      const cartWithAbsoluteUrls = cart.map(item => ({
+          ...item,
+          imageUrl: getAbsoluteUrl(item.imageUrl),
+      }));
 
+      // Add each cart item as a separate order
+      for (const item of cartWithAbsoluteUrls) {
         await addOrder({
             productName: item.name,
             quantity: item.quantity,
-            imageUrl: absoluteImageUrl,
+            imageUrl: item.imageUrl,
             size: item.size,
             price: item.price,
         });
       }
       
-      await sendOrderEmail({ cartItems: cart, address });
+      await sendOrderEmail({ cartItems: cartWithAbsoluteUrls, address });
       
       setConfirmationOpen(true);
     } catch (error) {
