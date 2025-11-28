@@ -1,3 +1,4 @@
+
 'use client';
 import { useEffect, useState, useMemo } from 'react';
 import type { Order, Category } from '@/lib/types';
@@ -13,8 +14,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Bar, BarChart, Line, LineChart, Pie, PieChart, Cell, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Package, ShoppingCart, Activity, Users, Loader2 } from 'lucide-react';
-import { subDays, format, parseISO } from 'date-fns';
+import { Package, ShoppingCart, Activity, Users, Loader2, Calendar as CalendarIcon } from 'lucide-react';
+import { subDays, format, parseISO, startOfDay, endOfDay, isWithinInterval } from 'date-fns';
+import { DateRange } from 'react-day-picker';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 
 const COLORS = [
   'hsl(var(--chart-1))',
@@ -25,9 +31,13 @@ const COLORS = [
 ];
 
 export default function DashboardPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: subDays(new Date(), 29),
+    to: new Date(),
+  });
 
   useEffect(() => {
     async function fetchData() {
@@ -36,7 +46,7 @@ export default function DashboardPage() {
           getOrders(),
           getSiteContent(),
         ]);
-        setOrders(ordersData);
+        setAllOrders(ordersData);
         setCategories(siteContent.categories);
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
@@ -46,8 +56,21 @@ export default function DashboardPage() {
     }
     fetchData();
   }, []);
+  
+  const filteredOrders = useMemo(() => {
+      if (!dateRange?.from) return allOrders;
+      const from = startOfDay(dateRange.from);
+      const to = dateRange.to ? endOfDay(dateRange.to) : endOfDay(from);
+      return allOrders.filter(order => {
+        const orderDate = parseISO(order.date);
+        return isWithinInterval(orderDate, { start: from, end: to });
+      });
+  }, [allOrders, dateRange]);
+
 
   const analytics = useMemo(() => {
+    const orders = filteredOrders;
+
     if (orders.length === 0) {
       return {
         totalOrders: 0,
@@ -81,11 +104,11 @@ export default function DashboardPage() {
       return acc;
     }, {} as Record<string, number>);
 
-    const last30Days = Array.from({ length: 30 }, (_, i) =>
-      format(subDays(new Date(), i), 'yyyy-MM-dd')
-    ).reverse();
-    
-    const lineChartData = last30Days.map(day => ({
+    const daysInRange = dateRange?.from ? 
+        Array.from({ length: Math.ceil(( (dateRange.to || dateRange.from).getTime() - dateRange.from.getTime()) / (1000 * 3600 * 24)) +1 }, (_, i) => format(subDays(dateRange.to || new Date(), i), 'yyyy-MM-dd')).reverse()
+        : Array.from({ length: 30 }, (_, i) => format(subDays(new Date(), i), 'yyyy-MM-dd')).reverse();
+
+    const lineChartData = daysInRange.map(day => ({
       date: format(parseISO(day), 'MMM dd'),
       orders: ordersByDay[day] || 0,
     }));
@@ -112,159 +135,202 @@ export default function DashboardPage() {
     const recentOrders = [...orders].reverse().slice(0, 10);
 
     return { totalOrders, topProduct, productChartData, lineChartData, averageOrdersPerDay, categoryOrderDistribution, recentOrders };
-  }, [orders, categories]);
+  }, [filteredOrders, categories, dateRange]);
 
   if (isLoading) {
     return <div className="flex items-center justify-center h-full"><Loader2 className="h-8 w-8 animate-spin" /></div>;
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-          <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{analytics.totalOrders}</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Top Product</CardTitle>
-          <Package className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold truncate">
-            {analytics.topProduct ? analytics.topProduct[0] : 'N/A'}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {analytics.topProduct ? `${analytics.topProduct[1]} units sold` : ''}
-          </p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            Avg. Orders per Day
-          </CardTitle>
-          <Activity className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            {analytics.averageOrdersPerDay.toFixed(1)}
-          </div>
-        </CardContent>
-      </Card>
-       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Welcome</CardTitle>
-          <Users className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">Admin</div>
-           <p className="text-xs text-muted-foreground">
-            Analytics are updated in real-time.
-          </p>
-        </CardContent>
-      </Card>
+    <div className="space-y-4">
+        <div className="flex items-center justify-between space-x-2">
+            <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
+             <div className="flex items-center space-x-2">
+                <Popover>
+                    <PopoverTrigger asChild>
+                    <Button
+                        id="date"
+                        variant={"outline"}
+                        className={cn(
+                        "w-[300px] justify-start text-left font-normal",
+                        !dateRange && "text-muted-foreground"
+                        )}
+                    >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {dateRange?.from ? (
+                        dateRange.to ? (
+                            <>
+                            {format(dateRange.from, "LLL dd, y")} -{" "}
+                            {format(dateRange.to, "LLL dd, y")}
+                            </>
+                        ) : (
+                            format(dateRange.from, "LLL dd, y")
+                        )
+                        ) : (
+                        <span>Pick a date</span>
+                        )}
+                    </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="end">
+                    <Calendar
+                        initialFocus
+                        mode="range"
+                        defaultMonth={dateRange?.from}
+                        selected={dateRange}
+                        onSelect={setDateRange}
+                        numberOfMonths={2}
+                    />
+                    </PopoverContent>
+                </Popover>
+            </div>
+        </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
+            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{analytics.totalOrders}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Top Product</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold truncate">
+              {analytics.topProduct ? analytics.topProduct[0] : 'N/A'}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {analytics.topProduct ? `${analytics.topProduct[1]} units sold` : ''}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Avg. Orders per Day
+            </CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {analytics.averageOrdersPerDay.toFixed(1)}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Welcome</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">Admin</div>
+            <p className="text-xs text-muted-foreground">
+              Analytics are updated based on new orders.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-full lg:col-span-4">
+          <CardHeader>
+            <CardTitle>Daily Orders</CardTitle>
+            <CardDescription>Order volume for the selected period.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={analytics.lineChartData}>
+                <CartesianGrid vertical={false} />
+                <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                <YAxis />
+                <Tooltip contentStyle={{ background: 'hsl(var(--background))' }} />
+                <Line type="monotone" dataKey="orders" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+        <Card className="col-span-full lg:col-span-3">
+          <CardHeader>
+            <CardTitle>Category Distribution</CardTitle>
+            <CardDescription>Distribution of orders across categories.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={analytics.categoryOrderDistribution}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                  nameKey="name"
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                >
+                  {analytics.categoryOrderDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-      <Card className="col-span-full xl:col-span-2">
-        <CardHeader>
-          <CardTitle>Products vs. Quantities Sold</CardTitle>
-          <CardDescription>Top 10 products by quantity.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={analytics.productChartData}>
-              <CartesianGrid vertical={false} />
-              <XAxis dataKey="name" tick={{ fontSize: 10 }} angle={-45} textAnchor="end" height={60} />
-              <YAxis />
-              <Tooltip cursor={{ fill: 'hsl(var(--muted))' }} />
-              <Bar dataKey="quantity" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
+        <Card className="col-span-full">
+            <CardHeader>
+            <CardTitle>Products vs. Quantities Sold</CardTitle>
+            <CardDescription>Top 10 products by quantity in the selected period.</CardDescription>
+            </CardHeader>
+            <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={analytics.productChartData}>
+                <CartesianGrid vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 10 }} angle={-45} textAnchor="end" height={60} />
+                <YAxis allowDecimals={false} />
+                <Tooltip cursor={{ fill: 'hsl(var(--muted))' }} />
+                <Bar dataKey="quantity" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                </BarChart>
+            </ResponsiveContainer>
+            </CardContent>
+        </Card>
 
-      <Card className="col-span-full xl:col-span-2">
-        <CardHeader>
-          <CardTitle>Daily Orders</CardTitle>
-          <CardDescription>Order volume over the last 30 days.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={analytics.lineChartData}>
-              <CartesianGrid vertical={false} />
-              <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-              <YAxis />
-              <Tooltip contentStyle={{ background: 'hsl(var(--background))' }} />
-              <Line type="monotone" dataKey="orders" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-
-      <Card className="col-span-full xl:col-span-2">
-        <CardHeader>
-          <CardTitle>Category Distribution</CardTitle>
-          <CardDescription>Distribution of orders across categories.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={analytics.categoryOrderDistribution}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-                nameKey="name"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-              >
-                {analytics.categoryOrderDistribution.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-
-      <Card className="col-span-full">
-        <CardHeader>
-          <CardTitle>Recent Orders</CardTitle>
-          <CardDescription>The last 10 orders received.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Product</TableHead>
-                <TableHead>Size</TableHead>
-                <TableHead>Quantity</TableHead>
-                <TableHead>Date</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {analytics.recentOrders.map(order => (
-                <TableRow key={order.id}>
-                  <TableCell>{order.productName}</TableCell>
-                   <TableCell>{order.size || 'N/A'}</TableCell>
-                  <TableCell>{order.quantity}</TableCell>
-                  <TableCell>
-                    {format(parseISO(order.date), 'MMM dd, yyyy, hh:mm a')}
-                  </TableCell>
+        <Card className="col-span-full">
+          <CardHeader>
+            <CardTitle>Recent Orders</CardTitle>
+            <CardDescription>The last 10 orders received in the selected period.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Product</TableHead>
+                  <TableHead>Size</TableHead>
+                  <TableHead>Quantity</TableHead>
+                  <TableHead>Date</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+              </TableHeader>
+              <TableBody>
+                {analytics.recentOrders.map(order => (
+                  <TableRow key={order.id}>
+                    <TableCell>{order.productName}</TableCell>
+                    <TableCell>{order.size || 'N/A'}</TableCell>
+                    <TableCell>{order.quantity}</TableCell>
+                    <TableCell>
+                      {format(parseISO(order.date), 'MMM dd, yyyy, hh:mm a')}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
