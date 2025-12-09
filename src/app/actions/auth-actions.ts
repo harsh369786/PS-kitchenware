@@ -50,5 +50,5 @@ export async function logout() {
 export async function isAuthenticated() {
     const cookieStore = cookies();
     const authToken = cookieStore.get(AUTH_COOKIE_NAME);
-    return !!authToken;
+    return !!authToken?.value;
 }
