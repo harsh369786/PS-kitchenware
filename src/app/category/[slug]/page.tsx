@@ -44,7 +44,13 @@ async function getCategory(slug: string): Promise<{ category: Category | null, p
   }
 }
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
+interface CategoryPageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export default async function CategoryPage({ params }: CategoryPageProps) {
   const { category, products } = await getCategory(params.slug);
 
   if (!category) {
@@ -58,3 +64,4 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     </div>
   );
 }
+
