@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { Separator } from '@/components/ui/separator';
 
 const COLORS = [
   'hsl(var(--chart-1))',
@@ -34,10 +35,15 @@ export default function DashboardPage() {
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+
+  const [activeDateRange, setActiveDateRange] = useState<DateRange | undefined>({
     from: subDays(new Date(), 29),
     to: new Date(),
   });
+  
+  const [popoverDateRange, setPopoverDateRange] = useState<DateRange | undefined>(activeDateRange);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -58,14 +64,19 @@ export default function DashboardPage() {
   }, []);
   
   const filteredOrders = useMemo(() => {
-      if (!dateRange?.from) return allOrders;
-      const from = startOfDay(dateRange.from);
-      const to = dateRange.to ? endOfDay(dateRange.to) : endOfDay(from);
+      if (!activeDateRange?.from) return allOrders;
+      const from = startOfDay(activeDateRange.from);
+      const to = activeDateRange.to ? endOfDay(activeDateRange.to) : endOfDay(from);
       return allOrders.filter(order => {
         const orderDate = parseISO(order.date);
         return isWithinInterval(orderDate, { start: from, end: to });
       });
-  }, [allOrders, dateRange]);
+  }, [allOrders, activeDateRange]);
+
+  const handleDateApply = () => {
+    setActiveDateRange(popoverDateRange);
+    setIsPopoverOpen(false);
+  };
 
 
   const analytics = useMemo(() => {
@@ -104,8 +115,8 @@ export default function DashboardPage() {
       return acc;
     }, {} as Record<string, number>);
 
-    const daysInRange = dateRange?.from ? 
-        Array.from({ length: Math.ceil(( (dateRange.to || dateRange.from).getTime() - dateRange.from.getTime()) / (1000 * 3600 * 24)) +1 }, (_, i) => format(subDays(dateRange.to || new Date(), i), 'yyyy-MM-dd')).reverse()
+    const daysInRange = activeDateRange?.from ? 
+        Array.from({ length: Math.ceil(( (activeDateRange.to || activeDateRange.from).getTime() - activeDateRange.from.getTime()) / (1000 * 3600 * 24)) +1 }, (_, i) => format(subDays(activeDateRange.to || new Date(), i), 'yyyy-MM-dd')).reverse()
         : Array.from({ length: 30 }, (_, i) => format(subDays(new Date(), i), 'yyyy-MM-dd')).reverse();
 
     const lineChartData = daysInRange.map(day => ({
@@ -135,7 +146,7 @@ export default function DashboardPage() {
     const recentOrders = [...orders].reverse().slice(0, 10);
 
     return { totalOrders, topProduct, productChartData, lineChartData, averageOrdersPerDay, categoryOrderDistribution, recentOrders };
-  }, [filteredOrders, categories, dateRange]);
+  }, [filteredOrders, categories, activeDateRange]);
 
   if (isLoading) {
     return <div className="flex items-center justify-center h-full"><Loader2 className="h-8 w-8 animate-spin" /></div>;
@@ -146,25 +157,25 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between space-x-2">
             <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
              <div className="flex items-center space-x-2">
-                <Popover>
+                <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
                     <PopoverTrigger asChild>
                     <Button
                         id="date"
                         variant={"outline"}
                         className={cn(
                         "w-[300px] justify-start text-left font-normal",
-                        !dateRange && "text-muted-foreground"
+                        !activeDateRange && "text-muted-foreground"
                         )}
                     >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {dateRange?.from ? (
-                        dateRange.to ? (
+                        {activeDateRange?.from ? (
+                        activeDateRange.to ? (
                             <>
-                            {format(dateRange.from, "LLL dd, y")} -{" "}
-                            {format(dateRange.to, "LLL dd, y")}
+                            {format(activeDateRange.from, "LLL dd, y")} -{" "}
+                            {format(activeDateRange.to, "LLL dd, y")}
                             </>
                         ) : (
-                            format(dateRange.from, "LLL dd, y")
+                            format(activeDateRange.from, "LLL dd, y")
                         )
                         ) : (
                         <span>Pick a date</span>
@@ -175,11 +186,14 @@ export default function DashboardPage() {
                     <Calendar
                         initialFocus
                         mode="range"
-                        defaultMonth={dateRange?.from}
-                        selected={dateRange}
-                        onSelect={setDateRange}
+                        defaultMonth={popoverDateRange?.from}
+                        selected={popoverDateRange}
+                        onSelect={setPopoverDateRange}
                         numberOfMonths={2}
                     />
+                    <div className="p-4 border-t">
+                        <Button onClick={handleDateApply} className="w-full">Apply</Button>
+                    </div>
                     </PopoverContent>
                 </Popover>
             </div>
@@ -334,3 +348,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
