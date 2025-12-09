@@ -14,14 +14,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Bar, BarChart, Line, LineChart, Pie, PieChart, Cell, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Package, ShoppingCart, Activity, Users, Loader2, Calendar as CalendarIcon, IndianRupee } from 'lucide-react';
+import { Package, ShoppingCart, Activity, Loader2, Calendar as CalendarIcon, IndianRupee } from 'lucide-react';
 import { subDays, format, parseISO, startOfDay, endOfDay, isWithinInterval, isToday } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { Separator } from '@/components/ui/separator';
 
 const COLORS = [
   'hsl(var(--chart-1))',
@@ -44,9 +43,9 @@ export default function DashboardPage() {
   const [popoverDateRange, setPopoverDateRange] = useState<DateRange | undefined>(activeDateRange);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       try {
         const [ordersData, siteContent] = await Promise.all([
           getOrders(),
@@ -67,9 +66,15 @@ export default function DashboardPage() {
       if (!activeDateRange?.from) return allOrders;
       const from = startOfDay(activeDateRange.from);
       const to = activeDateRange.to ? endOfDay(activeDateRange.to) : endOfDay(from);
+      
       return allOrders.filter(order => {
-        const orderDate = parseISO(order.date);
-        return isWithinInterval(orderDate, { start: from, end: to });
+        try {
+            const orderDate = parseISO(order.date);
+            return isWithinInterval(orderDate, { start: from, end: to });
+        } catch (e) {
+            console.warn(`Invalid date format for order: ${order.id}`, order.date);
+            return false;
+        }
       });
   }, [allOrders, activeDateRange]);
 
@@ -78,24 +83,17 @@ export default function DashboardPage() {
     setIsPopoverOpen(false);
   };
 
-
   const analytics = useMemo(() => {
     const orders = filteredOrders;
 
-    if (orders.length === 0 && allOrders.length === 0) {
-      return {
-        totalOrders: 0,
-        todaysRevenue: 0,
-        topProduct: null,
-        productChartData: [],
-        lineChartData: [],
-        averageOrdersPerDay: 0,
-        categoryOrderDistribution: [],
-        recentOrders: [],
-      };
-    }
-    
-    const todaysOrders = allOrders.filter(order => isToday(parseISO(order.date)));
+    const todaysOrders = allOrders.filter(order => {
+        try {
+            return isToday(parseISO(order.date));
+        } catch (e) {
+            return false;
+        }
+    });
+
     const todaysRevenue = todaysOrders.reduce((sum, order) => {
         return sum + (order.price ?? 0) * order.quantity;
     }, 0);
@@ -114,6 +112,7 @@ export default function DashboardPage() {
 
     const productChartData = Object.entries(productQuantities)
       .map(([name, quantity]) => ({ name, quantity }))
+      .sort((a,b) => b.quantity - a.quantity)
       .slice(0, 10);
 
     const ordersByDay = orders.reduce((acc, order) => {
@@ -150,13 +149,13 @@ export default function DashboardPage() {
         name, value
     }));
     
-    const recentOrders = [...orders].reverse().slice(0, 10);
+    const recentOrders = [...orders].slice(0, 10);
 
     return { totalOrders, todaysRevenue, topProduct, productChartData, lineChartData, averageOrdersPerDay, categoryOrderDistribution, recentOrders };
   }, [filteredOrders, allOrders, categories, activeDateRange]);
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-full"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+    return <div className="flex items-center justify-center h-full"><Loader2 className="h-8 w-8 animate-spin" /><span>&nbsp;Loading dashboard data...</span></div>;
   }
 
   return (
@@ -272,7 +271,7 @@ export default function DashboardPage() {
               <LineChart data={analytics.lineChartData}>
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                <YAxis />
+                <YAxis allowDecimals={false}/>
                 <Tooltip contentStyle={{ background: 'hsl(var(--background))' }} />
                 <Line type="monotone" dataKey="orders" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
               </LineChart>
@@ -361,5 +360,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
