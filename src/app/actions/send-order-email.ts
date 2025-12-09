@@ -90,7 +90,7 @@ export async function sendOrderEmail(details: OrderDetails) {
 
     const mailOptions = {
       from: `"Ps Kitchenware" <${GMAIL_SENDER_EMAIL}>`,
-      to: "harsh.shah@finqy.ai",
+      to: "shahharsh143.hs@gmail.com",
       subject: `New Order Received`,
       html: `
         <h1>New Order Received</h1>

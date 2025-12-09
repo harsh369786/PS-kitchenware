@@ -43,7 +43,7 @@ export async function sendEnquiryEmail(details: EnquiryDetails) {
 
     const mailOptions = {
       from: `"Ps Kitchenware" <${GMAIL_SENDER_EMAIL}>`,
-      to: 'harsh.shah@finqy.ai',
+      to: 'shahharsh143.hs@gmail.com',
       subject: `Enquiry Form`,
       html: `
         <h1>New Enquiry Received</h1>
