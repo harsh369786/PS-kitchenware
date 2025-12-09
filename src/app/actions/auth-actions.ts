@@ -24,7 +24,8 @@ export async function login(credentials: unknown) {
 
   if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
     // Set a secure, httpOnly cookie to manage the session
-    cookies().set(AUTH_COOKIE_NAME, 'super-secret-auth-token', {
+    const cookieStore = await cookies();
+    cookieStore.set(AUTH_COOKIE_NAME, 'super-secret-auth-token', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60 * 24, // 1 day
@@ -39,7 +40,8 @@ export async function login(credentials: unknown) {
 
 export async function logout() {
   // Ensure the path is specified to correctly clear the cookie
-  cookies().set(AUTH_COOKIE_NAME, '', {
+  const cookieStore = await cookies();
+  cookieStore.set(AUTH_COOKIE_NAME, '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: -1, // Expire the cookie immediately
@@ -48,7 +50,7 @@ export async function logout() {
 }
 
 export async function isAuthenticated() {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const authToken = cookieStore.get(AUTH_COOKIE_NAME);
     return !!authToken?.value;
 }
