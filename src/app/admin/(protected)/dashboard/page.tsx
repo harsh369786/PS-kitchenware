@@ -14,8 +14,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Bar, BarChart, Line, LineChart, Pie, PieChart, Cell, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Package, ShoppingCart, Activity, Users, Loader2, Calendar as CalendarIcon } from 'lucide-react';
-import { subDays, format, parseISO, startOfDay, endOfDay, isWithinInterval } from 'date-fns';
+import { Package, ShoppingCart, Activity, Users, Loader2, Calendar as CalendarIcon, IndianRupee } from 'lucide-react';
+import { subDays, format, parseISO, startOfDay, endOfDay, isWithinInterval, isToday } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -82,9 +82,10 @@ export default function DashboardPage() {
   const analytics = useMemo(() => {
     const orders = filteredOrders;
 
-    if (orders.length === 0) {
+    if (orders.length === 0 && allOrders.length === 0) {
       return {
         totalOrders: 0,
+        todaysRevenue: 0,
         topProduct: null,
         productChartData: [],
         lineChartData: [],
@@ -93,6 +94,12 @@ export default function DashboardPage() {
         recentOrders: [],
       };
     }
+    
+    const todaysOrders = allOrders.filter(order => isToday(parseISO(order.date)));
+    const todaysRevenue = todaysOrders.reduce((sum, order) => {
+        return sum + (order.price ?? 0) * order.quantity;
+    }, 0);
+
 
     const totalOrders = orders.length;
 
@@ -101,9 +108,9 @@ export default function DashboardPage() {
       return acc;
     }, {} as Record<string, number>);
 
-    const topProduct = Object.entries(productQuantities).sort(
+    const topProduct = totalOrders > 0 ? Object.entries(productQuantities).sort(
       ([, a], [, b]) => b - a
-    )[0];
+    )[0] : null;
 
     const productChartData = Object.entries(productQuantities)
       .map(([name, quantity]) => ({ name, quantity }))
@@ -125,7 +132,7 @@ export default function DashboardPage() {
     }));
 
     const uniqueOrderDays = Object.keys(ordersByDay).length;
-    const averageOrdersPerDay = totalOrders / (uniqueOrderDays || 1);
+    const averageOrdersPerDay = totalOrders > 0 ? totalOrders / (uniqueOrderDays || 1) : 0;
 
     const categoryMap = new Map<string, string>();
     categories.forEach(cat => {
@@ -145,8 +152,8 @@ export default function DashboardPage() {
     
     const recentOrders = [...orders].reverse().slice(0, 10);
 
-    return { totalOrders, topProduct, productChartData, lineChartData, averageOrdersPerDay, categoryOrderDistribution, recentOrders };
-  }, [filteredOrders, categories, activeDateRange]);
+    return { totalOrders, todaysRevenue, topProduct, productChartData, lineChartData, averageOrdersPerDay, categoryOrderDistribution, recentOrders };
+  }, [filteredOrders, allOrders, categories, activeDateRange]);
 
   if (isLoading) {
     return <div className="flex items-center justify-center h-full"><Loader2 className="h-8 w-8 animate-spin" /></div>;
@@ -201,11 +208,14 @@ export default function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Today's Revenue</CardTitle>
+            <IndianRupee className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analytics.totalOrders}</div>
+            <div className="text-2xl font-bold">₹{analytics.todaysRevenue.toFixed(2)}</div>
+             <p className="text-xs text-muted-foreground">
+              Total value of orders placed today.
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -218,7 +228,19 @@ export default function DashboardPage() {
               {analytics.topProduct ? analytics.topProduct[0] : 'N/A'}
             </div>
             <p className="text-xs text-muted-foreground">
-              {analytics.topProduct ? `${analytics.topProduct[1]} units sold` : ''}
+              {analytics.topProduct ? `${analytics.topProduct[1]} units sold in range` : ''}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Orders (in range)</CardTitle>
+            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{analytics.totalOrders}</div>
+             <p className="text-xs text-muted-foreground">
+              Total orders in selected date range.
             </p>
           </CardContent>
         </Card>
@@ -233,17 +255,8 @@ export default function DashboardPage() {
             <div className="text-2xl font-bold">
               {analytics.averageOrdersPerDay.toFixed(1)}
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Welcome</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">Admin</div>
             <p className="text-xs text-muted-foreground">
-              Analytics are updated based on new orders.
+              Average daily orders in selected range.
             </p>
           </CardContent>
         </Card>
