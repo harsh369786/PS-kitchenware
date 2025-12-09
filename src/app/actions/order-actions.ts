@@ -20,50 +20,35 @@ const orderSchema = z.object({
 
 
 async function readOrders(): Promise<Order[]> {
+  // In a read-only filesystem environment, we might not be able to write,
+  // but we should still try to read existing orders if the file is present from the build.
   try {
-    // Ensure the directory exists
-    await fs.mkdir(path.dirname(ordersFilePath), { recursive: true });
-    // Try to read the file
     const data = await fs.readFile(ordersFilePath, "utf-8");
     if (!data) return [];
     const orders: Order[] = JSON.parse(data);
     return orders.map(order => orderSchema.parse(order));
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-      return []; // No orders yet, return empty array
-    }
-    console.error("Failed to read or parse orders file:", error);
-    // Return empty array on error to prevent dashboard crash
+    // If the file doesn't exist or there's an error, return an empty array.
+    // This is expected in environments where the file isn't created.
     return [];
   }
 }
 
-async function writeOrders(orders: Order[]): Promise<void> {
-    try {
-      await fs.mkdir(path.dirname(ordersFilePath), { recursive: true });
-      await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2));
-    } catch (error) {
-      console.error("Failed to write orders file:", error);
-      throw new Error("Could not save orders.");
-    }
-}
 
 export async function getOrders(): Promise<Order[]> {
     return await readOrders();
 }
 
 export async function addOrder(newOrder: Omit<Order, 'id' | 'date'>): Promise<void> {
-  const orders = await readOrders();
-  const orderWithTimestamp: Order = {
-    ...newOrder,
-    id: `order_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-    date: new Date().toISOString(),
-  };
-
-  const validatedOrder = orderSchema.parse(orderWithTimestamp);
-  orders.push(validatedOrder);
-  await writeOrders(orders);
+  // This function is being kept for API compatibility, but we are no longer
+  // writing to a file on the server because the deployed environment has a
+  // read-only filesystem. The core ordering functionality relies on email notifications.
   
-  // Revalidate the dashboard path to trigger data refresh if needed
+  // We can still revalidate the path in case the data source changes in the future.
   revalidatePath('/admin/dashboard');
+  
+  // We will simply log the action for now.
+  console.log("Order received, but not saved to file system:", newOrder.productName);
+
+  // No file writing operation is performed.
 }
