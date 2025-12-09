@@ -6,6 +6,7 @@ import Footer from '@/components/layout/footer';
 import { CartProvider } from '@/context/cart-context';
 import { headers } from 'next/headers';
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: 'Ps Kitchenware E-Store',
@@ -42,6 +43,7 @@ export default function RootLayout({
           <Toaster />
         </CartProvider>
         <SpeedInsights/>
+        <Analytics />
       </body>
     </html>
   );
