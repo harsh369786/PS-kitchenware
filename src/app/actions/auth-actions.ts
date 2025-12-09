@@ -49,5 +49,6 @@ export async function logout() {
 
 export async function isAuthenticated() {
     const cookieStore = cookies();
-    return cookieStore.has(AUTH_COOKIE_NAME);
+    const authToken = cookieStore.get(AUTH_COOKIE_NAME);
+    return !!authToken;
 }
