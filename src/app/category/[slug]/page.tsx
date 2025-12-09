@@ -47,8 +47,9 @@ async function getCategory(slug: string): Promise<{ category: Category | null, p
   }
 }
 
-export default async function CategoryPage({ params }: Props) {
-  const { category, products } = await getCategory(params.slug);
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const { category, products } = await getCategory(slug);
 
   if (!category) {
     notFound();
