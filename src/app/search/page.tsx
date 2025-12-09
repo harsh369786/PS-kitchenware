@@ -59,9 +59,10 @@ async function getSearchResults(query: string): Promise<Product[]> {
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const query = typeof searchParams.q === 'string' ? searchParams.q : '';
+  const awaitedSearchParams = await searchParams;
+  const query = typeof awaitedSearchParams.q === 'string' ? awaitedSearchParams.q : '';
   const searchResults = await getSearchResults(query);
 
   return (
