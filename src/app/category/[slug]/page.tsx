@@ -1,9 +1,13 @@
 
 import type { SiteContent, Category, Product } from "@/lib/types";
 import { getSiteContent } from "@/lib/site-content";
-import { Package } from "lucide-react";
 import CategoryProductGrid from "@/components/category-product-grid";
 import { notFound } from "next/navigation";
+
+type Props = {
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
 export async function generateStaticParams() {
   try {
@@ -44,7 +48,7 @@ async function getCategory(slug: string): Promise<{ category: Category | null, p
   }
 }
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
+export default async function CategoryPage({ params }: Props) {
   const { category, products } = await getCategory(params.slug);
 
   if (!category) {
