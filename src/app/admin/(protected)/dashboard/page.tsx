@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/table';
 import { Bar, BarChart, Line, LineChart, Pie, PieChart, Cell, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Package, ShoppingCart, Activity, Loader2, Calendar as CalendarIcon, IndianRupee } from 'lucide-react';
-import { subDays, format, parseISO, startOfDay, endOfDay, isWithinInterval, isToday } from 'date-fns';
+import { subDays, format, parseISO, startOfDay, endOfDay, isWithinInterval, isToday, differenceInCalendarDays } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -121,10 +121,19 @@ export default function DashboardPage() {
       acc[day] = (acc[day] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
+    
+    const daysInRange = (() => {
+        if (!activeDateRange?.from) {
+            return Array.from({ length: 30 }, (_, i) => format(subDays(new Date(), i), 'yyyy-MM-dd')).reverse();
+        }
+        const to = activeDateRange.to || activeDateRange.from;
+        const from = activeDateRange.from;
+        // Ensure the length is not negative if from is after to
+        const daysCount = Math.max(0, differenceInCalendarDays(to, from) + 1);
+        
+        return Array.from({ length: daysCount }, (_, i) => format(subDays(to, daysCount - 1 - i), 'yyyy-MM-dd'));
+    })();
 
-    const daysInRange = activeDateRange?.from ? 
-        Array.from({ length: Math.ceil(( (activeDateRange.to || activeDateRange.from).getTime() - activeDateRange.from.getTime()) / (1000 * 3600 * 24)) +1 }, (_, i) => format(subDays(activeDateRange.to || new Date(), i), 'yyyy-MM-dd')).reverse()
-        : Array.from({ length: 30 }, (_, i) => format(subDays(new Date(), i), 'yyyy-MM-dd')).reverse();
 
     const lineChartData = daysInRange.map(day => ({
       date: format(parseISO(day), 'MMM dd'),
