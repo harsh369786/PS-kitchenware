@@ -39,7 +39,7 @@ async function getSearchResults(query: string): Promise<Product[]> {
             if (!addedProductIds.has(productDetails.id)) {
                 results.push({
                   ...(productDetails as Product),
-                  imageUrl: heroProduct.imageUrl || productDetails.imageUrl,
+                  imageUrl: heroProduct.imageUrl || productDetails.imageUrl || '',
                   imageHint: heroProduct.imageHint || productDetails.imageHint,
                   tagline: heroProduct.tagline || (productDetails as Product).tagline,
                 });
@@ -62,7 +62,7 @@ export default async function SearchPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const awaitedSearchParams = await searchParams;
-  const query = typeof awaitedSearchParams.q === 'string' ? awaitedSearchParams.q : '';
+  const query = typeof awaitedSearchParams.q === 'string' ? awaitedSearchParams.q : Array.isArray(awaitedSearchParams.q) ? awaitedSearchParams.q[0] : '';
   const searchResults = await getSearchResults(query);
 
   return (
