@@ -1,5 +1,5 @@
 
-import type { SiteContent, Product } from "@/lib/types";
+import type { SiteContent, Product, SubCategory } from "@/lib/types";
 import { getSiteContent } from "@/lib/site-content";
 import { Search } from "lucide-react";
 import CategoryProductGrid from "@/components/category-product-grid";
@@ -14,7 +14,7 @@ async function getSearchResults(query: string): Promise<Product[]> {
     const results: Product[] = [];
     const addedProductIds = new Set<string>();
 
-    const allProducts = content.categories.flatMap(category =>
+    const allProducts: SubCategory[] = content.categories.flatMap(category =>
         (category.subcategories || []).map(sub => ({
             ...sub,
             imageUrl: sub.imageUrl || category.imageUrl,
@@ -26,7 +26,7 @@ async function getSearchResults(query: string): Promise<Product[]> {
     allProducts.forEach((product) => {
         if (product.name.toLowerCase().includes(lowerCaseQuery)) {
             if (!addedProductIds.has(product.id)) {
-                results.push(product);
+                results.push(product as Product);
                 addedProductIds.add(product.id);
             }
         }
@@ -38,10 +38,10 @@ async function getSearchResults(query: string): Promise<Product[]> {
         if (productDetails && productDetails.name.toLowerCase().includes(lowerCaseQuery)) {
             if (!addedProductIds.has(productDetails.id)) {
                 results.push({
-                  ...productDetails,
+                  ...(productDetails as Product),
                   imageUrl: heroProduct.imageUrl || productDetails.imageUrl,
                   imageHint: heroProduct.imageHint || productDetails.imageHint,
-                  tagline: heroProduct.tagline || productDetails.tagline,
+                  tagline: heroProduct.tagline || (productDetails as Product).tagline,
                 });
                 addedProductIds.add(productDetails.id);
             }

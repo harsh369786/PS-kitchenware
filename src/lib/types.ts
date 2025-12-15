@@ -1,8 +1,8 @@
 
 
 export interface ProductSize {
-  name: string;
-  price: number;
+  name?: string;
+  price?: number;
 }
 
 export interface Product {
@@ -10,7 +10,7 @@ export interface Product {
   name:string;
   tagline?: string;
   imageUrl: string;
-  imageHint: string;
+  imageHint?: string;
   price?: number;
   sizes?: ProductSize[];
 }
@@ -19,6 +19,7 @@ export interface SubCategory {
   id: string;
   name: string;
   href: string;
+  tagline?: string;
   imageUrl?: string;
   imageHint?: string;
   price?: number;
@@ -29,7 +30,7 @@ export interface Category {
   id:string;
   name: string;
   imageUrl: string;
-  imageHint: string;
+  imageHint?: string;
   href: string;
   subcategories?: SubCategory[];
 }

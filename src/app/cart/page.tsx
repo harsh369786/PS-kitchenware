@@ -53,23 +53,23 @@ export default function CartPage() {
     try {
       // Create absolute URLs for all items before sending to server actions.
       const cartWithAbsoluteUrls = cart.map(item => ({
-          ...item,
-          imageUrl: getAbsoluteUrl(item.imageUrl),
-      }));
-
-      // Add each cart item as a separate order
-      for (const item of cartWithAbsoluteUrls) {
-        await addOrder({
-            productName: item.name,
-            quantity: item.quantity,
-            imageUrl: item.imageUrl,
-            size: item.size,
-            price: item.price,
-        });
-      }
-      
-      await sendOrderEmail({ cartItems: cartWithAbsoluteUrls, address });
-      
+        ...item,
+        imageUrl: getAbsoluteUrl(item.imageUrl),
+        imageHint: item.name, // ADD THIS LINE: Use item.name or an empty string ""
+    }));
+    
+    // Now the rest of the function will work:
+    for (const item of cartWithAbsoluteUrls) {
+      await addOrder({
+          productName: item.name,
+          quantity: item.quantity,
+          imageUrl: item.imageUrl,
+          size: item.size,
+          price: item.price,
+      });
+    }
+    
+    await sendOrderEmail({ cartItems: cartWithAbsoluteUrls, address });
       setConfirmationOpen(true);
     } catch (error) {
       console.error("Failed to confirm order:", error);
