@@ -1,7 +1,7 @@
 
 
 'use client';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import type { Order, Category } from '@/lib/types';
 import { getOrders } from '@/app/actions/order-actions';
 import { getSiteContent } from '@/lib/site-content';
@@ -15,13 +15,14 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Bar, BarChart, Line, LineChart, Pie, PieChart, Cell, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Package, ShoppingCart, Activity, Loader2, Calendar as CalendarIcon, IndianRupee } from 'lucide-react';
+import { Package, ShoppingCart, Activity, Loader2, Calendar as CalendarIcon, IndianRupee, RefreshCw } from 'lucide-react';
 import { subDays, format, parseISO, startOfDay, endOfDay, isWithinInterval, isToday, differenceInCalendarDays } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 const COLORS = [
   'hsl(var(--chart-1))',
@@ -35,18 +36,15 @@ export default function DashboardPage() {
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { toast } = useToast();
 
-  const [activeDateRange, setActiveDateRange] = useState<DateRange | undefined>({
+  const [date, setDate] = useState<DateRange | undefined>({
     from: subDays(new Date(), 29),
     to: new Date(),
   });
-  
-  const [popoverDateRange, setPopoverDateRange] = useState<DateRange | undefined>(activeDateRange);
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-  useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
+  const fetchData = useCallback(async () => {
       try {
         const [ordersData, siteContent] = await Promise.all([
           getOrders(),
@@ -56,17 +54,37 @@ export default function DashboardPage() {
         setCategories(siteContent.categories);
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
-      } finally {
-        setIsLoading(false);
+        toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Could not fetch latest dashboard data.',
+        });
       }
+  }, [toast]);
+  
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await fetchData();
+    setIsRefreshing(false);
+    toast({
+        title: 'Dashboard Refreshed',
+        description: 'The latest data has been loaded.',
+    });
+  }, [fetchData, toast]);
+
+  useEffect(() => {
+    async function initialLoad() {
+      setIsLoading(true);
+      await fetchData();
+      setIsLoading(false);
     }
-    fetchData();
-  }, []);
+    initialLoad();
+  }, [fetchData]);
   
   const filteredOrders = useMemo(() => {
-      if (!activeDateRange?.from) return allOrders;
-      const from = startOfDay(activeDateRange.from);
-      const to = activeDateRange.to ? endOfDay(activeDateRange.to) : endOfDay(from);
+      if (!date?.from) return allOrders;
+      const from = startOfDay(date.from);
+      const to = date.to ? endOfDay(date.to) : endOfDay(from);
       
       return allOrders.filter(order => {
         try {
@@ -77,12 +95,8 @@ export default function DashboardPage() {
             return false;
         }
       });
-  }, [allOrders, activeDateRange]);
+  }, [allOrders, date]);
 
-  const handleDateApply = () => {
-    setActiveDateRange(popoverDateRange);
-    setIsPopoverOpen(false);
-  };
 
   const analytics = useMemo(() => {
     const orders = filteredOrders;
@@ -123,13 +137,12 @@ export default function DashboardPage() {
     }, {} as Record<string, number>);
     
     const daysInRange = (() => {
-        if (!activeDateRange?.from) {
+        if (!date?.from) {
             return Array.from({ length: 30 }, (_, i) => format(subDays(new Date(), i), 'yyyy-MM-dd')).reverse();
         }
-        const from = activeDateRange.from;
-        const to = activeDateRange.to || from; // Default 'to' to 'from' if it's undefined
+        const from = date.from;
+        const to = date.to || from; 
         
-        // Ensure the length is not negative if from is after to
         const daysCount = Math.max(0, differenceInCalendarDays(to, from) + 1);
         
         return Array.from({ length: daysCount }, (_, i) => format(subDays(to, daysCount - 1 - i), 'yyyy-MM-dd'));
@@ -163,7 +176,7 @@ export default function DashboardPage() {
     const recentOrders = [...orders].slice(0, 10);
 
     return { totalOrders, todaysRevenue, topProduct, productChartData, lineChartData, averageOrdersPerDay, categoryOrderDistribution, recentOrders };
-  }, [filteredOrders, allOrders, categories, activeDateRange]);
+  }, [filteredOrders, allOrders, categories, date]);
 
   if (isLoading) {
     return <div className="flex items-center justify-center h-full"><Loader2 className="h-8 w-8 animate-spin" /><span>&nbsp;Loading dashboard data...</span></div>;
@@ -174,25 +187,25 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between space-x-2">
             <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
              <div className="flex items-center space-x-2">
-                <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                <Popover>
                     <PopoverTrigger asChild>
                     <Button
                         id="date"
                         variant={"outline"}
                         className={cn(
                         "w-[300px] justify-start text-left font-normal",
-                        !activeDateRange && "text-muted-foreground"
+                        !date && "text-muted-foreground"
                         )}
                     >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {activeDateRange?.from ? (
-                        activeDateRange.to ? (
+                        {date?.from ? (
+                        date.to ? (
                             <>
-                            {format(activeDateRange.from, "LLL dd, y")} -{" "}
-                            {format(activeDateRange.to, "LLL dd, y")}
+                            {format(date.from, "LLL dd, y")} -{" "}
+                            {format(date.to, "LLL dd, y")}
                             </>
                         ) : (
-                            format(activeDateRange.from, "LLL dd, y")
+                            format(date.from, "LLL dd, y")
                         )
                         ) : (
                         <span>Pick a date</span>
@@ -203,16 +216,16 @@ export default function DashboardPage() {
                     <Calendar
                         initialFocus
                         mode="range"
-                        defaultMonth={popoverDateRange?.from}
-                        selected={popoverDateRange}
-                        onSelect={setPopoverDateRange}
+                        defaultMonth={date?.from}
+                        selected={date}
+                        onSelect={setDate}
                         numberOfMonths={2}
                     />
-                    <div className="p-4 border-t">
-                        <Button onClick={handleDateApply} className="w-full">Apply</Button>
-                    </div>
                     </PopoverContent>
                 </Popover>
+                 <Button onClick={handleRefresh} variant="outline" size="icon" disabled={isRefreshing}>
+                    <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+                 </Button>
             </div>
         </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -372,3 +385,4 @@ export default function DashboardPage() {
   );
 }
 
+    
