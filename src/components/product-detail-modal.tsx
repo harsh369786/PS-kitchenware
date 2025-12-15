@@ -126,7 +126,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
                     </SelectTrigger>
                     <SelectContent>
                       {validSizes.map((size, index) => (
-                        <SelectItem key={`${size.name}-${index}`} value={size.name}>
+                        <SelectItem key={`${size.name}-${index}`} value={size.name!}>
                           {size.name}
                         </SelectItem>
                       ))}

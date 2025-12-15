@@ -55,7 +55,6 @@ export default function CartPage() {
       const cartWithAbsoluteUrls = cart.map(item => ({
         ...item,
         imageUrl: getAbsoluteUrl(item.imageUrl),
-        imageHint: item.name, // ADD THIS LINE: Use item.name or an empty string ""
     }));
     
     // Now the rest of the function will work:
