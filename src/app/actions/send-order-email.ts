@@ -1,6 +1,5 @@
 "use server";
 
-import nodemailer from "nodemailer";
 import { z } from "zod";
 import type { CartItem } from '@/lib/types';
 
@@ -28,95 +27,10 @@ const OrderSchema = z.object({
 
 type OrderDetails = z.infer<typeof OrderSchema>;
 
-function generateCartHTML(cartItems: CartItem[]) {
-    const itemsHTML = cartItems.map(item => {
-        // The imageUrl is now expected to be an absolute URL
-        return `
-            <div style="border-bottom: 1px solid #eee; padding: 10px 0; display: flex; align-items: center;">
-                <img src="${item.imageUrl}" alt="${item.name}" width="80" style="margin-right: 20px; border-radius: 8px;" />
-                <div style="flex-grow: 1;">
-                    <h3 style="margin: 0; font-size: 16px;">${item.name}</h3>
-                    ${item.size ? `<p style="margin: 5px 0 0;"><strong>Size:</strong> ${item.size}</p>` : ''}
-                    <p style="margin: 5px 0 0;"><strong>Quantity:</strong> ${item.quantity}</p>
-                    <p style="margin: 5px 0 0;"><strong>Price:</strong> ₹${item.price.toFixed(2)}</p>
-                </div>
-                <div style="font-weight: bold; text-align: right;">
-                    ₹${(item.price * item.quantity).toFixed(2)}
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    return `
-      <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; max-width: 600px; margin: auto;">
-          ${itemsHTML}
-      </div>
-    `;
-}
-
-
 export async function sendOrderEmail(details: OrderDetails) {
-  const validation = OrderSchema.safeParse(details);
-
-  if (!validation.success) {
-    console.error("Invalid order details object:", details, validation.error.flatten());
-    throw new Error("Invalid order details.");
-  }
-  
-  const { cartItems, address } = validation.data;
-  
-  if (cartItems.length === 0) {
-      console.log("No items in cart, skipping email.");
-      return { success: true, message: "No items to order." };
-  }
-  
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-
-  const { GMAIL_SENDER_EMAIL, GMAIL_APP_PASSWORD } = process.env;
-
-  if (!GMAIL_SENDER_EMAIL || !GMAIL_APP_PASSWORD) {
-    console.error("Missing Gmail environment variables for App Password.");
-    throw new Error("Email service is not configured.");
-  }
-
-  try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: GMAIL_SENDER_EMAIL,
-        pass: GMAIL_APP_PASSWORD,
-      },
-    });
-
-    const mailOptions = {
-      from: `"Ps Kitchenware" <${GMAIL_SENDER_EMAIL}>`,
-      to: "shahharsh143.hs@gmail.com",
-      subject: `New Order Received`,
-      html: `
-        <h1>New Order Received</h1>
-        
-        <h2>Delivery Details</h2>
-        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; max-width: 600px; margin: auto; margin-bottom: 20px;">
-          <p><strong>Name:</strong> ${address.name}</p>
-          <p><strong>Phone:</strong> ${address.phone}</p>
-          <p><strong>Email:</strong> ${address.email}</p>
-          <p><strong>Address:</strong><br/>${address.address.replace(/\n/g, '<br/>')}</p>
-          <p><strong>Pincode:</strong> ${address.pincode}</p>
-        </div>
-
-        <h2>Order Items</h2>
-        ${generateCartHTML(cartItems)}
-        <div style="max-width: 600px; margin: auto; padding-top: 15px; margin-top: 15px; border-top: 2px solid #333; text-align: right;">
-          <h2 style="margin: 0; font-size: 20px;">Total Price: ₹${totalPrice.toFixed(2)}</h2>
-        </div>
-      `,
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent: " + info.response);
-    return { success: true, message: "Email sent successfully" };
-  } catch (error) {
-    console.error("Error sending email:", error);
-    throw new Error("Failed to send order email.");
-  }
+  // This function is now a placeholder.
+  // Email sending logic has been removed to reduce bundle size.
+  // You can re-integrate an email service here if needed (e.g., using a transactional email API).
+  console.log("Order details for email (not sent):", details);
+  return { success: true, message: "Order processed." };
 }

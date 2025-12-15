@@ -163,5 +163,14 @@
     "price": 501,
     "date": "2025-11-27T10:07:05.516Z",
     "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/subcategory-sub-curv-1758952818186.png"
+  },
+  {
+    "productName": "Ograla laddel",
+    "quantity": 1,
+    "imageUrl": "https://6000-firebase-studio-1758286922662.cluster-a6zx3cwnb5hnuwbgyxmofxpkfe.cloudworkstations.dev/uploads/hero-hero-1-1758546352449.png",
+    "size": "10",
+    "price": 100,
+    "id": "order_1765804648940_yo98cvrtm",
+    "date": "2025-12-15T13:17:28.940Z"
   }
 ]
