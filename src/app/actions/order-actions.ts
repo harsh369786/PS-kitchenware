@@ -2,116 +2,49 @@
 "use server";
 import { z } from "zod";
 import type { Order } from '@/lib/types';
-import imaps from 'imap-simple';
-import { simpleParser } from 'mailparser';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-const orderSchema = z.object({
-  id: z.string(),
-  productName: z.string(),
-  quantity: z.number(),
-  size: z.string().optional(),
-  price: z.number().optional(),
-  date: z.string().datetime(),
-  imageUrl: z.string().url(),
-});
+const ordersFilePath = path.join(process.cwd(), 'src/lib/orders.json');
 
-function extractValue(body: string, label: string): string {
-    const regex = new RegExp(`<strong>${label}:<\\/strong>\\s*([^<]+)`);
-    const match = body.match(regex);
-    return match ? match[1].trim() : '';
+async function readOrdersFromFile(): Promise<Order[]> {
+    try {
+        const fileContent = await fs.readFile(ordersFilePath, 'utf-8');
+        return JSON.parse(fileContent);
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            return []; // File doesn't exist, return empty array
+        }
+        console.error("Failed to read orders from file:", error);
+        return [];
+    }
 }
 
-function parseEmailBody(html: string): Omit<Order, 'id' | 'date'>[] {
-    const products: Omit<Order, 'id' | 'date'>[] = [];
-    const productDivs = html.split('<div style="border-bottom: 1px solid #eee; padding: 10px 0; display: flex; align-items: center;">');
-    
-    productDivs.slice(1).forEach((div) => {
-        const nameMatch = div.match(/<h3 style="margin: 0; font-size: 16px;">([^<]+)<\/h3>/);
-        const quantityMatch = div.match(/<strong>Quantity:<\/strong>\s*(\d+)/);
-        const priceMatch = div.match(/<strong>Price:<\/strong>\s*₹([\d.]+)/);
-        const sizeMatch = div.match(/<strong>Size:<\/strong>\s*([^<]+)/);
-        const imageMatch = div.match(/<img src="([^"]+)"/);
-
-        if (nameMatch && quantityMatch && priceMatch && imageMatch) {
-            products.push({
-                productName: nameMatch[1],
-                quantity: parseInt(quantityMatch[1], 10),
-                price: parseFloat(priceMatch[1]),
-                size: sizeMatch ? sizeMatch[1] : undefined,
-                imageUrl: imageMatch[1],
-            });
-        }
-    });
-
-    return products;
+async function writeOrdersToFile(orders: Order[]): Promise<void> {
+    try {
+        await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2));
+    } catch (error) {
+        console.error("Failed to write orders to file:", error);
+        throw new Error("Could not save orders.");
+    }
 }
 
 export async function getOrders(): Promise<Order[]> {
-    const { GMAIL_SENDER_EMAIL, GMAIL_APP_PASSWORD } = process.env;
-
-    if (!GMAIL_SENDER_EMAIL || !GMAIL_APP_PASSWORD) {
-        console.error("Missing Gmail IMAP environment variables.");
-        // Return empty array if not configured, so the dashboard doesn't crash.
-        return [];
-    }
-    
-    const config = {
-        imap: {
-            user: GMAIL_SENDER_EMAIL,
-            password: GMAIL_APP_PASSWORD,
-            host: 'imap.gmail.com',
-            port: 993,
-            tls: true,
-            tlsOptions: { rejectUnauthorized: false }
-        }
-    };
-
-    let connection: imaps.ImapSimple | null = null;
-    try {
-        connection = await imaps.connect(config);
-        await connection.openBox('INBOX');
-
-        const searchCriteria = ['ALL', ['SUBJECT', 'New Order Received']];
-        const fetchOptions = { bodies: ['HEADER.FIELDS (DATE)', 'TEXT'], struct: true };
-
-        const messages = await connection.search(searchCriteria, fetchOptions);
-        const orders: Order[] = [];
-
-        for (const item of messages) {
-            const all = item.parts.find(part => part.which === 'TEXT');
-            if (all?.body) {
-                const parsedMail = await simpleParser(all.body);
-                const dateHeader = item.parts.find(part => part.which === 'HEADER.FIELDS (DATE)');
-                const emailDate = dateHeader?.body ? new Date(dateHeader.body.date[0]) : new Date();
-                
-                if (typeof parsedMail.html === 'string') {
-                    const productsFromEmail = parseEmailBody(parsedMail.html);
-                    productsFromEmail.forEach((product, index) => {
-                         orders.push({
-                            ...product,
-                            id: `order-${emailDate.getTime()}-${index}`,
-                            date: emailDate.toISOString(),
-                         });
-                    });
-                }
-            }
-        }
-        
-        // Sort orders by date descending
-        return orders.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-    } catch (error) {
-        console.error("Failed to fetch orders from Gmail:", error);
-        return [];
-    } finally {
-        if (connection) {
-            connection.end();
-        }
-    }
+    const orders = await readOrdersFromFile();
+    // Sort orders by date descending
+    return orders.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
-// This function is kept for compatibility but no longer writes to a file.
-// The primary order mechanism is via email.
-export async function addOrder(newOrder: Omit<Order, 'id' | 'date'>): Promise<void> {
-  console.log("Order received, processed via email notification:", newOrder.productName);
+export async function addOrder(newOrderData: Omit<Order, 'id' | 'date'>): Promise<void> {
+    const existingOrders = await readOrdersFromFile();
+    
+    const newOrder: Order = {
+        ...newOrderData,
+        id: `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        date: new Date().toISOString(),
+    };
+
+    const updatedOrders = [...existingOrders, newOrder];
+    await writeOrdersToFile(updatedOrders);
+    console.log("Order successfully added and saved to orders.json");
 }
