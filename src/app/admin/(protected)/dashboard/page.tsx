@@ -1,4 +1,5 @@
 
+
 'use client';
 import { useEffect, useState, useMemo } from 'react';
 import type { Order, Category } from '@/lib/types';
@@ -360,3 +361,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
