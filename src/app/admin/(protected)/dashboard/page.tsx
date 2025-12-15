@@ -126,8 +126,9 @@ export default function DashboardPage() {
         if (!activeDateRange?.from) {
             return Array.from({ length: 30 }, (_, i) => format(subDays(new Date(), i), 'yyyy-MM-dd')).reverse();
         }
-        const to = activeDateRange.to || activeDateRange.from;
         const from = activeDateRange.from;
+        const to = activeDateRange.to || from; // Default 'to' to 'from' if it's undefined
+        
         // Ensure the length is not negative if from is after to
         const daysCount = Math.max(0, differenceInCalendarDays(to, from) + 1);
         
