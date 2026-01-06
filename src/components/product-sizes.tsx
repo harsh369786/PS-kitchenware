@@ -3,21 +3,21 @@
 
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import {
-  FormField,
-  FormItem,
-  FormControl,
-  FormMessage,
+    FormField,
+    FormItem,
+    FormControl,
+    FormMessage,
 } from "@/components/ui/form";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PlusCircle, Trash2 } from 'lucide-react';
 
 const ProductSizes = ({ fieldNamePrefix }: { fieldNamePrefix: string }) => {
-    const { control } = useFormContext(); 
+    const { control } = useFormContext();
 
     const { fields, append, remove } = useFieldArray({
-      control: control,
-      name: `${fieldNamePrefix}.sizes`
+        control: control,
+        name: `${fieldNamePrefix}.sizes`
     });
 
     return (
@@ -30,26 +30,28 @@ const ProductSizes = ({ fieldNamePrefix }: { fieldNamePrefix: string }) => {
                         name={`${fieldNamePrefix}.sizes.${index}.name`}
                         render={({ field }) => (
                             <FormItem className="flex-1">
-                                <FormControl><Input {...field} placeholder="Size Name (e.g. S, M, L)"/></FormControl>
+                                <FormControl><Input {...field} placeholder="Size Name (e.g. S, M, L)" /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                     <FormField
+                    <FormField
                         control={control}
                         name={`${fieldNamePrefix}.sizes.${index}.price`}
-                        render={({ field }) => (
+                        render={({ field: { onChange, value, ...field } }) => (
                             <FormItem>
                                 <FormControl>
                                     <Input
                                         type="number"
+                                        step="0.01"
+                                        min="0"
                                         placeholder="Price"
                                         {...field}
+                                        defaultValue={value ?? ''}
                                         onChange={(e) => {
-                                            const value = e.target.value;
-                                            field.onChange(value === '' ? undefined : Number(value));
+                                            const val = e.target.value;
+                                            onChange(val === '' ? undefined : parseFloat(val));
                                         }}
-                                        value={field.value ?? ''}
                                     />
                                 </FormControl>
                                 <FormMessage />

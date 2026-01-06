@@ -1,50 +1,58 @@
-
 "use server";
 import { z } from "zod";
 import type { Order } from '@/lib/types';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { supabase } from '@/lib/supabase';
 
-const ordersFilePath = path.join(process.cwd(), 'src/lib/orders.json');
-
-async function readOrdersFromFile(): Promise<Order[]> {
+export async function getOrders(): Promise<Order[]> {
     try {
-        const fileContent = await fs.readFile(ordersFilePath, 'utf-8');
-        return JSON.parse(fileContent);
-    } catch (error) {
-        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-            return []; // File doesn't exist, return empty array
+        const { data, error } = await supabase
+            .from('orders')
+            .select('*')
+            .order('date', { ascending: false });
+
+        if (error) {
+            console.error("Supabase error fetching orders:", error);
+            return [];
         }
-        console.error("Failed to read orders from file:", error);
+
+        if (!data) return [];
+
+        return data.map((item: any) => ({
+            id: item.id,
+            productName: item.product_name,
+            quantity: item.quantity,
+            date: item.date,
+            imageUrl: item.image_url,
+            size: item.size,
+            price: item.price
+        }));
+    } catch (error) {
+        console.error("Failed to fetch orders:", error);
         return [];
     }
 }
 
-async function writeOrdersToFile(orders: Order[]): Promise<void> {
-    try {
-        await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2));
-    } catch (error) {
-        console.error("Failed to write orders to file:", error);
-        throw new Error("Could not save orders.");
-    }
-}
-
-export async function getOrders(): Promise<Order[]> {
-    const orders = await readOrdersFromFile();
-    // Sort orders by date descending
-    return orders.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-}
-
 export async function addOrder(newOrderData: Omit<Order, 'id' | 'date'>): Promise<void> {
-    const existingOrders = await readOrdersFromFile();
-    
-    const newOrder: Order = {
-        ...newOrderData,
-        id: `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        date: new Date().toISOString(),
-    };
+    try {
+        const id = `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const date = new Date().toISOString();
 
-    const updatedOrders = [...existingOrders, newOrder];
-    await writeOrdersToFile(updatedOrders);
-    console.log("Order successfully added and saved to orders.json");
+        const { error } = await supabase
+            .from('orders')
+            .insert({
+                id: id,
+                product_name: newOrderData.productName,
+                quantity: newOrderData.quantity,
+                price: newOrderData.price,
+                size: newOrderData.size,
+                image_url: newOrderData.imageUrl,
+                date: date
+            });
+
+        if (error) throw error;
+        console.log("Order successfully added to Supabase");
+    } catch (error) {
+        console.error("Failed to add order to Supabase:", error);
+        throw new Error("Could not save order.");
+    }
 }

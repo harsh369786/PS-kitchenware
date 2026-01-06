@@ -57,7 +57,7 @@ const categorySchema = z.object({
   id: z.string(),
   name: z.string().min(1, 'Category name is required'),
   href: z.string(),
-imageUrl: z.string().min(1, 'Image is required'),
+  imageUrl: z.string().min(1, 'Image is required'),
   imageHint: z.string().optional(),
   subcategories: z.array(subCategorySchema).optional(),
 });
@@ -99,7 +99,7 @@ export default function ContentAdminPage() {
   const { control, setValue, getValues, reset } = form;
 
   const allProducts: SubCategory[] = getValues('categories').flatMap(cat => cat.subcategories || []);
-  
+
   const updateHrefs = useCallback((categoryIndex: number, subcategoryIndex?: number) => {
     const categories = getValues('categories');
     const category = categories[categoryIndex];
@@ -121,13 +121,13 @@ export default function ContentAdminPage() {
         }
       }
     } else {
-       category.subcategories?.forEach((sub, subIndex) => {
-          const subcategorySlug = slugify(sub.name);
-          const expectedSubHref = `${expectedCategoryHref}/${subcategorySlug}`;
-           if (sub.href !== expectedSubHref) {
-             setValue(`categories.${categoryIndex}.subcategories.${subIndex}.href`, expectedSubHref, { shouldDirty: true, shouldTouch: true });
-           }
-       });
+      category.subcategories?.forEach((sub, subIndex) => {
+        const subcategorySlug = slugify(sub.name);
+        const expectedSubHref = `${expectedCategoryHref}/${subcategorySlug}`;
+        if (sub.href !== expectedSubHref) {
+          setValue(`categories.${categoryIndex}.subcategories.${subIndex}.href`, expectedSubHref, { shouldDirty: true, shouldTouch: true });
+        }
+      });
     }
   }, [getValues, setValue]);
 
@@ -146,9 +146,9 @@ export default function ContentAdminPage() {
     async function loadContent() {
       try {
         const content = await getSiteContent();
-        
+
         const sanitizedContent = {
-          heroProducts: content.heroProducts.map(p => ({ 
+          heroProducts: content.heroProducts.map(p => ({
             productId: p.productId,
             tagline: p.tagline,
             imageUrl: p.imageUrl,
@@ -156,10 +156,10 @@ export default function ContentAdminPage() {
           })),
           categories: content.categories.map(c => ({
             ...c,
-            subcategories: c.subcategories?.map(sc => ({ 
-                ...sc, 
-                price: sc.price ?? undefined,
-                sizes: sc.sizes?.map(s => ({...s, price: s.price ?? undefined})) || []
+            subcategories: c.subcategories?.map(sc => ({
+              ...sc,
+              price: sc.price ?? undefined,
+              sizes: sc.sizes?.map(s => ({ ...s, price: s.price ?? undefined })) || []
             })) || []
           }))
         };
@@ -172,7 +172,7 @@ export default function ContentAdminPage() {
       }
     }
     loadContent();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reset]);
 
   const handleFileChange = (
@@ -194,10 +194,10 @@ export default function ContentAdminPage() {
     try {
       const cleanedData: SiteContent = {
         heroProducts: data.heroProducts.map(p => ({
-            productId: p.productId,
-            tagline: p.tagline || '',
-            imageUrl: p.imageUrl || '',
-            imageHint: p.imageHint || '',
+          productId: p.productId,
+          tagline: p.tagline || '',
+          imageUrl: p.imageUrl || '',
+          imageHint: p.imageHint || '',
         })),
         categories: data.categories.map(c => ({
           ...c,
@@ -206,11 +206,11 @@ export default function ContentAdminPage() {
             price: sc.price ? Number(sc.price) : undefined,
             sizes: sc.sizes
               ?.filter(s => s && s.name && s.name.trim() !== '')
-              .map(s => ({...s, price: s.price ? Number(s.price) : 0 }))
+              .map(s => ({ ...s, price: s.price ? Number(s.price) : 0 }))
           }))
         }))
       };
-      
+
       await saveSiteContent(cleanedData);
       toast({ title: 'Success', description: 'Content saved successfully.' });
       reset(data);
@@ -226,83 +226,85 @@ export default function ContentAdminPage() {
       control: control,
       name: `categories.${categoryIndex}.subcategories`,
     });
-    
+
     return (
       <div className="ml-6 mt-4 space-y-4 border-l pl-4">
         <h4 className="font-semibold">Subcategories / Products</h4>
         {fields.map((field, index) => (
           <div key={field.id} className="relative rounded-md border p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                    <FormField
-                    control={control}
-                    name={`categories.${categoryIndex}.subcategories.${index}.name`}
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl><Input {...field} onBlur={() => updateHrefs(categoryIndex, index)} /></FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                      control={control}
-                      name={`categories.${categoryIndex}.subcategories.${index}.href`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Link (auto-generated)</FormLabel>
-                          <FormControl>
-                            <Input {...field} readOnly className="bg-muted" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                     <FormField
-                        control={control}
-                        name={`categories.${categoryIndex}.subcategories.${index}.price`}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Price (if no sizes)</FormLabel>
-                                <FormControl>
-                                  <Input 
-                                    type="number"
-                                    placeholder="Price"
-                                    {...field}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        field.onChange(value === '' ? undefined : Number(value));
-                                    }}
-                                    value={field.value ?? ''}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-                <div className="space-y-4">
-                    <FormField
-                        control={control}
-                        name={`categories.${categoryIndex}.subcategories.${index}.imageUrl`}
-                        render={({ field: { onChange, value } }) => (
-                        <FormItem>
-                            <FormLabel>Image (optional)</FormLabel>
-                            {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
-                            <FormControl>
-                            <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                     <p className="text-xs text-muted-foreground">If no image is provided, the main category image will be used.</p>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <FormField
+                  control={control}
+                  name={`categories.${categoryIndex}.subcategories.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl><Input {...field} onBlur={() => updateHrefs(categoryIndex, index)} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name={`categories.${categoryIndex}.subcategories.${index}.href`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Link (auto-generated)</FormLabel>
+                      <FormControl>
+                        <Input {...field} readOnly className="bg-muted" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name={`categories.${categoryIndex}.subcategories.${index}.price`}
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>Price (if no sizes)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          placeholder="Price"
+                          {...field}
+                          defaultValue={value ?? ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            onChange(val === '' ? undefined : parseFloat(val));
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <ProductSizes fieldNamePrefix={`categories.${categoryIndex}.subcategories.${index}`} />
-              <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} className="absolute top-2 right-2 h-6 w-6">
-                <Trash2 className="h-4 w-4 text-destructive" />
-              </Button>
+              <div className="space-y-4">
+                <FormField
+                  control={control}
+                  name={`categories.${categoryIndex}.subcategories.${index}.imageUrl`}
+                  render={({ field: { onChange, value } }) => (
+                    <FormItem>
+                      <FormLabel>Image (optional)</FormLabel>
+                      {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
+                      <FormControl>
+                        <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <p className="text-xs text-muted-foreground">If no image is provided, the main category image will be used.</p>
+              </div>
+            </div>
+            <ProductSizes fieldNamePrefix={`categories.${categoryIndex}.subcategories.${index}`} />
+            <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} className="absolute top-2 right-2 h-6 w-6">
+              <Trash2 className="h-4 w-4 text-destructive" />
+            </Button>
           </div>
         ))}
         <Button
@@ -312,14 +314,14 @@ export default function ContentAdminPage() {
           onClick={() => {
             const newId = `new-subcat-${Date.now()}`;
             const categorySlugVal = slugify(getValues(`categories.${categoryIndex}.name`));
-            append({ 
-              id: newId, 
-              name: '', 
-              href: `/category/${categorySlugVal}/${slugify('')}`, 
-              imageUrl: '', 
+            append({
+              id: newId,
+              name: '',
+              href: `/category/${categorySlugVal}/${slugify('')}`,
+              imageUrl: '',
               imageHint: '',
               price: undefined,
-              sizes: [] 
+              sizes: []
             })
           }}
         >
@@ -328,7 +330,7 @@ export default function ContentAdminPage() {
       </div>
     );
   };
-  
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -358,16 +360,16 @@ export default function ContentAdminPage() {
                           <FormItem>
                             <FormLabel>Product</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a product to feature" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {allProducts.map(p => (
-                                        <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
-                                    ))}
-                                </SelectContent>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select a product to feature" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {allProducts.map(p => (
+                                  <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                                ))}
+                              </SelectContent>
                             </Select>
                             <FormMessage />
                           </FormItem>
@@ -379,14 +381,14 @@ export default function ContentAdminPage() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Tagline (Optional)</FormLabel>
-                            <FormControl><Input {...field} placeholder="Override product tagline"/></FormControl>
+                            <FormControl><Input {...field} placeholder="Override product tagline" /></FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                     </div>
                     <div className="space-y-2">
-                       <FormField
+                      <FormField
                         control={control}
                         name={`heroProducts.${index}.imageUrl`}
                         render={({ field: { onChange, value } }) => (
@@ -413,72 +415,72 @@ export default function ContentAdminPage() {
               </Button>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Categories & Products</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {categoryFields.map((field, index) => (
-                  <Card key={field.id} className="p-4">
-                    <div className="flex justify-between items-start">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
-                        <div className="space-y-4">
-                          <FormField
-                            control={control}
-                            name={`categories.${index}.name`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Category Name</FormLabel>
-                                <FormControl><Input {...field} onBlur={() => updateHrefs(index)}/></FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                           <FormField
-                            control={control}
-                            name={`categories.${index}.href`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Link (auto-generated)</FormLabel>
-                                <FormControl><Input {...field} readOnly className="bg-muted"/></FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <FormField
-                            control={control}
-                            name={`categories.${index}.imageUrl`}
-                            render={({ field: { onChange, value } }) => (
-                              <FormItem>
-                                <FormLabel>Image</FormLabel>
-                                {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
-                                <FormControl>
-                                  <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
+                <Card key={field.id} className="p-4">
+                  <div className="flex justify-between items-start">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
+                      <div className="space-y-4">
+                        <FormField
+                          control={control}
+                          name={`categories.${index}.name`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Category Name</FormLabel>
+                              <FormControl><Input {...field} onBlur={() => updateHrefs(index)} /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={control}
+                          name={`categories.${index}.href`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Link (auto-generated)</FormLabel>
+                              <FormControl><Input {...field} readOnly className="bg-muted" /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       </div>
-                      <div className="flex flex-col ml-4">
-                         <Button type="button" variant="destructive" size="sm" onClick={() => removeCategory(index)} className="mt-2">
-                           <Trash2 className="mr-2 h-4 w-4" /> Remove
-                         </Button>
-                       </div>
+                      <div className="space-y-2">
+                        <FormField
+                          control={control}
+                          name={`categories.${index}.imageUrl`}
+                          render={({ field: { onChange, value } }) => (
+                            <FormItem>
+                              <FormLabel>Image</FormLabel>
+                              {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
+                              <FormControl>
+                                <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                     </div>
-                      <Subcategories categoryIndex={index} />
-                  </Card>
+                    <div className="flex flex-col ml-4">
+                      <Button type="button" variant="destructive" size="sm" onClick={() => removeCategory(index)} className="mt-2">
+                        <Trash2 className="mr-2 h-4 w-4" /> Remove
+                      </Button>
+                    </div>
+                  </div>
+                  <Subcategories categoryIndex={index} />
+                </Card>
               ))}
               <Button type="button" onClick={() => appendCategory({ id: `new-cat-${Date.now()}`, name: '', href: '', imageUrl: '', imageHint: '', subcategories: [] })}>
                 <PlusCircle className="mr-2 h-4 w-4" /> Add Category
               </Button>
             </CardContent>
           </Card>
-          
+
           <Button type="submit" disabled={isSaving || !form.formState.isDirty} size="lg">
             {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Save Changes
@@ -489,6 +491,5 @@ export default function ContentAdminPage() {
   );
 }
 
-    
 
-    
+

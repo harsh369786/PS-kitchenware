@@ -15,14 +15,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Bar, BarChart, Line, LineChart, Pie, PieChart, Cell, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Package, ShoppingCart, Activity, Loader2, Calendar as CalendarIcon, IndianRupee, RefreshCw } from 'lucide-react';
+import { Package, ShoppingCart, Activity, Loader2, IndianRupee, RefreshCw } from 'lucide-react';
 import { subDays, format, parseISO, startOfDay, endOfDay, isWithinInterval, isToday, differenceInCalendarDays } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
 
 const COLORS = [
   'hsl(var(--chart-1))',
@@ -45,30 +44,30 @@ export default function DashboardPage() {
   });
 
   const fetchData = useCallback(async () => {
-      try {
-        const [ordersData, siteContent] = await Promise.all([
-          getOrders(),
-          getSiteContent(),
-        ]);
-        setAllOrders(ordersData);
-        setCategories(siteContent.categories);
-      } catch (error) {
-        console.error('Failed to fetch dashboard data:', error);
-        toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: 'Could not fetch latest dashboard data.',
-        });
-      }
+    try {
+      const [ordersData, siteContent] = await Promise.all([
+        getOrders(),
+        getSiteContent(),
+      ]);
+      setAllOrders(ordersData);
+      setCategories(siteContent.categories);
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Could not fetch latest dashboard data.',
+      });
+    }
   }, [toast]);
-  
+
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     await fetchData();
     setIsRefreshing(false);
     toast({
-        title: 'Dashboard Refreshed',
-        description: 'The latest data has been loaded.',
+      title: 'Dashboard Refreshed',
+      description: 'The latest data has been loaded.',
     });
   }, [fetchData, toast]);
 
@@ -80,21 +79,21 @@ export default function DashboardPage() {
     }
     initialLoad();
   }, [fetchData]);
-  
+
   const filteredOrders = useMemo(() => {
-      if (!date?.from) return allOrders;
-      const from = startOfDay(date.from);
-      const to = date.to ? endOfDay(date.to) : endOfDay(from);
-      
-      return allOrders.filter(order => {
-        try {
-            const orderDate = parseISO(order.date);
-            return isWithinInterval(orderDate, { start: from, end: to });
-        } catch (e) {
-            console.warn(`Invalid date format for order: ${order.id}`, order.date);
-            return false;
-        }
-      });
+    if (!date?.from) return allOrders;
+    const from = startOfDay(date.from);
+    const to = date.to ? endOfDay(date.to) : endOfDay(from);
+
+    return allOrders.filter(order => {
+      try {
+        const orderDate = parseISO(order.date);
+        return isWithinInterval(orderDate, { start: from, end: to });
+      } catch (e) {
+        console.warn(`Invalid date format for order: ${order.id}`, order.date);
+        return false;
+      }
+    });
   }, [allOrders, date]);
 
 
@@ -102,15 +101,15 @@ export default function DashboardPage() {
     const orders = filteredOrders;
 
     const todaysOrders = allOrders.filter(order => {
-        try {
-            return isToday(parseISO(order.date));
-        } catch (e) {
-            return false;
-        }
+      try {
+        return isToday(parseISO(order.date));
+      } catch (e) {
+        return false;
+      }
     });
 
     const todaysRevenue = todaysOrders.reduce((sum, order) => {
-        return sum + (order.price ?? 0) * order.quantity;
+      return sum + (order.price ?? 0) * order.quantity;
     }, 0);
 
 
@@ -127,7 +126,7 @@ export default function DashboardPage() {
 
     const productChartData = Object.entries(productQuantities)
       .map(([name, quantity]) => ({ name, quantity }))
-      .sort((a,b) => b.quantity - a.quantity)
+      .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 10);
 
     const ordersByDay = orders.reduce((acc, order) => {
@@ -135,17 +134,17 @@ export default function DashboardPage() {
       acc[day] = (acc[day] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
-    
+
     const daysInRange = (() => {
-        if (!date?.from) {
-            return Array.from({ length: 30 }, (_, i) => format(subDays(new Date(), i), 'yyyy-MM-dd')).reverse();
-        }
-        const from = date.from;
-        const to = date.to || from; 
-        
-        const daysCount = Math.max(0, differenceInCalendarDays(to, from) + 1);
-        
-        return Array.from({ length: daysCount }, (_, i) => format(subDays(to, daysCount - 1 - i), 'yyyy-MM-dd'));
+      if (!date?.from) {
+        return Array.from({ length: 30 }, (_, i) => format(subDays(new Date(), i), 'yyyy-MM-dd')).reverse();
+      }
+      const from = date.from;
+      const to = date.to || from;
+
+      const daysCount = Math.max(0, differenceInCalendarDays(to, from) + 1);
+
+      return Array.from({ length: daysCount }, (_, i) => format(subDays(to, daysCount - 1 - i), 'yyyy-MM-dd'));
     })();
 
 
@@ -159,20 +158,20 @@ export default function DashboardPage() {
 
     const categoryMap = new Map<string, string>();
     categories.forEach(cat => {
-        cat.subcategories?.forEach(sub => categoryMap.set(sub.name, cat.name));
-        categoryMap.set(cat.name, cat.name);
+      cat.subcategories?.forEach(sub => categoryMap.set(sub.name, cat.name));
+      categoryMap.set(cat.name, cat.name);
     });
-    
+
     const categoryCounts = orders.reduce((acc, order) => {
-        const categoryName = categoryMap.get(order.productName) || 'Others';
-        acc[categoryName] = (acc[categoryName] || 0) + 1;
-        return acc;
+      const categoryName = categoryMap.get(order.productName) || 'Others';
+      acc[categoryName] = (acc[categoryName] || 0) + 1;
+      return acc;
     }, {} as Record<string, number>);
 
     const categoryOrderDistribution = Object.entries(categoryCounts).map(([name, value]) => ({
-        name, value
+      name, value
     }));
-    
+
     const recentOrders = [...orders].slice(0, 10);
 
     return { totalOrders, todaysRevenue, topProduct, productChartData, lineChartData, averageOrdersPerDay, categoryOrderDistribution, recentOrders };
@@ -184,50 +183,19 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4">
-        <div className="flex items-center justify-between space-x-2">
-            <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
-             <div className="flex items-center space-x-2">
-                <Popover>
-                    <PopoverTrigger asChild>
-                    <Button
-                        id="date"
-                        variant={"outline"}
-                        className={cn(
-                        "w-[300px] justify-start text-left font-normal",
-                        !date && "text-muted-foreground"
-                        )}
-                    >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {date?.from ? (
-                        date.to ? (
-                            <>
-                            {format(date.from, "LLL dd, y")} -{" "}
-                            {format(date.to, "LLL dd, y")}
-                            </>
-                        ) : (
-                            format(date.from, "LLL dd, y")
-                        )
-                        ) : (
-                        <span>Pick a date</span>
-                        )}
-                    </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="end">
-                    <Calendar
-                        initialFocus
-                        mode="range"
-                        defaultMonth={date?.from}
-                        selected={date}
-                        onSelect={setDate}
-                        numberOfMonths={2}
-                    />
-                    </PopoverContent>
-                </Popover>
-                 <Button onClick={handleRefresh} variant="outline" size="icon" disabled={isRefreshing}>
-                    <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
-                 </Button>
-            </div>
+      <div className="flex items-center justify-between space-x-2">
+        <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
+        <div className="flex items-center space-x-2">
+          <DateRangePicker
+            value={date}
+            onChange={setDate}
+            className="w-[320px]"
+          />
+          <Button onClick={handleRefresh} variant="outline" size="icon" disabled={isRefreshing}>
+            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+          </Button>
         </div>
+      </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -236,7 +204,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">₹{analytics.todaysRevenue.toFixed(2)}</div>
-             <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Total value of orders placed today.
             </p>
           </CardContent>
@@ -262,7 +230,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{analytics.totalOrders}</div>
-             <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Total orders in selected date range.
             </p>
           </CardContent>
@@ -295,7 +263,7 @@ export default function DashboardPage() {
               <LineChart data={analytics.lineChartData}>
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                <YAxis allowDecimals={false}/>
+                <YAxis allowDecimals={false} />
                 <Tooltip contentStyle={{ background: 'hsl(var(--background))' }} />
                 <Line type="monotone" dataKey="orders" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
               </LineChart>
@@ -333,21 +301,21 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="col-span-full">
-            <CardHeader>
+          <CardHeader>
             <CardTitle>Products vs. Quantities Sold</CardTitle>
             <CardDescription>Top 10 products by quantity in the selected period.</CardDescription>
-            </CardHeader>
-            <CardContent>
+          </CardHeader>
+          <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={analytics.productChartData}>
+              <BarChart data={analytics.productChartData}>
                 <CartesianGrid vertical={false} />
                 <XAxis dataKey="name" tick={{ fontSize: 10 }} angle={-45} textAnchor="end" height={60} />
                 <YAxis allowDecimals={false} />
                 <Tooltip cursor={{ fill: 'hsl(var(--muted))' }} />
                 <Bar dataKey="quantity" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                </BarChart>
+              </BarChart>
             </ResponsiveContainer>
-            </CardContent>
+          </CardContent>
         </Card>
 
         <Card className="col-span-full">
@@ -385,4 +353,3 @@ export default function DashboardPage() {
   );
 }
 
-    

@@ -1,5 +1,4 @@
 
-
 export interface ProductSize {
   name?: string;
   price?: number;
@@ -7,7 +6,7 @@ export interface ProductSize {
 
 export interface Product {
   id: string;
-  name:string;
+  name: string;
   tagline?: string;
   imageUrl: string;
   imageHint?: string;
@@ -27,7 +26,7 @@ export interface SubCategory {
 }
 
 export interface Category {
-  id:string;
+  id: string;
   name: string;
   imageUrl: string;
   imageHint?: string;
@@ -48,6 +47,27 @@ export interface SiteContent {
   categories: Category[];
 }
 
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  phone: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface Address {
+  id?: string;
+  user_id?: string;
+  name: string;
+  phone: string;
+  address: string;
+  pincode: string;
+  email: string;
+  is_default?: boolean;
+  created_at?: string;
+}
+
 export interface Order {
   id: string;
   productName: string;
@@ -56,18 +76,12 @@ export interface Order {
   imageUrl: string;
   size?: string;
   price?: number;
+  user_id?: string;
+  address_id?: string;
 }
 
 export interface CartItem extends Product {
-    quantity: number;
-    price: number;
-    size?: string;
-}
-
-export interface Address {
-  name: string;
-  phone: string;
-  address: string;
-  pincode: string;
-  email: string;
+  quantity: number;
+  price: number;
+  size?: string;
 }
