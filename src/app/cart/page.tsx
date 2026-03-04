@@ -110,8 +110,8 @@ export default function CartPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
           {cart.map((item) => (
-            <div key={item.id} className="flex items-center gap-4 border rounded-lg p-4">
-              <div className="relative h-24 w-24 rounded-md overflow-hidden flex-shrink-0">
+            <div key={item.id} className="flex flex-row sm:flex-row items-start sm:items-center gap-4 sm:gap-6 border rounded-lg p-4 bg-card">
+              <div className="relative h-24 w-24 sm:h-28 sm:w-28 rounded-md overflow-hidden flex-shrink-0 border bg-muted">
                 <Image
                   src={item.imageUrl}
                   alt={item.name}
@@ -120,27 +120,31 @@ export default function CartPage() {
                   className="object-cover"
                 />
               </div>
-              <div className="flex-grow grid grid-cols-2 md:grid-cols-4 items-center gap-4">
-                <div className="md:col-span-1">
-                    <h2 className="font-semibold">{item.name}</h2>
+              <div className="flex-grow flex flex-col sm:grid sm:grid-cols-4 items-start sm:items-center gap-4">
+                <div className="sm:col-span-1 border-b sm:border-0 pb-2 sm:pb-0 w-full sm:w-auto">
+                    <h2 className="font-semibold text-lg sm:text-base leading-tight">{item.name}</h2>
                     {item.size && (
-                        <p className="text-sm text-muted-foreground">Size: {item.size}</p>
+                        <p className="text-sm text-muted-foreground mt-1">Size: {item.size}</p>
                     )}
                 </div>
-                 <div className="text-sm">₹{item.price.toFixed(2)}</div>
-                <div className="flex items-center gap-2">
+                 <div className="text-sm sm:text-base hidden sm:block">₹{item.price.toFixed(2)}</div>
+                <div className="flex items-center justify-between w-full sm:w-auto">
+                   <div className="sm:hidden text-sm font-medium mr-4">Price: ₹{item.price.toFixed(2)}</div>
                    <Input
                     type="number"
                     min="1"
                     value={item.quantity}
                     onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
-                    className="w-20 text-center"
+                    className="w-20 text-center flex-shrink-0"
                   />
                 </div>
-                 <div className="font-semibold text-right">₹{(item.price * item.quantity).toFixed(2)}</div>
+                 <div className="font-semibold sm:text-right w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-0 flex justify-between sm:block">
+                   <span className="sm:hidden text-muted-foreground">Total:</span>
+                   <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+                 </div>
               </div>
-               <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.id)} className="ml-4">
-                  <Trash2 className="h-5 w-5 text-destructive" />
+               <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.id)} className="ml-0 sm:ml-4 self-start sm:self-center mt-2 sm:mt-0 text-muted-foreground hover:text-destructive shrink-0">
+                  <Trash2 className="h-5 w-5" />
                 </Button>
             </div>
           ))}

@@ -70,13 +70,16 @@ export function DateRangePicker({ value, onChange, className }: Props) {
                         )}
                     </span>
                     {value && (
-                        <X
-                            className="ml-auto h-4 w-4 flex-shrink-0 opacity-50 hover:opacity-100"
+                        <span
+                            className="ml-auto flex-shrink-0 opacity-50 hover:opacity-100 pointer-events-auto cursor-pointer p-1 rounded-full hover:bg-muted"
                             onClick={(e) => {
                                 e.stopPropagation();
+                                e.preventDefault();
                                 handleClear();
                             }}
-                        />
+                        >
+                            <X className="h-4 w-4" />
+                        </span>
                     )}
                 </Button>
             </PopoverTrigger>

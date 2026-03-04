@@ -14,7 +14,7 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
         <h2 className="text-3xl font-bold text-center mb-12 font-headline uppercase tracking-wider">
           Categories
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
           {categories.map((category) => (
             <Link key={category.id} href={category.href} className="group">
               <div className="relative aspect-square w-full rounded-lg overflow-hidden">
