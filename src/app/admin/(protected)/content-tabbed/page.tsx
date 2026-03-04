@@ -5,6 +5,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { getSiteContent, saveSiteContent } from '@/lib/site-content';
+import { uploadImageToStorage } from '@/lib/upload-image';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -177,17 +178,27 @@ export default function ContentAdminPageTabbed() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reset]);
 
-    const handleFileChange = (
+    const handleFileChange = async (
         e: React.ChangeEvent<HTMLInputElement>,
-        onChange: (value: string) => void
+        onChange: (value: string) => void,
+        prefix: string = 'image'
     ) => {
         const file = e.target.files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                onChange(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+            // Check file size client-side (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                toast({ variant: 'destructive', title: 'Error', description: 'Image is too large. Please use an image under 5MB.' });
+                return;
+            }
+            try {
+                toast({ title: 'Uploading...', description: 'Uploading image to storage.' });
+                const publicUrl = await uploadImageToStorage(file, prefix);
+                onChange(publicUrl);
+                toast({ title: 'Uploaded', description: 'Image uploaded successfully.' });
+            } catch (error) {
+                console.error('Image upload failed:', error);
+                toast({ variant: 'destructive', title: 'Upload Failed', description: 'Failed to upload image. Please try again.' });
+            }
         }
     };
 
@@ -295,7 +306,7 @@ export default function ContentAdminPageTabbed() {
                                             <FormLabel>Image (optional)</FormLabel>
                                             {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
                                             <FormControl>
-                                                <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
+                                                <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange, `subcategory-${index}`)} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -420,7 +431,7 @@ export default function ContentAdminPageTabbed() {
                                                                 <FormLabel>Image (Optional)</FormLabel>
                                                                 {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
                                                                 <FormControl>
-                                                                    <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
+                                                                    <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange, `hero-${index}`)} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                                 <p className="text-xs text-muted-foreground">If no image is provided, the original product image will be used.</p>
@@ -486,7 +497,7 @@ export default function ContentAdminPageTabbed() {
                                                                     <FormLabel>Image</FormLabel>
                                                                     {value && <Image src={value} alt="preview" width={100} height={100} className="rounded-md object-cover" />}
                                                                     <FormControl>
-                                                                        <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange)} />
+                                                                        <Input type="file" accept="image/*" onChange={(e) => handleFileChange(e, onChange, `category-${index}`)} />
                                                                     </FormControl>
                                                                     <FormMessage />
                                                                 </FormItem>

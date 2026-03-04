@@ -48,6 +48,12 @@ export async function getSiteContent(): Promise<SiteContent> {
       if (!content.categories) content.categories = [];
       content.categories.forEach(cat => {
         if (!cat.subcategories) cat.subcategories = [];
+        // Backward compat: populate imageUrls from imageUrl if not set
+        cat.subcategories.forEach(sub => {
+          if (!sub.imageUrls || sub.imageUrls.length === 0) {
+            sub.imageUrls = sub.imageUrl ? [sub.imageUrl] : [];
+          }
+        });
       });
       return content;
     }

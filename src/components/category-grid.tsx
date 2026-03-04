@@ -25,7 +25,7 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                   className="object-cover transform transition-transform duration-500 group-hover:scale-110"
                   data-ai-hint={category.imageHint}
                 />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
                   <h3 className="text-xl font-bold uppercase tracking-widest">
                     {category.name}

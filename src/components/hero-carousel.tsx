@@ -40,7 +40,7 @@ export default function HeroCarousel({ products, onProductClick }: HeroCarouselP
                   className="object-cover"
                   data-ai-hint={product.imageHint}
                 />
-                <div className="absolute inset-0 bg-black/30" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 p-8 md:p-16 text-white">
                   <div className="max-w-md">
                     <h2 className="text-3xl md:text-5xl font-bold font-headline">{product.name}</h2>

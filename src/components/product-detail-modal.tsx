@@ -22,6 +22,7 @@ import {
 import type { Product, ProductSize } from "@/lib/types";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
+import { Package } from "lucide-react";
 
 interface ProductDetailModalProps {
   isOpen: boolean;
@@ -33,27 +34,50 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<ProductSize | undefined>(undefined);
   const [displayPrice, setDisplayPrice] = useState<number | undefined>(product.price);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const { addToCart } = useCart();
   const { toast } = useToast();
 
   const validSizes = product.sizes?.filter(s => s && s.name && s.name.trim() !== '') || [];
   const hasSizes = validSizes.length > 0;
 
+  // Build image list from imageUrls or fallback to imageUrl
+  const images = (product.imageUrls?.filter(u => u && u.trim() !== '') || []);
+  if (images.length === 0 && product.imageUrl) {
+    images.push(product.imageUrl);
+  }
+
   useEffect(() => {
     // Reset state when modal opens or product changes
     if (isOpen) {
       setQuantity(1);
+      setCurrentImageIndex(0);
+      setIsTransitioning(false);
       if (hasSizes) {
-        // Product has sizes, so clear price until one is selected
         setSelectedSize(undefined);
         setDisplayPrice(undefined);
       } else {
-        // Product does not have sizes
         setSelectedSize(undefined); 
         setDisplayPrice(product.price);
       }
     }
   }, [isOpen, product, hasSizes]);
+
+  // Auto-scroll images in the modal
+  useEffect(() => {
+    if (!isOpen || images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentImageIndex(prev => (prev + 1) % images.length);
+        setIsTransitioning(false);
+      }, 300);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [isOpen, images.length]);
 
 
   const handleSizeChange = (sizeName: string) => {
@@ -87,7 +111,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     if (!isNaN(value) && value > 0) {
         setQuantity(value);
     } else if (e.target.value === '') {
-        setQuantity(0); // Allow clearing the input
+        setQuantity(0);
     }
   };
   
@@ -98,13 +122,34 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
       <DialogContent className="sm:max-w-[600px] p-0">
         <div className="grid grid-cols-1 md:grid-cols-2">
           <div className="relative h-64 md:h-full min-h-[300px]">
-            <Image
-              src={product.imageUrl}
-              alt={product.name}
-              fill
-              className="object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none"
-              data-ai-hint={product.imageHint}
-            />
+            {images.length > 0 ? (
+              <>
+                <Image
+                  src={images[currentImageIndex]}
+                  alt={product.name}
+                  fill
+                  className={`object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+                  data-ai-hint={product.imageHint}
+                />
+                {/* Dot indicators */}
+                {images.length > 1 && (
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                    {images.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => { setCurrentImageIndex(i); }}
+                        className={`h-2 rounded-full transition-all duration-300 ${i === currentImageIndex ? 'bg-white w-5' : 'bg-white/50 w-2'}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="w-full h-full bg-muted flex items-center justify-center rounded-t-lg md:rounded-l-lg md:rounded-t-none">
+                <Package className="h-12 w-12 text-muted-foreground/30" />
+              </div>
+            )}
           </div>
           <div className="p-6 flex flex-col justify-center">
             <DialogHeader>

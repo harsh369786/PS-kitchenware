@@ -9,6 +9,7 @@ export interface Product {
   name: string;
   tagline?: string;
   imageUrl: string;
+  imageUrls?: string[];
   imageHint?: string;
   price?: number;
   sizes?: ProductSize[];
@@ -20,6 +21,7 @@ export interface SubCategory {
   href: string;
   tagline?: string;
   imageUrl?: string;
+  imageUrls?: string[];
   imageHint?: string;
   price?: number;
   sizes?: ProductSize[];

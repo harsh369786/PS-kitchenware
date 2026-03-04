@@ -40,11 +40,12 @@ export default function Home() {
           fullProduct = {
             id: foundSubcategory.id,
             name: foundSubcategory.name,
-            imageUrl: product.imageUrl, // Keep hero image if it was clicked from hero
+            imageUrl: product.imageUrl,
+            imageUrls: foundSubcategory.imageUrls || (foundSubcategory.imageUrl ? [foundSubcategory.imageUrl] : []),
             imageHint: product.imageHint,
             price: foundSubcategory.price,
             sizes: foundSubcategory.sizes,
-            tagline: product.tagline // Keep hero tagline if it exists
+            tagline: product.tagline
           };
           break;
         }
@@ -84,7 +85,8 @@ export default function Home() {
         baseProduct = {
           id: found.id,
           name: found.name,
-          imageUrl: found.imageUrl || category.imageUrl,
+          imageUrl: found.imageUrl || found.imageUrls?.[0] || category.imageUrl,
+          imageUrls: found.imageUrls || (found.imageUrl ? [found.imageUrl] : []),
           imageHint: found.imageHint || category.imageHint || '',
           price: found.price,
           sizes: found.sizes

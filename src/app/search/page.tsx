@@ -17,7 +17,8 @@ async function getSearchResults(query: string): Promise<Product[]> {
     const allProducts: SubCategory[] = content.categories.flatMap(category =>
         (category.subcategories || []).map(sub => ({
             ...sub,
-            imageUrl: sub.imageUrl || category.imageUrl,
+            imageUrl: sub.imageUrl || sub.imageUrls?.[0] || category.imageUrl,
+            imageUrls: sub.imageUrls?.length ? sub.imageUrls : (sub.imageUrl ? [sub.imageUrl] : [category.imageUrl]),
             imageHint: sub.imageHint || category.imageHint || "",
         }))
     );

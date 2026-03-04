@@ -34,7 +34,8 @@ async function getCategory(slug: string): Promise<{ category: Category | null, p
     const categoryProducts: Product[] = (currentCategory.subcategories || []).map(sub => ({
       id: sub.id,
       name: sub.name,
-      imageUrl: sub.imageUrl || currentCategory.imageUrl, 
+      imageUrl: sub.imageUrl || sub.imageUrls?.[0] || currentCategory.imageUrl, 
+      imageUrls: sub.imageUrls?.length ? sub.imageUrls : (sub.imageUrl ? [sub.imageUrl] : [currentCategory.imageUrl]),
       imageHint: sub.imageHint || currentCategory.imageHint || "",
       price: sub.price,
       sizes: sub.sizes,

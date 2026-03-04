@@ -104,8 +104,8 @@ A modern e-commerce platform for kitchenware products built with Next.js, Supaba
 ## Admin Access
 
 Default credentials:
-- Email: admin@pskitchen.com
-- Password: admin123
+- Username: superman101
+- Password: 1Testmypolicy$
 
 **⚠️ Change these in production!**
 
