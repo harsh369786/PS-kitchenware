@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Loader2, PlusCircle, Trash2, Save, ImageIcon, GripVertical, AlertCircle, Upload, X, Layers, Tag, FolderOpen } from 'lucide-react';
+import { Loader2, PlusCircle, Trash2, Save, ImageIcon, GripVertical, AlertCircle, Upload, X, Layers, Tag, FolderOpen, ArrowUp, ArrowDown } from 'lucide-react';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import type { SiteContent, SubCategory } from '@/lib/types';
@@ -456,12 +456,12 @@ export default function ContentAdminPage() {
     }
   }, [getValues, setValue]);
 
-  const { fields: heroProductFields, append: appendHero, remove: removeHero } = useFieldArray({
+  const { fields: heroProductFields, append: appendHero, remove: removeHero, move: moveHero } = useFieldArray({
     control,
     name: "heroProducts",
   });
 
-  const { fields: categoryFields, append: appendCategory, remove: removeCategory } = useFieldArray({
+  const { fields: categoryFields, append: appendCategory, remove: removeCategory, move: moveCategory } = useFieldArray({
     control,
     name: "categories",
   });
@@ -822,15 +822,23 @@ export default function ContentAdminPage() {
                           <div className="p-4 space-y-3">
                             <div className="flex items-center justify-between">
                               <Badge variant="secondary" className="text-xs">Banner {index + 1}</Badge>
-                              <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                                onClick={() => setDeleteDialog({
-                                  open: true, title: 'Delete Banner',
-                                  description: `Remove Banner ${index + 1}?`,
-                                  onConfirm: () => removeHero(index),
-                                })}
-                              >
-                                <Trash2 className="h-3.5 w-3.5" />
-                              </Button>
+                              <div className="flex items-center gap-1">
+                                <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary" onClick={() => moveHero(index, index - 1)} disabled={index === 0}>
+                                  <ArrowUp className="h-3.5 w-3.5" />
+                                </Button>
+                                <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary" onClick={() => moveHero(index, index + 1)} disabled={index === heroProductFields.length - 1}>
+                                  <ArrowDown className="h-3.5 w-3.5" />
+                                </Button>
+                                <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                                  onClick={() => setDeleteDialog({
+                                    open: true, title: 'Delete Banner',
+                                    description: `Remove Banner ${index + 1}?`,
+                                    onConfirm: () => removeHero(index),
+                                  })}
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </Button>
+                              </div>
                             </div>
                             <FormField
                               control={control}
@@ -943,6 +951,12 @@ export default function ContentAdminPage() {
                                     </div>
                                     <div className="flex items-center gap-1 pt-5">
                                       <Badge variant="outline" className="text-xs shrink-0">{subCount} product{subCount !== 1 ? 's' : ''}</Badge>
+                                      <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary shrink-0" onClick={() => moveCategory(index, index - 1)} disabled={index === 0}>
+                                        <ArrowUp className="h-3.5 w-3.5" />
+                                      </Button>
+                                      <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary shrink-0" onClick={() => moveCategory(index, index + 1)} disabled={index === categoryFields.length - 1}>
+                                        <ArrowDown className="h-3.5 w-3.5" />
+                                      </Button>
                                       <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive shrink-0"
                                         onClick={() => setDeleteDialog({
                                           open: true, title: 'Delete Category',

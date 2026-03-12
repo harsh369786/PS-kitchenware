@@ -134,6 +134,13 @@ export async function saveSiteContent(content: SiteContent): Promise<void> {
       .upsert({ id: CONTENT_DOC_ID, data: content });
 
     if (error) throw error;
+    
+    try {
+      const { revalidatePath } = require('next/cache');
+      revalidatePath('/', 'layout');
+    } catch (e) {
+      console.error("Failed to revalidate path after saving content:", e);
+    }
 
   } catch (error) {
     console.error("Error saving site content to Supabase:", error);
