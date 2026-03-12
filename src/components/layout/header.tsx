@@ -47,8 +47,8 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b" role="banner">
+      <div className="container mx-auto flex h-14 sm:h-16 md:h-20 items-center justify-between px-3 sm:px-6 lg:px-8">
         <div className="flex-shrink-0">
           <Logo />
         </div>

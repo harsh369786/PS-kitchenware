@@ -2,13 +2,36 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import dynamic from "next/dynamic";
 import type { Product, SiteContent, HeroProduct } from "@/lib/types";
 import HeroCarousel from "@/components/hero-carousel";
 import CategoryGrid from "@/components/category-grid";
-import ProductDetailModal from "@/components/product-detail-modal";
-import OrderConfirmationDialog from "@/components/order-confirmation-dialog";
 import { getSiteContent } from "@/lib/site-content";
+
+// Lazy load heavy modal components — they're not needed at initial paint
+const ProductDetailModal = dynamic(() => import("@/components/product-detail-modal"), { ssr: false });
+const OrderConfirmationDialog = dynamic(() => import("@/components/order-confirmation-dialog"), { ssr: false });
+
+function HomeSkeleton() {
+  return (
+    <div className="bg-background">
+      {/* Hero skeleton */}
+      <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] skeleton-shimmer" />
+      {/* Categories skeleton */}
+      <div className="py-10 sm:py-16 md:py-24">
+        <div className="container mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="h-8 w-48 mx-auto mb-8 sm:mb-12 skeleton-shimmer rounded" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-8">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="aspect-square rounded-lg skeleton-shimmer" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -70,11 +93,7 @@ export default function Home() {
 
 
   if (!siteContent) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-2xl">Loading...</div>
-      </div>
-    );
+    return <HomeSkeleton />;
   }
 
   const heroProductsWithDetails: Product[] = siteContent.heroProducts.map(heroProduct => {

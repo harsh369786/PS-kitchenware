@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, memo } from "react";
 import Image from "next/image";
 import type { Product } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -8,12 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Package } from "lucide-react";
 import ProductDetailModal from "@/components/product-detail-modal";
 
-interface CategoryProductGridProps {
-    products: Product[];
-}
-
 // Auto-scrolling image component for products with multiple images
-function AutoScrollImage({ product }: { product: Product }) {
+const AutoScrollImage = memo(function AutoScrollImage({ product }: { product: Product }) {
     const images = product.imageUrls?.filter(u => u && u.trim() !== '') || [];
     // Fall back to single imageUrl if no imageUrls
     if (images.length === 0 && product.imageUrl) {
@@ -31,8 +27,8 @@ function AutoScrollImage({ product }: { product: Product }) {
             setTimeout(() => {
                 setCurrentIndex(prev => (prev + 1) % images.length);
                 setIsTransitioning(false);
-            }, 300); // fade duration
-        }, 2500); // switch every 2.5 seconds
+            }, 300);
+        }, 2500);
 
         return () => clearInterval(interval);
     }, [images.length]);
@@ -40,7 +36,7 @@ function AutoScrollImage({ product }: { product: Product }) {
     if (images.length === 0) {
         return (
             <div className="w-full h-full bg-muted flex items-center justify-center">
-                <Package className="h-12 w-12 text-muted-foreground/30" />
+                <Package className="h-8 w-8 sm:h-12 sm:w-12 text-muted-foreground/30" />
             </div>
         );
     }
@@ -53,7 +49,9 @@ function AutoScrollImage({ product }: { product: Product }) {
                 fill
                 className={`object-cover transform transition-all duration-300 group-hover:scale-105 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
                 data-ai-hint={product.imageHint}
-                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                quality={75}
+                loading="lazy"
             />
             {/* Dot indicators for multiple images */}
             {images.length > 1 && (
@@ -68,9 +66,9 @@ function AutoScrollImage({ product }: { product: Product }) {
             )}
         </div>
     );
-}
+});
 
-export default function CategoryProductGrid({ products }: CategoryProductGridProps) {
+export default function CategoryProductGrid({ products }: { products: Product[] }) {
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isDetailModalOpen, setDetailModalOpen] = useState(false);
 
@@ -87,19 +85,25 @@ export default function CategoryProductGrid({ products }: CategoryProductGridPro
     return (
         <>
             {products.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
                     {products.map((product) => (
                         <Card key={product.id} className="overflow-hidden group">
                             <CardContent className="p-0">
                                 <div className="relative aspect-square">
                                     <AutoScrollImage product={product} />
                                 </div>
-                                <div className="p-4 text-center">
-                                    <h4 className="font-semibold text-base mb-2 truncate">{product.name}</h4>
-                                    <p className="text-muted-foreground text-sm mb-4">
+                                <div className="p-2 sm:p-4 text-center">
+                                    <h4 className="font-semibold text-xs sm:text-sm md:text-base mb-1 sm:mb-2 truncate">{product.name}</h4>
+                                    <p className="text-muted-foreground text-xs sm:text-sm mb-2 sm:mb-4">
                                         {product.price ? `₹${product.price}` : 'From ₹...'}
                                     </p>
-                                    <Button onClick={() => handleProductClick(product)} className="bg-primary hover:bg-primary/90">Shop Now</Button>
+                                    <Button 
+                                        onClick={() => handleProductClick(product)} 
+                                        className="bg-primary hover:bg-primary/90 text-xs sm:text-sm h-8 sm:h-10"
+                                        size="sm"
+                                    >
+                                        Shop Now
+                                    </Button>
                                 </div>
                             </CardContent>
                         </Card>

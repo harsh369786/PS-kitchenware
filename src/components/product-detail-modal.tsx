@@ -22,7 +22,7 @@ import {
 import type { Product, ProductSize } from "@/lib/types";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
-import { Package } from "lucide-react";
+import { Package, Minus, Plus } from "lucide-react";
 
 interface ProductDetailModalProps {
   isOpen: boolean;
@@ -106,22 +106,16 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
     }
   };
 
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value) && value > 0) {
-        setQuantity(value);
-    } else if (e.target.value === '') {
-        setQuantity(0);
-    }
-  };
+  const incrementQuantity = () => setQuantity(prev => prev + 1);
+  const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1));
   
   if (!isOpen) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] p-0">
+      <DialogContent className="w-[95vw] max-w-[600px] p-0 max-h-[90vh] overflow-y-auto">
         <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className="relative h-64 md:h-full min-h-[300px]">
+          <div className="relative h-56 sm:h-64 md:h-full min-h-[220px] md:min-h-[300px]">
             {images.length > 0 ? (
               <>
                 <Image
@@ -129,6 +123,8 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
                   alt={product.name}
                   fill
                   className={`object-cover rounded-t-lg md:rounded-l-lg md:rounded-t-none transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+                  sizes="(max-width: 768px) 95vw, 300px"
+                  quality={80}
                   data-ai-hint={product.imageHint}
                 />
                 {/* Dot indicators */}
@@ -151,14 +147,14 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
               </div>
             )}
           </div>
-          <div className="p-6 flex flex-col justify-center">
+          <div className="p-4 sm:p-6 flex flex-col justify-center">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold font-headline">{product.name}</DialogTitle>
+              <DialogTitle className="text-xl sm:text-2xl font-bold font-headline">{product.name}</DialogTitle>
               {product.tagline && <DialogDescription>{product.tagline}</DialogDescription>}
             </DialogHeader>
 
-            <div className="py-6 space-y-4">
-              <div className="text-3xl font-bold text-primary">
+            <div className="py-4 sm:py-6 space-y-3 sm:space-y-4">
+              <div className="text-2xl sm:text-3xl font-bold text-primary">
                  {displayPrice !== undefined ? `₹${displayPrice.toFixed(2)}` : 'Select a size'}
               </div>
 
@@ -166,7 +162,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
                 <div className="flex items-center space-x-4">
                    <label htmlFor="size" className="text-sm font-medium">Size</label>
                    <Select onValueChange={handleSizeChange} value={selectedSize?.name}>
-                    <SelectTrigger id="size" className="w-full">
+                    <SelectTrigger id="size" className="w-full h-10">
                       <SelectValue placeholder="Select a size" />
                     </SelectTrigger>
                     <SelectContent>
@@ -179,19 +175,31 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
                   </Select>
                 </div>
               )}
-              <div className="flex items-center space-x-4">
-                <label htmlFor="quantity" className="text-sm font-medium">Quantity</label>
-                <Input
-                  id="quantity"
-                  type="number"
-                  min="1"
-                  value={quantity > 0 ? quantity : ""}
-                  onChange={handleQuantityChange}
-                  className="w-24 text-center"
-                />
+              <div className="flex items-center space-x-3">
+                <label htmlFor="quantity" className="text-sm font-medium">Qty</label>
+                <div className="flex items-center border rounded-lg overflow-hidden">
+                  <Button type="button" variant="ghost" size="icon" className="h-10 w-10 rounded-none" onClick={decrementQuantity} disabled={quantity <= 1}>
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Input
+                    id="quantity"
+                    type="number"
+                    min="1"
+                    value={quantity > 0 ? quantity : ""}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value, 10);
+                      if (!isNaN(value) && value > 0) setQuantity(value);
+                      else if (e.target.value === '') setQuantity(0);
+                    }}
+                    className="w-14 text-center border-0 rounded-none h-10 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  />
+                  <Button type="button" variant="ghost" size="icon" className="h-10 w-10 rounded-none" onClick={incrementQuantity}>
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </div>
-            <Button onClick={handleAddToCartClick} size="lg" className="bg-primary hover:bg-primary/90" disabled={quantity <= 0 || (hasSizes && !selectedSize)}>
+            <Button onClick={handleAddToCartClick} size="lg" className="bg-primary hover:bg-primary/90 w-full h-12 text-base" disabled={quantity <= 0 || (hasSizes && !selectedSize)}>
                 Add to Cart
             </Button>
           </div>
