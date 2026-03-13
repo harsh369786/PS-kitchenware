@@ -58,8 +58,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Preconnect to Supabase storage for faster LCP image load */}
+        <link rel="preconnect" href="https://bojyqtzliosixswsdejd.supabase.co" />
+        <link rel="dns-prefetch" href="https://bojyqtzliosixswsdejd.supabase.co" />
       </head>
       <body className={`${inter.className} antialiased`} suppressHydrationWarning>
         <CartProvider>

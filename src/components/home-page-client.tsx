@@ -2,10 +2,13 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import type { Product, Category } from "@/lib/types";
 import HeroCarousel from "@/components/hero-carousel";
 import CategoryGrid from "@/components/category-grid";
-import ProductDetailModal from "@/components/product-detail-modal";
+
+// Lazy-load the modal — not needed until user clicks "Shop Now"
+const ProductDetailModal = dynamic(() => import("@/components/product-detail-modal"), { ssr: false });
 
 interface HomePageClientProps {
   categories: Category[];
@@ -28,11 +31,12 @@ export default function HomePageClient({ categories, heroProducts, allCategories
           fullProduct = {
             id: foundSubcategory.id,
             name: foundSubcategory.name,
-            imageUrl: product.imageUrl, // Keep hero image if it was clicked from hero
+            imageUrl: product.imageUrl,
+            imageUrls: foundSubcategory.imageUrls || (foundSubcategory.imageUrl ? [foundSubcategory.imageUrl] : []),
             imageHint: product.imageHint,
             price: foundSubcategory.price,
             sizes: foundSubcategory.sizes,
-            tagline: product.tagline // Keep hero tagline if it exists
+            tagline: product.tagline
           };
           break;
         }

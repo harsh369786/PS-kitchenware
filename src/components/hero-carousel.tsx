@@ -38,6 +38,7 @@ export default function HeroCarousel({ products, onProductClick }: HeroCarouselP
                   fill
                   priority={index === 0}
                   loading={index === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={index === 0 ? 'high' : 'low'}
                   className="object-cover"
                   sizes="100vw"
                   quality={index === 0 ? 85 : 75}
