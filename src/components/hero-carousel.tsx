@@ -31,7 +31,7 @@ export default function HeroCarousel({ products, onProductClick }: HeroCarouselP
         <CarouselContent className="-ml-0">
           {products.map((product, index) => (
             <CarouselItem key={product.id} className="pl-0">
-              <div className="relative h-[450px] sm:h-[550px] md:h-[700px] lg:h-[800px] w-full">
+              <div className="relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-full">
                 <Image
                   src={product.imageUrl}
                   alt={product.name}
