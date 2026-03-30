@@ -22,7 +22,7 @@ export default function HeroCarousel({ products, onProductClick }: HeroCarouselP
   }
   
   return (
-    <section className="w-full" aria-label="Featured Products">
+    <section className="w-full mb-12 md:mb-20" aria-label="Featured Products">
       <Carousel
         plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
         opts={{ loop: true }}
@@ -31,7 +31,7 @@ export default function HeroCarousel({ products, onProductClick }: HeroCarouselP
         <CarouselContent className="-ml-0">
           {products.map((product, index) => (
             <CarouselItem key={product.id} className="pl-0">
-              <div className="relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-full">
+              <div className="relative h-[450px] sm:h-[550px] md:h-[700px] lg:h-[800px] w-full">
                 <Image
                   src={product.imageUrl}
                   alt={product.name}

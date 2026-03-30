@@ -3,8 +3,9 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import type { Product, Category } from "@/lib/types";
+import type { Product, Category, VideoCarouselItem } from "@/lib/types";
 import HeroCarousel from "@/components/hero-carousel";
+import VideoCarousel from "@/components/video-carousel";
 import CategoryGrid from "@/components/category-grid";
 
 // Lazy-load the modal — not needed until user clicks "Shop Now"
@@ -14,9 +15,10 @@ interface HomePageClientProps {
   categories: Category[];
   heroProducts: Product[];
   allCategories: Category[];
+  videoCarousel?: VideoCarouselItem[];
 }
 
-export default function HomePageClient({ categories, heroProducts, allCategories }: HomePageClientProps) {
+export default function HomePageClient({ categories, heroProducts, allCategories, videoCarousel }: HomePageClientProps) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDetailModalOpen, setDetailModalOpen] = useState(false);
 
@@ -61,6 +63,11 @@ export default function HomePageClient({ categories, heroProducts, allCategories
       {heroProducts.length > 0 && (
           <HeroCarousel products={heroProducts} onProductClick={handleProductClick} />
       )}
+      
+      {videoCarousel && videoCarousel.length > 0 && (
+          <VideoCarousel videos={videoCarousel} />
+      )}
+
       <CategoryGrid categories={categories} />
       
       {selectedProduct && (

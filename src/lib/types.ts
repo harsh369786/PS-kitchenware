@@ -44,9 +44,17 @@ export interface HeroProduct {
   imageHint?: string;
 }
 
+export interface VideoCarouselItem {
+  id: string;
+  videoUrl: string;
+  title?: string;
+  description?: string;
+}
+
 export interface SiteContent {
   heroProducts: HeroProduct[];
   categories: Category[];
+  videoCarousel?: VideoCarouselItem[];
 }
 
 export interface User {

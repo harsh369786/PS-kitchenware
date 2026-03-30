@@ -24,9 +24,16 @@ const initialHeroProducts = PlaceHolderImages.filter((p) => p.id.startsWith("her
   imageHint: p.imageHint,
 }));
 
+const initialVideoCarousel = [
+  { id: "v1", videoUrl: "https://bojyqtzliosixswsdejd.supabase.co/storage/v1/object/public/uploads/smit%201.mp4", title: "Premium Kitchenware", description: "Crafted for Excellence" },
+  { id: "v2", videoUrl: "https://bojyqtzliosixswsdejd.supabase.co/storage/v1/object/public/uploads/video%202.mp4", title: "Modern Designs", description: "Elevate your Cooking" },
+  { id: "v3", videoUrl: "https://bojyqtzliosixswsdejd.supabase.co/storage/v1/object/public/uploads/video%203.mp4", title: "Durable Materials", description: "Built to Last" }
+];
+
 const initialContent: SiteContent = {
   heroProducts: initialHeroProducts,
-  categories: initialCategories
+  categories: initialCategories,
+  videoCarousel: initialVideoCarousel
 };
 
 export async function getSiteContent(): Promise<SiteContent> {
@@ -46,6 +53,7 @@ export async function getSiteContent(): Promise<SiteContent> {
       // Ensure data integrity
       if (!content.heroProducts) content.heroProducts = [];
       if (!content.categories) content.categories = [];
+      if (!content.videoCarousel) content.videoCarousel = initialVideoCarousel;
       content.categories.forEach(cat => {
         if (!cat.subcategories) cat.subcategories = [];
         // Backward compat: populate imageUrls from imageUrl if not set

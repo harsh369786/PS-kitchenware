@@ -49,6 +49,7 @@ export default async function Home() {
       categories={siteContent.categories}
       heroProducts={heroProductsWithDetails}
       allCategories={siteContent.categories}
+      videoCarousel={siteContent.videoCarousel}
     />
   );
 }
