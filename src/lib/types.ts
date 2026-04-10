@@ -95,3 +95,25 @@ export interface CartItem extends Product {
   price: number;
   size?: string;
 }
+
+export interface Blog {
+  id: string;
+  title: string;
+  slug: string;
+  shortDescription: string;
+  content: string;
+  imageUrl?: string;
+  featuredImage?: string; // Additional banner image if needed
+  rank: number;
+  status: "draft" | "published";
+  publishDate: string;
+  category?: string;
+  tags?: string[];
+  seoTitle?: string;
+  seoDescription?: string;
+  created_at?: string;
+}
+
+export interface BlogContent {
+  blogs: Blog[];
+}
